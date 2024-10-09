@@ -57,10 +57,94 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [Expanded( flex: 2,child: Container(
+            width: MediaQuery.of(context).size.width,
             color: ColorTheme.PRIMARY,
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.ss,),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(flex:1,child: SizedBox()),
+                    Expanded(flex: 5,child: RichText(text: TextSpan(text: 'Trusted PDF',children: [TextSpan(text: '\n'),TextSpan(text: 'PDF',style: TextStyle(color: ColorTheme.RED)),TextSpan(text: ' Reader')],style: Theme.of(context).textTheme.headlineLarge),)),
+                    Expanded(flex: 2,child: Text('Version 1.0.25',style: Theme.of(context).textTheme.bodyMedium,))
+                  ],
+                ),
+              ),
+            ),
           )),
           Expanded(flex: 5,child: Container(
+            width: MediaQuery.of(context).size.width,
             color: ColorTheme.BLACK,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 30.ss,horizontal: 15.ss),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 45.ss,
+                      decoration: BoxDecoration(
+                        color: Colors.amberAccent,
+                        borderRadius: BorderRadius.all(Radius.circular(20.ss)),
+                      ),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(flex:1,child: Image.asset('assets/icons/crown_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.RED,)),
+                          Expanded(flex: 3,child: RichText(text: TextSpan(text:'Design',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.RED),children: [TextSpan(text: ' By Chandan',style: TextStyle(color: ColorTheme.BLACK))]),)),
+                        ],
+                
+                      ),
+                    ),
+
+                    SizedBox(height: 10.ss,),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/language_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('Language',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/share_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('Share App',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/app_like_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('Rate App',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/feedback_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('Feedback',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/privacy_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('Privacy Policy',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                
+                    IconButton(onPressed: (){}, icon: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 1,child: Image.asset('assets/icons/application_icon.png',width: 25.ss,height: 25.ss,color: ColorTheme.WHITE,)),
+                        SizedBox(width: 10.ss,),
+                        Expanded(flex: 6,child: Text('More App',style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: ColorTheme.WHITE),)),
+                      ],)),
+                  ],
+                ),
+              ),
+            ),
           ))],
         ),
       ),
