@@ -47,8 +47,38 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: ColorTheme.PRIMARY,
         title: RichText(text: TextSpan(text: 'PDF ',style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: ColorTheme.RED),children: [TextSpan(text: 'Reader',style: Theme.of(context).textTheme.headlineMedium)])),
         actions: <Widget>[
-          IconButton(onPressed: (){}, icon: Image.asset('assets/icons/search_icon.png',width: 30,height: 30,)),
-          IconButton(onPressed: (){}, icon: Image.asset('assets/icons/sort_icon.png',width: 30,height: 30,)),
+          IconButton(onPressed: (){}, icon: Image.asset('assets/icons/search_icon.png',width: 30.ss,height: 30.ss,)),
+          PopupMenuButton(itemBuilder: (context){
+            return <PopupMenuItem>[
+              PopupMenuItem(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(flex:8 ,child: Text('Last Modified',style: Theme.of(context).textTheme.bodyMedium,)),
+                  Expanded(flex: 1,child: Image.asset('assets/icons/sort_icon.png',width: 0.ss,height: 20.ss,))
+                ],
+              ),),
+
+              PopupMenuItem(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(flex:8 ,child: Text('Name',style: Theme.of(context).textTheme.bodyMedium,)),
+                  Expanded(flex: 1,child: Image.asset('assets/icons/sort_by_name_icon.png',width: 20.ss,height: 20.ss,))
+                ],
+              ),),
+
+              PopupMenuItem(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(flex:8 ,child: Text('File Size',style: Theme.of(context).textTheme.bodyMedium,)),
+                  Expanded(flex: 1,child: Image.asset('assets/icons/sort_by_size_icon.png',width: 20.ss,height: 20.ss,))
+                ],
+              ),)
+            ];
+          },
+            icon: Image.asset('assets/icons/sort_icon.png',width: 30.ss,height: 30.ss,),
+            color: ColorTheme.WHITE,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.ss)),
+          ),
           SizedBox(width: 10.ss,),
         ],
       ),
@@ -171,4 +201,5 @@ class _MyHomePageState extends State<MyHomePage> {
 
     );
   }
+
 }
