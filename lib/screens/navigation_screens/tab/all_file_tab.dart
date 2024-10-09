@@ -5,10 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
 
 class AllFileTab extends StatefulWidget{
-  AllFileTab._();
-  factory AllFileTab(){
-    return AllFileTab._();
-  }
+  final String iconPath;
+  final String title;
+  final String subTitle;
+  final String trailing;
+
+  AllFileTab({
+    required this.iconPath,
+    required this.title,
+    required this.subTitle,
+    this.trailing ='assets/icons/three_dots_icon.png',
+});
+
   @override
   State<StatefulWidget> createState() => _States();
 }
@@ -20,7 +28,7 @@ class _States extends State<AllFileTab> {
       body: SafeArea(child:ListView.builder(
         itemCount: 100,
           itemBuilder: (context,index){
-        return CustomListTile(iconPath: 'assets/icons/pdf.png', title: 'My Offer Letter.pdf', subTitle: '253.2 OCT 9 2024');
+        return CustomListTile(iconPath: widget.iconPath, title: widget.title, subTitle: widget.subTitle,trailing: widget.trailing,);
       })
       ),
     );

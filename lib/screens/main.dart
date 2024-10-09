@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SafeArea(child: _screens[_currentIndex]),
       drawer: Drawer(
+        width: MediaQuery.of(context).size.width*0.8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [Expanded( flex: 2,child: Container(
@@ -84,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      height: 45.ss,
                       decoration: BoxDecoration(
                         color: Colors.amberAccent,
                         borderRadius: BorderRadius.all(Radius.circular(20.ss)),

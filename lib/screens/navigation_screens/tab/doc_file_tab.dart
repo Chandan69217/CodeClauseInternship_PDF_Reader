@@ -4,10 +4,18 @@ import 'package:flutter/material.dart';
 import '../../../widgets/custom_list_tile.dart';
 
 class DocFileTab extends StatefulWidget {
-  DocFileTab._();
-  factory DocFileTab(){
-    return DocFileTab._();
-  }
+  final String iconPath;
+  final String title;
+  final String subTitle;
+  final String trailing;
+
+  DocFileTab({
+    required this.iconPath,
+    required this.title,
+    required this.subTitle,
+    this.trailing ='assets/icons/three_dots_icon.png',
+});
+
   @override
   State<DocFileTab> createState() => _DocFileTabState();
 }
@@ -19,7 +27,7 @@ class _DocFileTabState extends State<DocFileTab> {
       body: SafeArea(child:ListView.builder(
           itemCount: 100,
           itemBuilder: (context,index){
-            return CustomListTile(iconPath: 'assets/icons/doc.png', title: 'My Offer Letter.doc', subTitle: '253.2 OCT 9 2024');
+            return CustomListTile(iconPath: widget.iconPath, title: widget.title, subTitle: widget.subTitle,trailing: widget.trailing,);
           })
       ),
     );

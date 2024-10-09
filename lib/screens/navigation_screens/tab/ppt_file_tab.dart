@@ -4,10 +4,17 @@ import 'package:flutter/material.dart';
 import '../../../widgets/custom_list_tile.dart';
 
 class PptFileTab extends StatefulWidget {
-  PptFileTab._();
-  factory PptFileTab(){
-    return PptFileTab._();
-  }
+  final String iconPath;
+  final String title;
+  final String subTitle;
+  final String trailing;
+
+  PptFileTab({
+    required this.iconPath,
+    required this.title,
+    required this.subTitle,
+    this.trailing ='assets/icons/three_dots_icon.png',
+});
 
   @override
   State<PptFileTab> createState() => _PptFileTabState();
@@ -20,7 +27,7 @@ class _PptFileTabState extends State<PptFileTab> {
       body: SafeArea(child:ListView.builder(
           itemCount: 100,
           itemBuilder: (context,index){
-            return CustomListTile(iconPath: 'assets/icons/ppt.png', title: 'My Offer Letter.pdf', subTitle: '253.2 OCT 9 2024');
+            return CustomListTile(iconPath: widget.iconPath, title: widget.title, subTitle: widget.subTitle,trailing: widget.trailing,);
           })
       ),
     );

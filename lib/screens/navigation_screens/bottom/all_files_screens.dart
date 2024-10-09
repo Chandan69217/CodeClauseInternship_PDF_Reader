@@ -34,11 +34,31 @@ class _AllFilesStates extends State<AllFilesScreens> {
                 Tab(text: 'PPT'),
               ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
-                AllFileTab(),
-                PdfFileTab(),
-                DocFileTab(),
-                ExcelFileTab(),
-                PptFileTab()
+                AllFileTab(
+                  iconPath: 'assets/icons/pdf.png',
+                  title: 'My Offer Letter.pdf',
+                  subTitle: '253.2 OCT 9 2024',
+                ),
+                PdfFileTab(
+                  iconPath: 'assets/icons/pdf.png',
+                  title: 'My Offer Letter.pdf',
+                  subTitle: '253.2 OCT 9 2024',
+                ),
+                DocFileTab(
+                  iconPath: 'assets/icons/doc.png',
+                  title: 'My Offer Letter.pdf',
+                  subTitle: '253.2 OCT 9 2024',
+                ),
+                ExcelFileTab(
+                  iconPath: 'assets/icons/xls.png',
+                  title: 'My Offer Letter.pdf',
+                  subTitle: '253.2 OCT 9 2024',
+                ),
+                PptFileTab(
+                  iconPath: 'assets/icons/ppt.png',
+                  title: 'My Offer Letter.pdf',
+                  subTitle: '253.2 OCT 9 2024',
+                )
               ]))
             ],
           )),
