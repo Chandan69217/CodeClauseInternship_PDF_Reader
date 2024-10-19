@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
@@ -40,8 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = <Widget>[AllFilesScreens(),HistoryScreen(),BookmarkScreen(),ToolsScreen()];
 
   @override
-  Widget build(BuildContext context) {
+  void initState()  {
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorTheme.PRIMARY,
