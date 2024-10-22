@@ -1,16 +1,16 @@
 
 // ignore_for_file: must_be_immutable
 
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdfx/pdfx.dart';
 import 'package:sizing/sizing.dart';
 
 import '../utilities/color.dart';
 
-class PdfViewer extends StatefulWidget{
+class FileViewer extends StatefulWidget{
   String filePath;
-  PdfViewer({super.key, required this.filePath});
+  FileViewer({super.key, required this.filePath});
 
   @override
   State<StatefulWidget> createState() => _PdfViewerStates();
@@ -18,15 +18,13 @@ class PdfViewer extends StatefulWidget{
 }
 
 
-class _PdfViewerStates extends State<PdfViewer>{
-  PdfControllerPinch? controllerPinch ;
+class _PdfViewerStates extends State<FileViewer>{
   int _totalPage = 0;
   int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    controllerPinch = PdfControllerPinch(document: PdfDocument.openFile(widget.filePath),);
   }
   @override
   Widget build(BuildContext context) {
@@ -42,11 +40,11 @@ class _PdfViewerStates extends State<PdfViewer>{
             children: [
               Text('Total Pages: $_totalPage',style: Theme.of(context).textTheme.bodySmall,),
               IconButton(onPressed: (){
-                controllerPinch!.previousPage(duration: const Duration(milliseconds: 500), curve: Curves.linear);
+                // controllerPinch!.previousPage(duration: const Duration(milliseconds: 500), curve: Curves.linear);
               }, icon: Icon(Icons.arrow_back_ios,size: 18.ss,)),
               Text('Current Page: $_currentPage',style: Theme.of(context).textTheme.bodySmall,),
               IconButton(onPressed: (){
-                controllerPinch!.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.linear);
+                // controllerPinch!.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.linear);
               }, icon: Icon(Icons.arrow_forward_ios_rounded,size: 18.ss,)),
             ],
           ),
@@ -85,31 +83,17 @@ class _PdfViewerStates extends State<PdfViewer>{
           ),
         ],
       ),
-      body: SafeArea(
-          child: Expanded(
-            child: PdfViewPinch(
-              controller: controllerPinch!,
-              onDocumentLoaded: (pdfDocument){
-                setState(() {
-                  _totalPage = pdfDocument.pagesCount;
-                  _currentPage = controllerPinch!.page;
-                });
-              },
-              onPageChanged: (pageNo){
-                setState(() {
-                  _currentPage = pageNo;
-                });
-              },
-            ),
-          )
-      ),
+      // body: SafeArea(
+      //     child: Expanded(
+      //       child: FileView(controller: controller)
+      //     )
+      // ),
     );
   }
 
   @override
   void dispose() {
     super.dispose();
-    controllerPinch!.dispose();
   }
 
 }

@@ -1,18 +1,17 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../external_storage/read_storage.dart';
+import '../../../model/data.dart';
+import '../../../utilities/color.dart';
 import '../../../widgets/custom_list_tile.dart';
+import '../../file_viewer.dart';
 
 class DocFileTab extends StatefulWidget {
-  final String iconPath;
-  final String title;
-  final String subTitle;
   final String trailing;
 
   DocFileTab({
-    required this.iconPath,
-    required this.title,
-    required this.subTitle,
     this.trailing ='assets/icons/three_dots_icon.png',
 });
 
@@ -24,11 +23,28 @@ class _DocFileTabState extends State<DocFileTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child:ListView.builder(
-          itemCount: 100,
-          itemBuilder: (context,index){
-            return CustomListTile(iconPath: widget.iconPath, title: widget.title, subTitle: widget.subTitle,trailing: widget.trailing,);
-          })
+      body: SafeArea(child:FutureBuilder(
+        future: Read(context).getDocFiles(),
+        builder: (BuildContext context, AsyncSnapshot<List<Data>> snapshot) {
+          if(snapshot.hasData){
+            return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context,index){
+                  return CustomListTile(
+                    title: snapshot.data![index].fileName,
+                    subTitle: snapshot.data![index].details,
+                    trailing: widget.trailing,
+                    onTap: (){
+                      print('Clicked:  $index');
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                    },
+                  );
+                });
+          }else{
+            return Center(child: CircularProgressIndicator(color: ColorTheme.RED,),);
+          }
+        },
+      )
       ),
     );
   }

@@ -36,33 +36,18 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
                 AllFileTab(
-                  iconPath: 'assets/icons/pdf.png',
-                  title: 'My Offer Letter.pdf',
-                  subTitle: '253.2 OCT 9 2024',
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 PdfFileTab(
-                  iconPath: 'assets/icons/pdf.png',
-                  title: 'My Offer Letter.pdf',
-                  subTitle: '253.2 OCT 9 2024',
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 DocFileTab(
-                  iconPath: 'assets/icons/doc.png',
-                  title: 'My Offer Letter.pdf',
-                  subTitle: '253.2 OCT 9 2024',
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 ExcelFileTab(
-                  iconPath: 'assets/icons/xls.png',
-                  title: 'My Offer Letter.pdf',
-                  subTitle: '253.2 OCT 9 2024',
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 PptFileTab(
-                  iconPath: 'assets/icons/ppt.png',
-                  title: 'My Offer Letter.pdf',
-                  subTitle: '253.2 OCT 9 2024',
                   trailing: 'assets/icons/bookmark_filled.png',
                 )
               ]))
