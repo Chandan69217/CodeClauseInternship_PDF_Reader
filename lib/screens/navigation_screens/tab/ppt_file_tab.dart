@@ -2,11 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/file_view_handler.dart';
 
 import '../../../external_storage/read_storage.dart';
 import '../../../utilities/color.dart';
 import '../../../widgets/custom_list_tile.dart';
-import '../../file_viewer.dart';
 
 class PptFileTab extends StatefulWidget {
   final String trailing;
@@ -36,7 +36,8 @@ class _PptFileTabState extends State<PptFileTab> {
                     trailing: widget.trailing,
                     onTap: (){
                       print('Clicked:  $index');
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                      // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                      fileViewHandler(context, snapshot.data![index]);
                     },
                   );
                 });

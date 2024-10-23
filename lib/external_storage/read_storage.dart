@@ -4,7 +4,6 @@ import 'package:external_path/external_path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf_reader/screens/permission_screen.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,11 +28,7 @@ import '../model/data.dart';
 
    Future<void> _scanForAllFiles() async {
      if(await requestPermission()){
-      // final directory = await getExternalStorageDirectory();
        final dir = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-       print(dir);
-       final dk = await ExternalPath.getExternalStorageDirectories();
-       print('${dk.length}');
        if(_AllEntity!.isEmpty){
          Directory directory = Directory(dir);
          _AllEntity = directory.listSync(recursive: true).where((files){
@@ -45,8 +40,6 @@ import '../model/data.dart';
            }
          }).toList();
        }
-     }else{
-
      }
    }
 
@@ -72,7 +65,9 @@ import '../model/data.dart';
            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> PermissionScreen()));
          }
        }
-       showMessage('Permission Required', 'Storage permission is required for accessing files on your devices. please allow the permission',onClick!);
+       showMessage('Permission Required', 'Storage permission is required for accessing files on your devices. please allow the permission',onClick);
+     }else if(status.isPermanentlyDenied){
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> PermissionScreen()));
      }
      return status.isGranted;
    }
@@ -199,8 +194,8 @@ import '../model/data.dart';
          ),
          content: Text(content),
          actions: [
-           TextButton(onPressed: (){SystemNavigator.pop();}, child: Text('Cancel')),
-           TextButton(onPressed: (){onClick(); Navigator.of(context).pop();}, child: Text('Ok')),
+           TextButton(onPressed: (){SystemNavigator.pop();}, child: const Text('Cancel')),
+           TextButton(onPressed: (){onClick(); Navigator.of(context).pop();}, child: const Text('Ok')),
          ],
        );
      });

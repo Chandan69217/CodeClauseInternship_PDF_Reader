@@ -13,8 +13,7 @@ class Data{
     required this.fileName,
     required this.fileType,
     required this.details,
-    required this.filePath
-
+    required this.filePath,
   });
 
 

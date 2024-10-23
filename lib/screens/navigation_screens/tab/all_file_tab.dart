@@ -3,7 +3,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/screens/file_viewer.dart';
+import 'package:pdf_reader/utilities/file_view_handler.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
 
 import '../../../external_storage/read_storage.dart';
@@ -28,8 +28,6 @@ class _States extends State<AllFileTab> {
       body: SafeArea(child:FutureBuilder(
         future: Read(context).getAllFiles(),
         builder: (BuildContext context, AsyncSnapshot<List<Data>> snapshot) {
-          print('${snapshot.hasData}');
-          print('${snapshot.error.toString()}');
           if(snapshot.hasData){
             return ListView.builder(
                 itemCount: snapshot.data!.length,
@@ -39,7 +37,8 @@ class _States extends State<AllFileTab> {
                     subTitle: snapshot.data![index].details,
                     trailing: widget.trailing,
                     onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                      // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                      fileViewHandler(context, snapshot.data![index]);
                     },
                   );
                 });

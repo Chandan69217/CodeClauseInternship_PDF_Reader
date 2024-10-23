@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
-import 'package:pdf_reader/screens/pdf_viewer.dart';
 import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/file_view_handler.dart';
 
 import '../../../model/data.dart';
 import '../../../widgets/custom_list_tile.dart';
@@ -43,7 +43,7 @@ class _PdfFileTabState extends State<PdfFileTab> {
                       subTitle: snapshot.data![index].details,
                       trailing: widget.trailing,
                     onTap: (){
-                        Navigator.push(context,MaterialPageRoute(builder: (context)=>PdfViewer(filePath: snapshot.data![index].filePath,)));
+                        fileViewHandler(context,snapshot.data![index]);
                     },
                   );
                 });
