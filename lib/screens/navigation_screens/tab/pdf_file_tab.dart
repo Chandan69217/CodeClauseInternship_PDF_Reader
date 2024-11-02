@@ -6,6 +6,7 @@ import 'package:pdf_reader/utilities/color.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
 
 import '../../../model/data.dart';
+import '../../../widgets/custom_bottomsheet.dart';
 import '../../../widgets/custom_list_tile.dart';
 
 class PdfFileTab extends StatefulWidget {
@@ -42,6 +43,9 @@ class _PdfFileTabState extends State<PdfFileTab> {
                       title: snapshot.data![index].fileName,
                       subTitle: snapshot.data![index].details,
                       trailing: widget.trailing,
+                    onOptionClick: (){
+                      customBottomSheet(context: context, data: snapshot.data![index]);
+                    },
                     onTap: (){
                         fileViewHandler(context,snapshot.data![index]);
                     },

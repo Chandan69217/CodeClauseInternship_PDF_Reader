@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
 
 import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
@@ -34,6 +35,9 @@ class _DocFileTabState extends State<DocFileTab> {
                     title: snapshot.data![index].fileName,
                     subTitle: snapshot.data![index].details,
                     trailing: widget.trailing,
+                    onOptionClick: (){
+                      customBottomSheet(context: context, data: snapshot.data![index]);
+                    },
                     onTap: (){
                       print('Clicked:  $index');
                       // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));

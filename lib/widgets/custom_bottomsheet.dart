@@ -1,12 +1,6 @@
-
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/utilities/color.dart';
-import 'package:pdf_reader/utilities/get_file_details.dart';
-import 'package:pdf_reader/widgets/custom_list_tile.dart';
 import 'package:sizing/sizing.dart';
 
 void customBottomSheet({required BuildContext context,required Data data}){
@@ -14,37 +8,40 @@ void customBottomSheet({required BuildContext context,required Data data}){
       context: context,
       elevation: 8,
       constraints: BoxConstraints(
-        maxHeight: 330.ss
+        maxHeight: MediaQuery.of(context).size.height*0.6,
+        minHeight: MediaQuery.of(context).size.height*0.46
       ),
       sheetAnimationStyle: AnimationStyle(curve: Curves.linear),
       useSafeArea: true,
       builder: (context){
-        return Padding(
-          padding: EdgeInsets.all(8.ss),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(padding: EdgeInsets.only(left: 24.ss,right: 24.ss,top: 12.ss),
-              child: _topDesign(context,data.fileName, data.details)),
-              SizedBox(height: 6.ss,),
-              const Divider(thickness: 2,),
-              Padding(
-                padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
-                child: ListTile(leading: Icon(Icons.drive_file_rename_outline),title: Text('Rename',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
-                child: ListTile(leading: Icon(Icons.share),title: Text('Share',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
-                child: ListTile(leading: Icon(Icons.delete_rounded),title: Text('Delete',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
-                child: ListTile(leading: Icon(Icons.info_outline),title: Text('Details',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
-              ),
-            ],
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(8.ss),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(padding: EdgeInsets.only(left: 24.ss,right: 24.ss,top: 12.ss),
+                child: _topDesign(context,data.fileName, data.details)),
+                SizedBox(height: 6.ss,),
+                const Divider(thickness: 2,),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
+                  child: ListTile(leading: Icon(Icons.drive_file_rename_outline),title: Text('Rename',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
+                  child: ListTile(leading: Icon(Icons.share),title: Text('Share',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
+                  child: ListTile(leading: Icon(Icons.delete_rounded),title: Text('Delete',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.ss,right: 24.ss,),
+                  child: ListTile(leading: Icon(Icons.info_outline),title: Text('Details',style: TextStyle(fontWeight: FontWeight.w400),),onTap: (){},),
+                ),
+              ],
+            ),
           ),
         );
       });

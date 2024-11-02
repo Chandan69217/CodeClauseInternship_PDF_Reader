@@ -26,6 +26,7 @@ class CustomListTile extends StatelessWidget {
       iconPath = 'assets/icons/xls.png';
     }
     return ListTile(
+      contentPadding: EdgeInsets.only(left: 12,),
       onTap: ()=> onTap!(),
       leading: Image.asset(iconPath,width: 45.ss,height: 45.ss,),
       title: Text(title,style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,maxLines: 1,),
