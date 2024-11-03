@@ -8,57 +8,68 @@ import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
 import '../../../utilities/color.dart';
 
-class AllFileTab extends StatefulWidget{
+class AllFileTab extends StatefulWidget {
   final String trailing;
-
   AllFileTab({
-    this.trailing ='assets/icons/three_dots_icon.png',
-});
+    this.trailing = 'assets/icons/three_dots_icon.png',
+  });
 
   @override
   State<StatefulWidget> createState() => _States();
 }
 
 class _States extends State<AllFileTab> {
+  late Future<List<Data>> futureData;
+
+  @override
+  void initState() {
+    super.initState();
+    futureData = Read(context).getAllFiles();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child:FutureBuilder(
-        future: Read(context).getAllFiles(),
+      body: SafeArea(
+          child: FutureBuilder(
+        future: futureData,
         builder: (BuildContext context, AsyncSnapshot<List<Data>> snapshot) {
-          if(snapshot.hasData){
+          if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data!.length,
-                itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return CustomListTile(
                     title: snapshot.data![index].fileName,
                     subTitle: snapshot.data![index].details,
                     trailing: widget.trailing,
-                    onOptionClick: (){
-                      customBottomSheet(context: context,data: snapshot.data![index]);
+                    onOptionClick: () {
+                      customBottomSheet(
+                        home_context: context,
+                        data: snapshot.data![index],
+                        onRenamed: (data) {
+                          setState(() {
+                            snapshot.data![index] = data;
+                          });
+                        },
+                      );
                     },
-                    onTap: (){
-                      // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
+                    onTap: () {
                       fileViewHandler(context, snapshot.data![index]);
                     },
                   );
                 });
-          }else{
-            return Center(child: CircularProgressIndicator(color: ColorTheme.RED,),);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                color: ColorTheme.RED,
+              ),
+            );
           }
         },
-      )
-      ),
+      )),
     );
   }
 }
-
-
-
-
-
-
-
 
 // class BottomSheetDummyUI extends StatelessWidget {
 //   const BottomSheetDummyUI({super.key});
@@ -232,8 +243,3 @@ class _States extends State<AllFileTab> {
 //     );
 //   }
 // }
-
-
-
-
-
