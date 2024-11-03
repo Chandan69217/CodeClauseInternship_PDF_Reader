@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,11 +34,14 @@ class _BottomSheetUI extends StatefulWidget {
 class _State extends State<_BottomSheetUI> {
   TextEditingController _controller = TextEditingController();
   TextSelectionControls? textSelectionControls;
+  bool _clearButtonVisibility = true;
+  bool _isOkIconButtonEnable = true;
   @override
   void initState() {
     super.initState();
     _controller.text = widget.data.fileName;
     _controller.selection = TextSelection(baseOffset: 0, extentOffset: widget.data.fileName.split('.').first.length);
+    _controller.addListener(_listenTextChanges);
   }
   @override
   Widget build(BuildContext context) {
@@ -71,40 +75,50 @@ class _State extends State<_BottomSheetUI> {
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(
-                  onPressed: renameFile,
+                  onPressed: _isOkIconButtonEnable?renameFile : null ,
                   icon: Image.asset(
                     'assets/icons/tick_icon.png',
                     width: 25.ss,
                     height: 25.ss,
+                    color: _isOkIconButtonEnable ? ColorTheme.BLACK : ColorTheme.BLACK.withOpacity(0.5),
                   ))),
           SizedBox(
             height: 20.ss,
           ),
-          TextField(
-            maxLines: 1,
-            autofocus: true,
-            cursorHeight: 20.ss,
-            controller: _controller,
-            cursorColor: ColorTheme.RED,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(8.ss),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: ColorTheme.RED)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: ColorTheme.RED)),
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _controller.clear();
-                      });
-                    },
-                    icon: Icon(
-                      Icons.cancel,
-                      color: ColorTheme.BLACK.withOpacity(0.5),
-                    )),
-              hintText: 'File name',
-              hintStyle: TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))
+          TextSelectionTheme(
+            data: TextSelectionThemeData(
+              selectionColor: ColorTheme.PRIMARY,
+              selectionHandleColor: ColorTheme.RED,
+            ),
+            child: TextField(
+              maxLines: 1,
+              autofocus: true,
+              cursorHeight: 20.ss,
+              controller: _controller,
+              cursorColor: ColorTheme.RED,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(8.ss),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorTheme.RED)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorTheme.RED)),
+                  suffixIcon: Visibility(
+                    visible: _clearButtonVisibility,
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _controller.clear();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.cancel,
+                          color: ColorTheme.BLACK.withOpacity(0.5),
+                        )),
+                  ),
+                hintText: 'File name',
+                hintStyle: TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))
+              ),
             ),
           ),
         ],
@@ -127,8 +141,21 @@ class _State extends State<_BottomSheetUI> {
     }catch(exception,track){
       print('${exception.toString()} : ${track.toString()}');
     }
-    
-    
+  }
+
+  void _listenTextChanges(){
+    if(_controller.text.isEmpty){
+      _clearButtonVisibility = false;
+    }else{
+      _clearButtonVisibility = true;
+    }
+    if(_controller.text.contains(RegExp(r'^[a-zA-Z0-9_\-\.\s]+(\.[a-zA-Z]{1,4}$)'))){
+      _isOkIconButtonEnable = true;
+    }else{
+      _isOkIconButtonEnable = false;
+    }
+    setState(() {
+    });
   }
   @override
   void dispose() {
