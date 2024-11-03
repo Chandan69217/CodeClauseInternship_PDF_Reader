@@ -2,22 +2,36 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 
-Future<String> getFileDetails(File file) async {
-  const int kb = 1024;
-  const int mb = kb * 1024;
-  const int gb = mb * 1024;
+class FileDetails {
+  static late DateTime _dateTime;
+  static late int _bytes;
 
-  var bytes = await file.length();
-  var date = await file.lastModified();
-  var formatData = DateFormat('MMM dd yyyy').format(date);
-  if (bytes >= gb) {
-    return '${(bytes / gb).toStringAsFixed(2)} GB $formatData';
-  } else if (bytes >= mb) {
-    return '${(bytes / mb).toStringAsFixed(2)} MB $formatData';
-  } else if (bytes >= kb) {
-    return '${(bytes / kb).toStringAsFixed(2)} KB $formatData';
-  } else {
-    return '$bytes Bytes $formatData';
+  static fetch(File file) async {
+    _dateTime = file.lastModifiedSync();
+    _bytes = await file.length();
   }
 
+  static String getSize() {
+    const int KB = 1024;
+    const int MB = KB * 1024;
+    const int GB = MB * 1024;
+    if (_bytes >= GB) {
+      return '${(_bytes / GB).toStringAsFixed(2)} GB';
+    } else if (_bytes >= MB) {
+      return '${(_bytes / MB).toStringAsFixed(2)} MB';
+    } else if (_bytes >= KB) {
+      return '${(_bytes / KB).toStringAsFixed(2)} KB';
+    } else {
+      return '$_bytes bytes';
+    }
+  }
+
+  static String getDate() {
+    return DateFormat('MMMM dd,yyyy hh:m a').format(_dateTime);
+  }
+
+  static String getDetails() {
+    var dateFormat = DateFormat('MMM dd yyyy').format(_dateTime);
+    return '${getSize()} $dateFormat';
+  }
 }

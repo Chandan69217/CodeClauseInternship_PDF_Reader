@@ -8,12 +8,16 @@ class Data{
   String fileType;
   String filePath;
   String fileName;
+  String fileSize;
+  String date;
 
   Data({required this.file,
     required this.fileName,
     required this.fileType,
     required this.details,
     required this.filePath,
+    required this.fileSize,
+    required this.date
   });
 
 

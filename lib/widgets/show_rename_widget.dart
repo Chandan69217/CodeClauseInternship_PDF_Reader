@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,7 +9,9 @@ import '../utilities/callbacks.dart';
 import '../utilities/color.dart';
 
 void showRenameWidget(
-    {required BuildContext home_context, required Data data,required OnRenamed onRenamed}) {
+    {required BuildContext home_context,
+    required Data data,
+    required OnRenamed onRenamed}) {
   showModalBottomSheet(
       context: home_context,
       isScrollControlled: true,
@@ -26,7 +27,7 @@ void showRenameWidget(
 class _BottomSheetUI extends StatefulWidget {
   Data data;
   OnRenamed? onRenamed;
-  _BottomSheetUI({required this.data,this.onRenamed});
+  _BottomSheetUI({required this.data, this.onRenamed});
   @override
   State<_BottomSheetUI> createState() => _State();
 }
@@ -40,9 +41,12 @@ class _State extends State<_BottomSheetUI> {
   void initState() {
     super.initState();
     _controller.text = widget.data.fileName;
-    _controller.selection = TextSelection(baseOffset: 0, extentOffset: widget.data.fileName.split('.').first.length);
+    _controller.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: widget.data.fileName.split('.').first.length);
     _controller.addListener(_listenTextChanges);
   }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
@@ -75,12 +79,14 @@ class _State extends State<_BottomSheetUI> {
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(
-                  onPressed: _isOkIconButtonEnable?renameFile : null ,
+                  onPressed: _isOkIconButtonEnable ? renameFile : null,
                   icon: Image.asset(
                     'assets/icons/tick_icon.png',
                     width: 25.ss,
                     height: 25.ss,
-                    color: _isOkIconButtonEnable ? ColorTheme.BLACK : ColorTheme.BLACK.withOpacity(0.5),
+                    color: _isOkIconButtonEnable
+                        ? ColorTheme.BLACK
+                        : ColorTheme.BLACK.withOpacity(0.5),
                   ))),
           SizedBox(
             height: 20.ss,
@@ -98,7 +104,7 @@ class _State extends State<_BottomSheetUI> {
               cursorColor: ColorTheme.RED,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(8.ss),
+                  contentPadding: EdgeInsets.all(8.ss),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: ColorTheme.RED)),
                   focusedBorder: UnderlineInputBorder(
@@ -116,9 +122,9 @@ class _State extends State<_BottomSheetUI> {
                           color: ColorTheme.BLACK.withOpacity(0.5),
                         )),
                   ),
-                hintText: 'File name',
-                hintStyle: TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))
-              ),
+                  hintText: 'File name',
+                  hintStyle:
+                      TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))),
             ),
           ),
         ],
@@ -126,37 +132,48 @@ class _State extends State<_BottomSheetUI> {
     );
   }
 
-  void renameFile()async{
+  void renameFile() async {
     String newFileName = _controller.text;
     Directory fileDir = widget.data.file.parent;
     File newFile = File('${fileDir.path}/$newFileName');
-    try{
-      if(await widget.data.file.exists()){
+    try {
+      if (await widget.data.file.exists()) {
         File file = await widget.data.file.rename(newFile.path);
-        String fileDetails = await getFileDetails(newFile);
-        Data newData = Data(file: file, fileName: newFileName, fileType: newFileName.split('.').last, details: fileDetails, filePath: newFile.path);
+        await FileDetails.fetch(newFile);
+        var fileDetails = FileDetails.getDetails();
+        var fileSize = FileDetails.getSize();
+        var date = FileDetails.getDate();
+        Data newData = Data(
+            file: file,
+            fileName: newFileName,
+            fileType: newFileName.split('.').last,
+            details: fileDetails,
+            filePath: newFile.path,
+            fileSize: fileSize,
+            date: date);
         widget.onRenamed!(newData);
         Navigator.pop(context);
       }
-    }catch(exception,track){
+    } catch (exception, track) {
       print('${exception.toString()} : ${track.toString()}');
     }
   }
 
-  void _listenTextChanges(){
-    if(_controller.text.isEmpty){
+  void _listenTextChanges() {
+    if (_controller.text.isEmpty) {
       _clearButtonVisibility = false;
-    }else{
+    } else {
       _clearButtonVisibility = true;
     }
-    if(_controller.text.contains(RegExp(r'^[a-zA-Z0-9_\-\.\s]+(\.[a-zA-Z]{1,4}$)'))){
+    if (_controller.text
+        .contains(RegExp(r'^[a-zA-Z0-9_\-\.\s]+(\.[a-zA-Z]{1,4}$)'))) {
       _isOkIconButtonEnable = true;
-    }else{
+    } else {
       _isOkIconButtonEnable = false;
     }
-    setState(() {
-    });
+    setState(() {});
   }
+
   @override
   void dispose() {
     super.dispose();

@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/widgets/rename_widget.dart';
+import 'package:pdf_reader/widgets/show_file_details_widget.dart';
+import 'package:pdf_reader/widgets/show_rename_widget.dart';
 import 'package:sizing/sizing.dart';
 
 import '../utilities/callbacks.dart';
 
 void customBottomSheet(
-    {required BuildContext home_context, required Data data,required OnRenamed onRenamed}) {
+    {required BuildContext home_context,
+    required Data data,
+    required OnRenamed onRenamed}) {
   showModalBottomSheet(
       context: home_context,
       sheetAnimationStyle: AnimationStyle(curve: Curves.linear),
@@ -20,8 +23,7 @@ void customBottomSheet(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                  padding:
-                      EdgeInsets.only(top: 12.ss),
+                  padding: EdgeInsets.only(top: 12.ss),
                   child: _topDesign(context, data.fileName, data.details)),
               SizedBox(
                 height: 4.ss,
@@ -37,7 +39,10 @@ void customBottomSheet(
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  showRenameWidget(home_context: home_context, data: data,onRenamed: onRenamed);
+                  showRenameWidget(
+                      home_context: home_context,
+                      data: data,
+                      onRenamed: onRenamed);
                 },
               ),
               ListTile(
@@ -62,7 +67,10 @@ void customBottomSheet(
                   'Details',
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  showFileDetails(home_context: home_context, data: data);
+                },
               ),
             ],
           ),
