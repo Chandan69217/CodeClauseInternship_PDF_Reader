@@ -4,6 +4,7 @@ import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/widgets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/show_rename_widget.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizing/sizing.dart';
 
 import '../utilities/callbacks.dart';
@@ -53,7 +54,10 @@ void customBottomSheet(
                   'Share',
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  _shareFile(data);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.delete_rounded),
@@ -138,4 +142,8 @@ Widget _topDesign(BuildContext context, String title, String subTitle) {
               )))
     ],
   );
+}
+
+void _shareFile(Data data) {
+  Share.shareXFiles([XFile(data.filePath)]);
 }
