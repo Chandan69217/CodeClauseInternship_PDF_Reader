@@ -49,6 +49,12 @@ class _PdfFileTabState extends State<PdfFileTab> {
                             setState(() {
                               snapshot.data![index] = data;
                             });
+                          },
+                          onDeleted: (status) {
+                            if (status)
+                              setState(() {
+                                snapshot.data!.removeAt(index);
+                              });
                           });
                     },
                     onTap: () {

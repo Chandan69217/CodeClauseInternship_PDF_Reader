@@ -50,6 +50,12 @@ class _ExcelFileTabState extends State<ExcelFileTab> {
                             setState(() {
                               snapshot.data![index] = data;
                             });
+                          },
+                          onDeleted: (status) {
+                            if (status)
+                              setState(() {
+                                snapshot.data!.removeAt(index);
+                              });
                           });
                     },
                     onTap: () {

@@ -50,6 +50,12 @@ class _DocFileTabState extends State<DocFileTab> {
                             setState(() {
                               snapshot.data![index] = data;
                             });
+                          },
+                          onDeleted: (status) {
+                            if (status)
+                              setState(() {
+                                snapshot.data!.removeAt(index);
+                              });
                           });
                     },
                     onTap: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/widgets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/show_rename_widget.dart';
 import 'package:sizing/sizing.dart';
@@ -10,7 +11,8 @@ import '../utilities/callbacks.dart';
 void customBottomSheet(
     {required BuildContext home_context,
     required Data data,
-    required OnRenamed onRenamed}) {
+    required OnRenamed onRenamed,
+    required OnDeleted onDeleted}) {
   showModalBottomSheet(
       context: home_context,
       sheetAnimationStyle: AnimationStyle(curve: Curves.linear),
@@ -59,7 +61,10 @@ void customBottomSheet(
                   'Delete',
                   style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  showDeleteWidget(home_context, data, onDeleted);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.info_outline),

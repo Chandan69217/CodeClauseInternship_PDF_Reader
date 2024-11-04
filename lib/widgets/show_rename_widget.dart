@@ -166,7 +166,7 @@ class _State extends State<_BottomSheetUI> {
       _clearButtonVisibility = true;
     }
     if (_controller.text
-        .contains(RegExp(r'^[a-zA-Z0-9_\-\.\s]+(\.[a-zA-Z]{1,4}$)'))) {
+        .contains(RegExp(r"^[a-zA-Z0-9_\-\.\s']+(\.[a-zA-Z]{1,4}$)"))) {
       _isOkIconButtonEnable = true;
     } else {
       _isOkIconButtonEnable = false;

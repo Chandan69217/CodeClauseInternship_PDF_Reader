@@ -44,14 +44,19 @@ class _States extends State<AllFileTab> {
                     trailing: widget.trailing,
                     onOptionClick: () {
                       customBottomSheet(
-                        home_context: context,
-                        data: snapshot.data![index],
-                        onRenamed: (data) {
-                          setState(() {
-                            snapshot.data![index] = data;
+                          home_context: context,
+                          data: snapshot.data![index],
+                          onRenamed: (data) {
+                            setState(() {
+                              snapshot.data![index] = data;
+                            });
+                          },
+                          onDeleted: (status) {
+                            if (status)
+                              setState(() {
+                                snapshot.data!.removeAt(index);
+                              });
                           });
-                        },
-                      );
                     },
                     onTap: () {
                       fileViewHandler(context, snapshot.data![index]);

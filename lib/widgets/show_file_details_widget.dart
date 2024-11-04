@@ -9,7 +9,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
       context: home_context,
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 24.ss, horizontal: 30.ss),
+          padding: EdgeInsets.symmetric(vertical: 30.ss, horizontal: 30.ss),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -20,13 +20,13 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(fontWeight: FontWeight.bold),
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 18.fss),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 textAlign: TextAlign.start,
               ),
               SizedBox(
-                height: 14.ss,
+                height: 30.ss,
               ),
               RichText(
                   text: TextSpan(
@@ -42,7 +42,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                         style: Theme.of(home_context).textTheme.bodySmall)
                   ])),
               SizedBox(
-                height: 12.ss,
+                height: 20.ss,
               ),
               RichText(
                   text: TextSpan(
@@ -58,7 +58,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                         style: Theme.of(home_context).textTheme.bodySmall)
                   ])),
               SizedBox(
-                height: 12.ss,
+                height: 20.ss,
               ),
               RichText(
                   text: TextSpan(
@@ -74,7 +74,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                         style: Theme.of(home_context).textTheme.bodySmall)
                   ])),
               SizedBox(
-                height: 12.ss,
+                height: 20.ss,
               ),
               RichText(
                   text: TextSpan(
