@@ -45,6 +45,7 @@ dependencies:
   device_info_plus: ^10.1.2
   open_file: ^3.5.9
   share_plus: ^10.1.1
+  awesome_dialog: ^3.2.1
 
 
 

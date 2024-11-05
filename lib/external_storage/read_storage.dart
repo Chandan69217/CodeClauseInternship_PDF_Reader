@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:pdf_reader/screens/permission_screen.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sizing/sizing.dart';
 import '../model/data.dart';
 
 class Read {
@@ -73,7 +73,7 @@ class Read {
         }
       }
 
-      showMessage(
+      _showMessage(
           'Permission Required',
           'Storage permission is required for accessing files on your devices. please allow the permission',
           onClick);
@@ -207,41 +207,21 @@ class Read {
     return _PptFiles!;
   }
 
-  void showMessage(String title, String content, VoidCallback onClick) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        useSafeArea: true,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.perm_media_outlined),
-                SizedBox(
-                  width: 8.ss,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(overflow: TextOverflow.ellipsis),
-                ),
-              ],
-            ),
-            content: Text(content),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  },
-                  child: const Text('Cancel')),
-              TextButton(
-                  onPressed: () {
-                    onClick();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Ok')),
-            ],
-          );
-        });
+  void _showMessage(String title, String content, VoidCallback onClick) {
+    AwesomeDialog(
+            context: context,
+            dismissOnBackKeyPress: false,
+            dismissOnTouchOutside: false,
+            animType: AnimType.scale,
+            btnOkOnPress: () {
+              onClick();
+            },
+            btnCancelOnPress: () {
+              SystemNavigator.pop();
+            },
+            dialogType: DialogType.info,
+            title: title,
+            desc: content)
+        .show();
   }
 }

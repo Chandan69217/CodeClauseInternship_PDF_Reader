@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/color.dart';
 import 'package:pdf_reader/widgets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/show_rename_widget.dart';
@@ -29,10 +30,11 @@ void customBottomSheet(
                   padding: EdgeInsets.only(top: 12.ss),
                   child: _topDesign(context, data.fileName, data.details)),
               SizedBox(
-                height: 4.ss,
+                height: 6.ss,
               ),
-              const Divider(
-                thickness: 1,
+              Divider(
+                height: 1,
+                color: ColorTheme.BLACK.withOpacity(0.3),
               ),
               ListTile(
                 leading: Icon(Icons.drive_file_rename_outline),
