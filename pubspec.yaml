@@ -46,6 +46,7 @@ dependencies:
   open_file: ^3.5.9
   share_plus: ^10.1.1
   awesome_dialog: ^3.2.1
+  shared_preferences: ^2.3.2
 
 
 

@@ -79,7 +79,7 @@ class _State extends State<_BottomSheetUI> {
                 textAlign: TextAlign.center,
               ),
               trailing: IconButton(
-                  onPressed: _isOkIconButtonEnable ? renameFile : null,
+                  onPressed: _isOkIconButtonEnable ? ()=> _renameFile(widget.data) : null,
                   icon: Image.asset(
                     'assets/icons/tick_icon.png',
                     width: 25.ss,
@@ -132,7 +132,7 @@ class _State extends State<_BottomSheetUI> {
     );
   }
 
-  void renameFile() async {
+  void _renameFile(Data oldData) async {
     String newFileName = _controller.text;
     Directory fileDir = widget.data.file.parent;
     File newFile = File('${fileDir.path}/$newFileName');
@@ -140,19 +140,18 @@ class _State extends State<_BottomSheetUI> {
       if (await widget.data.file.exists()) {
         File file = await widget.data.file.rename(newFile.path);
         await FileDetails.fetch(newFile);
-        var fileDetails = FileDetails.getDetails();
-        var fileSize = FileDetails.getSize();
-        var date = FileDetails.getDate();
         Data newData = Data(
             file: file,
             fileName: newFileName,
             fileType: newFileName.split('.').last,
-            details: fileDetails,
+            details: FileDetails.getDetails(),
             filePath: newFile.path,
-            fileSize: fileSize,
-            date: date);
-        widget.onRenamed!(newData);
+            fileSize: FileDetails.getSize(),
+            date: FileDetails.getDate(),
+            bytes: FileDetails.getBytes(),
+        );
         Navigator.pop(context);
+        widget.onRenamed!(widget.data,newData);
       }
     } catch (exception, track) {
       print('${exception.toString()} : ${track.toString()}');
@@ -166,7 +165,7 @@ class _State extends State<_BottomSheetUI> {
       _clearButtonVisibility = true;
     }
     if (_controller.text
-        .contains(RegExp(r"^[a-zA-Z0-9_\-\.\s']+(\.[a-zA-Z]{1,4}$)"))) {
+        .contains(RegExp(r"^[a-zA-Z0-9_\-\.\s',]+(\.[a-zA-Z]{1,4}$)"))) {
       _isOkIconButtonEnable = true;
     } else {
       _isOkIconButtonEnable = false;

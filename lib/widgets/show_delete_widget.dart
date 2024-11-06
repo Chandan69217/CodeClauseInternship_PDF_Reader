@@ -78,13 +78,13 @@ void _deleteFile(Data data, OnDeleted onDeleted) async {
   if (await data.file.exists()) {
     try {
       data.file.deleteSync();
-      onDeleted(true);
+      onDeleted(true,data);
     } catch (exception, trace) {
-      onDeleted(false);
+      onDeleted(false,data);
       print('$exception : $trace');
     }
   } else {
-    onDeleted(false);
+    onDeleted(false,data);
     print('file does not exist');
   }
 }

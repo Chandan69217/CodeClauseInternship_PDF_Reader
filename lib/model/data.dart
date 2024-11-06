@@ -10,6 +10,7 @@ class Data{
   String fileName;
   String fileSize;
   String date;
+  int bytes;
 
   Data({required this.file,
     required this.fileName,
@@ -17,7 +18,8 @@ class Data{
     required this.details,
     required this.filePath,
     required this.fileSize,
-    required this.date
+    required this.date,
+    required this.bytes,
   });
 
 

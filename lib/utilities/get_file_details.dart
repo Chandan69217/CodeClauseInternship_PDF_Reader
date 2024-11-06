@@ -10,7 +10,9 @@ class FileDetails {
     _dateTime = file.lastModifiedSync();
     _bytes = await file.length();
   }
-
+  static int getBytes(){
+    return _bytes;
+  }
   static String getSize() {
     const int KB = 1024;
     const int MB = KB * 1024;
