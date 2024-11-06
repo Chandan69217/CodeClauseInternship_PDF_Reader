@@ -36,11 +36,6 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if(state ==  AppLifecycleState.resumed){
-      setState(() {
-        _snapshot = Read.PptFiles;
-      });
-    }
   }
 
   @override

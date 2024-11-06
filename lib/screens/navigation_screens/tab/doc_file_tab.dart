@@ -37,11 +37,6 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if(state ==  AppLifecycleState.resumed){
-      setState(() {
-        _snapshot = Read.DocFiles;
-      });
-    }
   }
   @override
   Widget build(BuildContext context) {

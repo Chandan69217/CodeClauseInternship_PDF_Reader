@@ -35,11 +35,6 @@ class PdfFileTabState extends State<PdfFileTab> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      setState(() {
-        _snapshot = Read.PDFFiles;
-      });
-    }
   }
 
   @override

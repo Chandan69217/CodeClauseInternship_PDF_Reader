@@ -22,7 +22,4 @@ class Data{
     required this.bytes,
   });
 
-
- // factory Data(File file,String fileName, String  fileType,String  details,String filePath)=> Data._(file: file,fileName: fileName,details: details,filePath: filePath,fileType: fileType);
-
 }

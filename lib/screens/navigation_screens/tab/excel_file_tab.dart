@@ -37,11 +37,6 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if(state ==  AppLifecycleState.resumed){
-      setState(() {
-        _snapshot = Read.XlsFiles;
-      });
-    }
   }
   @override
   Widget build(BuildContext context) {
