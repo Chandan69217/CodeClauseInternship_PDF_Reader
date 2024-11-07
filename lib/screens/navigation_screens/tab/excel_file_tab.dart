@@ -69,12 +69,18 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
                   },
                   onTap: () {
                     // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
-                    fileViewHandler(context, _snapshot[index]);
+                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
                   },
                 );
               })
       ),
     );
+  }
+
+  refresh(){
+    setState(() {
+      _snapshot = Read.XlsFiles;
+    });
   }
 
   @override

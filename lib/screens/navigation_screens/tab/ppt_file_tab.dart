@@ -70,11 +70,17 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
                   onTap: () {
                     print('Clicked:  $index');
                     // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
-                    fileViewHandler(context, _snapshot[index]);
+                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
                   },
                 );
               })),
     );
+  }
+
+  refresh(){
+    setState(() {
+      _snapshot = Read.PptFiles;
+    });
   }
 
   @override

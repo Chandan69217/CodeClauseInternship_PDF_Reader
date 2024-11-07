@@ -67,11 +67,17 @@ class PdfFileTabState extends State<PdfFileTab> with WidgetsBindingObserver {
                         });
                   },
                   onTap: () {
-                    fileViewHandler(context, _snapshot[index]);
+                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
                   },
                 );
               })),
     );
+  }
+
+  refresh(){
+    setState(() {
+      _snapshot = Read.PDFFiles;
+    });
   }
 
   @override

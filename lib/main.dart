@@ -36,7 +36,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _currentIndex = 0;
   double _appliedSortingDate = 0;
   double _appliedSortingName = 0;
@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                 future: Read(context).scanForAllFiles(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    setSorting(Read.sortingType);
+                      setSorting(Read.sortingType);
                     return _screens[_currentIndex];
                   } else if (snapshot.hasError) {
                     return ScaffoldMessenger(
@@ -86,12 +87,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
         bottomNavigationBar: _bottomNavigationBar());
   }
 
-  setSorting(SortBy sortType) {
-    if (sortType == SortBy.DATE) {
+  setSorting(String sortType) {
+    if (sortType == SortType.DATE) {
       _appliedSortingDate = 1;
       _appliedSortingName = 0;
       _appliedSortingSize = 0;
-    } else if (sortType == SortBy.NAME) {
+    } else if (sortType == SortType.NAME) {
       _appliedSortingDate = 0;
       _appliedSortingName = 1;
       _appliedSortingSize = 0;
@@ -102,9 +103,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     }
   }
 
-  Future<void> _saveSorting(SortBy sortingType, String sortingName) async {
+  Future<void> _saveSorting(String sortingType) async {
     var instance = await SharedPreferences.getInstance();
-    instance.setString('SORTED_TYPE', sortingName.toUpperCase());
+    instance.setString(SortType.KEY, sortingType);
     Read.sortBy(sortingType);
     _allFilesKey.currentState?.handleSortEvent();
     setSorting(sortingType);
@@ -125,107 +126,91 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
                 text: 'Reader',
                 style: Theme.of(context).textTheme.headlineMedium)
           ])),
-      actions: <Widget>[
-        IconButton(
-            onPressed: () {},
-            icon: Image.asset(
-              'assets/icons/search_icon.png',
-              width: 30.ss,
-              height: 30.ss,
-            )),
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return <PopupMenuItem>[
-              PopupMenuItem(
-                child: ListTile(
-                  leading: Image.asset(
-                    'assets/icons/sort_icon.png',
-                    width: 25.ss,
-                    height: 25.ss,
-                  ),
-                  title: Text(
-                    'Last Modified',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  trailing: Opacity(
-                    opacity: _appliedSortingDate,
-                    child: Image.asset(
-                      'assets/icons/tick_icon.png',
-                      width: 25.ss,
-                      height: 25.ss,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _saveSorting(SortBy.DATE, 'DATE');
-                },
-              ),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: Image.asset(
-                    'assets/icons/sort_by_name_icon.png',
-                    width: 25.ss,
-                    height: 25.ss,
-                  ),
-                  title: Text(
-                    'Name',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  trailing: Opacity(
-                    opacity: _appliedSortingName,
-                    child: Image.asset(
-                      'assets/icons/tick_icon.png',
-                      width: 25.ss,
-                      height: 25.ss,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _saveSorting(SortBy.NAME, 'NAME');
-                },
-              ),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: Image.asset(
-                    'assets/icons/sort_by_size_icon.png',
-                    width: 25.ss,
-                    height: 25.ss,
-                  ),
-                  title: Text(
-                    'File Size',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  trailing: Opacity(
-                    opacity: _appliedSortingSize,
-                    child: Image.asset(
-                      'assets/icons/tick_icon.png',
-                      width: 25.ss,
-                      height: 25.ss,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _saveSorting(SortBy.SIZE, 'SIZE');
-                },
-              )
-            ];
-          },
+      actions: _actionsButton(),
+    );
+  }
+
+  _onSelected(dynamic value){
+    _saveSorting(value);
+  }
+
+  List<Widget> _actionsButton() {
+    return <Widget>[
+      IconButton(
+          onPressed: () {},
           icon: Image.asset(
-            'assets/icons/sort_icon.png',
+            'assets/icons/search_icon.png',
             width: 30.ss,
             height: 30.ss,
-          ),
-          color: ColorTheme.WHITE,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.ss)),
+          )),
+      PopupMenuButton(
+        menuPadding: EdgeInsets.all(5.ss),
+        onSelected: _onSelected,
+        itemBuilder: (context) {
+          return <PopupMenuItem>[
+            PopupMenuItem(
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', opacity: _appliedSortingDate),
+              value: 'DATE',
+            ),
+            PopupMenuItem(
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'NAME', opacity: _appliedSortingName),
+              value: 'NAME',
+            ),
+            PopupMenuItem(
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', opacity: _appliedSortingSize),
+              value: 'SIZE',
+            )
+          ];
+        },
+        icon: Image.asset(
+          'assets/icons/sort_icon.png',
+          width: 30.ss,
+          height: 30.ss,
         ),
-        SizedBox(
-          width: 10.ss,
+        color: ColorTheme.WHITE,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.ss)),
+      ),
+      SizedBox(
+        width: 10.ss,
+      ),
+    ];
+  }
+
+  Widget _popupMenuItemUI({required String leading,required String title,required double opacity}){
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Image.asset(
+            leading,
+            width: 25.ss,
+            height: 25.ss,
+          ),
+        ),
+        SizedBox(width: 5.ss,),
+        Expanded(
+          flex: 5,
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        Expanded(
+          child: Opacity(
+            opacity: opacity,
+            child: Image.asset(
+              'assets/icons/tick_icon.png',
+              width: 25.ss,
+              height: 25.ss,
+            ),
+          ),
         ),
       ],
     );
   }
-
   Drawer _drawerUI() {
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.8,
@@ -558,6 +543,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
       ],
     );
   }
+
   @override
   void dispose() {
     super.dispose();

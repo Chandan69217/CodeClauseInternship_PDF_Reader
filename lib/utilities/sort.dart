@@ -1,10 +1,11 @@
 import 'package:intl/intl.dart';
 import 'package:pdf_reader/model/data.dart';
 
-enum SortBy{
-  NAME,
-  DATE,
-  SIZE,
+class SortType{
+  static const String KEY = 'SORTED_TYPE';
+  static const String NAME = 'NAME';
+  static const String DATE = 'DATE';
+  static const String SIZE = 'SIZE';
 }
 
 class Sort{

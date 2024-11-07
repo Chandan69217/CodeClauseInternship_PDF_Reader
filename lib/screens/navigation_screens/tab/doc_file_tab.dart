@@ -30,7 +30,7 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
 
   void sort(){
     setState(() {
-      _snapshot = Read.AllFiles;
+      _snapshot = Read.DocFiles;
     });
   }
 
@@ -69,12 +69,18 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
                   },
                   onTap: () {
                     // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
-                    fileViewHandler(context, _snapshot[index]);
+                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
                   },
                 );
               })
       ),
     );
+  }
+
+  refresh(){
+    setState(() {
+      _snapshot = Read.DocFiles;
+    });
   }
 
   @override

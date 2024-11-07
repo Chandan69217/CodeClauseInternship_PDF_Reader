@@ -21,7 +21,7 @@ class Read {
   static List<Data> XlsFiles = [];
   static List<Data> PptFiles = [];
   final BuildContext context;
-  static late SortBy sortingType;
+  static String sortingType = '';
   VoidCallback? onClick;
 
   Read._(this.context);
@@ -83,22 +83,21 @@ class Read {
     return false;
   }
 
-  Future<SortBy> checkSortingSetup() async{
+  Future<String> checkSortingSetup() async{
     var instance = await SharedPreferences.getInstance();
     var isKeyContains = await instance.containsKey('SORTED_TYPE');
     if(!isKeyContains){
-      instance.setString('SORTED_TYPE','NAME');
-      return SortBy.NAME;
-    }else{
-      var getType = instance.get('SORTED_TYPE');
-      if(getType == 'DATE'){
-        return SortBy.DATE;
-      }else if(getType == 'NAME'){
-        return SortBy.NAME;
-      }else{
-        return SortBy.SIZE;
-      }
+      instance.setString(SortType.KEY,SortType.NAME);
     }
+    var getType = instance.get('SORTED_TYPE');
+    if(getType == 'DATE'){
+        return SortType.DATE;
+    }else if(getType == 'NAME'){
+        return SortType.NAME;
+    }else{
+        return SortType.SIZE;
+    }
+
   }
 
   Future<bool> requestPermission() async {
@@ -186,6 +185,7 @@ class Read {
   void _showMessage(String title, String content, VoidCallback onClick) {
     AwesomeDialog(
             context: context,
+            width: MediaQuery.of(context).size.width,
             dismissOnBackKeyPress: false,
             dismissOnTouchOutside: false,
             animType: AnimType.scale,
@@ -201,20 +201,20 @@ class Read {
         .show();
   }
 
-  static void sortBy(SortBy sort) async {
-    if(sort == SortBy.NAME){
+  static void sortBy(String sort) async {
+    if(sort == SortType.NAME){
       AllFiles = Sort(filesData: AllFiles).sortByName();
       PDFFiles = Sort(filesData: PDFFiles).sortByName();
       DocFiles = Sort(filesData: DocFiles).sortByName();
       XlsFiles = Sort(filesData: XlsFiles).sortByName();
       PptFiles = Sort(filesData: PptFiles).sortByName();
-    }else if(sort == SortBy.DATE){
+    }else if(sort == SortType.DATE){
       AllFiles = Sort(filesData: AllFiles).sortByDate();
       PDFFiles = Sort(filesData: PDFFiles).sortByDate();
       DocFiles = Sort(filesData: DocFiles).sortByDate();
       XlsFiles = Sort(filesData: XlsFiles).sortByDate();
       PptFiles = Sort(filesData: PptFiles).sortByDate();
-    }else if(sort == SortBy.SIZE){
+    }else if(sort == SortType.SIZE){
       AllFiles = Sort(filesData: AllFiles).sortBySize();
       PDFFiles = Sort(filesData: PDFFiles).sortBySize();
       DocFiles = Sort(filesData: DocFiles).sortBySize();
