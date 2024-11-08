@@ -24,20 +24,12 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    _snapshot = Read.DocFiles;
+    _snapshot = _getDoc();;
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void sort(){
-    setState(() {
-      _snapshot = Read.DocFiles;
-    });
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,14 +48,14 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
                         onRenamed: (oldData,newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
-                            _snapshot = Read.DocFiles;
+                            _snapshot = _getDoc();;
                           });
                         },
                         onDeleted: (status,data) {
                           if (status)
                             setState(() {
                               Read.updateFilesDeletion(data);
-                              _snapshot = Read.AllFiles;
+                              _snapshot = _getDoc();;
                             });
                         });
                   },
@@ -79,8 +71,18 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
 
   refresh(){
     setState(() {
-      _snapshot = Read.DocFiles;
+      _snapshot = _getDoc();
     });
+  }
+
+  List<Data> _getDoc(){
+    List<Data> doc = [];
+    for(var data in Read.AllFiles){
+      if(data.fileType == 'doc' || data.fileType == 'docx'){
+        doc.add(data);
+      }
+    }
+    return doc;
   }
 
   @override

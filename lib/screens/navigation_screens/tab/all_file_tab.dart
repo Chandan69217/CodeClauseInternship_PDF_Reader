@@ -26,13 +26,7 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void sort(){
-    refresh();
-  }
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

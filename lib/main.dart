@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double _appliedSortingDate = 0;
   double _appliedSortingName = 0;
   double _appliedSortingSize = 0;
-  late final Future<bool> _scanFiles;
+  late final Future<bool> _scanFiles = Read(context).scanForAllFiles();
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
   final List<Widget> _screens = <Widget>[
     AllFilesScreens(
@@ -54,9 +54,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+   //_scanFiles = Read(context).scanForAllFiles();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _scanFiles = Read(context).scanForAllFiles();
   }
 
 

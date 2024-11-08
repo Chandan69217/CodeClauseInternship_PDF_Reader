@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
-
 import '../../../model/data.dart';
 import '../../../widgets/custom_bottomsheet.dart';
 import '../../../widgets/custom_list_tile.dart';
@@ -22,20 +21,11 @@ class PdfFileTabState extends State<PdfFileTab> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _snapshot = Read.PDFFiles;
+    _snapshot = _getPdf();
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void sort() {
-    setState(() {
-      _snapshot = Read.PDFFiles;
-    });
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +45,16 @@ class PdfFileTabState extends State<PdfFileTab> with WidgetsBindingObserver {
                         onRenamed: (oldData, newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
-                            _snapshot = Read.PDFFiles;
+                            _snapshot = _getPdf();
                           });
                         },
                         onDeleted: (status, data) {
-                          if (status)
+                          if (status) {
                             setState(() {
                               Read.updateFilesDeletion(data);
-                              _snapshot = Read.AllFiles;
+                              _snapshot = _getPdf();
                             });
+                          }
                         });
                   },
                   onTap: () {
@@ -76,10 +67,19 @@ class PdfFileTabState extends State<PdfFileTab> with WidgetsBindingObserver {
 
   refresh(){
     setState(() {
-      _snapshot = Read.PDFFiles;
+      _snapshot = _getPdf();
     });
   }
 
+  List<Data> _getPdf(){
+    List<Data> pdf = [];
+    for(var data in Read.AllFiles){
+      if(data.fileType == 'pdf'){
+        pdf.add(data);
+      }
+    }
+    return pdf;
+  }
   @override
   void dispose() {
     super.dispose();

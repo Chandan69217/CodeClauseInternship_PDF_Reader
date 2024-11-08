@@ -24,20 +24,12 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    _snapshot = Read.XlsFiles;
+    _snapshot = _getXls();
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void sort(){
-    setState(() {
-      _snapshot = Read.XlsFiles;
-    });
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,14 +48,14 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
                         onRenamed: (oldData,newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
-                            _snapshot = Read.XlsFiles;
+                            _snapshot = _getXls();
                           });
                         },
                         onDeleted: (status,data) {
                           if (status)
                             setState(() {
                               Read.updateFilesDeletion(data);
-                              _snapshot = Read.AllFiles;
+                              _snapshot = _getXls();
                             });
                         });
                   },
@@ -79,10 +71,19 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
 
   refresh(){
     setState(() {
-      _snapshot = Read.XlsFiles;
+      _snapshot = _getXls();
     });
   }
 
+  List<Data> _getXls(){
+    List<Data> xls = [];
+    for(var data in Read.AllFiles){
+      if(data.fileType == 'xls' || data.fileType == 'xlsx'){
+        xls.add(data);
+      }
+    }
+    return xls;
+  }
   @override
   void dispose() {
     super.dispose();

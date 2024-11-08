@@ -28,11 +28,11 @@ class AllFilesStates extends State<AllFilesScreens>{
   }
 
   void handleSortEvent(){
-    _allFileTabKey.currentState?.sort();
-    _pdfFileTabKey.currentState?.sort();
-    _docFileTabKey.currentState?.sort();
-    _xlsFileTabKey.currentState?.sort();
-    _pptFileTabKey.currentState?.sort();
+    _allFileTabKey.currentState?.refresh();
+    _pdfFileTabKey.currentState?.refresh();
+    _docFileTabKey.currentState?.refresh();
+    _xlsFileTabKey.currentState?.refresh();
+    _pptFileTabKey.currentState?.refresh();
   }
 
 

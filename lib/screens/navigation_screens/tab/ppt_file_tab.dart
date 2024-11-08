@@ -23,20 +23,11 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    _snapshot = Read.PptFiles;
+    _snapshot = _getPpt();
     WidgetsBinding.instance.addObserver(this);
   }
 
-  void sort(){
-    setState(() {
-      _snapshot = Read.PptFiles;
-    });
-  }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +47,14 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
                         onRenamed: (oldData, newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
-                            _snapshot = Read.PptFiles;
+                            _snapshot = _getPpt();
                           });
                         },
                         onDeleted: (status,data) {
                           if (status)
                             setState(() {
                               Read.updateFilesDeletion(data);
-                              _snapshot = Read.AllFiles;
+                              _snapshot = _getPpt();
                             });
                         });
                   },
@@ -78,8 +69,18 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
 
   refresh(){
     setState(() {
-      _snapshot = Read.PptFiles;
+      _snapshot = _getPpt();
     });
+  }
+
+  List<Data> _getPpt(){
+    List<Data> ppt = [];
+    for(var data in Read.AllFiles){
+      if(data.fileType == 'ppt'||data.fileType == 'pptx'){
+        ppt.add(data);
+      }
+    }
+    return ppt;
   }
 
   @override

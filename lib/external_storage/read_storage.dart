@@ -13,7 +13,7 @@ import '../model/data.dart';
 
 class Read {
   // ignore: non_constant_identifier_names
-  static List<String> FilePaths = [];
+  static List<String> _FilePaths = [];
   static List<Data> AllFiles = [];
   static List<Data> PDFFiles = [];
   static List<Data> DocFiles = [];
@@ -29,12 +29,12 @@ class Read {
 
   Future<bool> scanForAllFiles() async {
     if (await requestPermission()) {
-      if (FilePaths.isEmpty) {
-        FilePaths = await _getAllPathsFromDirectory();
-        for (var path in FilePaths) {
+      if (_FilePaths.isEmpty) {
+        _FilePaths = await _getAllPathsFromDirectory();
+        for (var path in _FilePaths) {
           String extension = path.split('.').last.toLowerCase();
           await FileDetails.fetch(File(path));
-          var data = Data(
+          AllFiles.add(Data(
               file: File(path),
               fileType: extension,
               fileName: path.split('/').last,
@@ -42,25 +42,7 @@ class Read {
               details: FileDetails.getDetails(),
               fileSize: FileDetails.getSize(),
               date: FileDetails.getDate(),
-              bytes: FileDetails.getBytes());
-          AllFiles.add(data);
-          switch (data.fileType) {
-            case 'pdf':
-              PDFFiles.add(data);
-              break;
-            case 'doc':
-            case 'docx':
-              DocFiles.add(data);
-              break;
-            case 'xls':
-            case 'xlsx':
-              XlsFiles.add(data);
-              break;
-            case 'ppt':
-            case 'pptx':
-              PptFiles.add(data);
-              break;
-          }
+              bytes: FileDetails.getBytes()));
         }
         sortingType = await _checkSortingSetup();
         sortBy(sortingType);
@@ -121,51 +103,11 @@ class Read {
   }
 
   static void updateFilesRename(Data oldData, newData) {
-    switch (oldData.fileType) {
-      case 'pdf':
-        AllFiles[AllFiles.indexOf(oldData)] = newData;
-        PDFFiles[PDFFiles.indexOf(oldData)] = newData;
-        break;
-      case 'doc':
-      case 'docx':
-        AllFiles[AllFiles.indexOf(oldData)] = newData;
-        DocFiles[DocFiles.indexOf(oldData)] = newData;
-        break;
-      case 'xls':
-      case 'xlsx':
-        AllFiles[AllFiles.indexOf(oldData)] = newData;
-        XlsFiles[XlsFiles.indexOf(oldData)] = newData;
-        break;
-      case 'ppt':
-      case 'pptx':
-        AllFiles[AllFiles.indexOf(oldData)] = newData;
-        PptFiles[PptFiles.indexOf(oldData)] = newData;
-        break;
-    }
+    AllFiles[AllFiles.indexOf(oldData)] = newData;
   }
 
   static void updateFilesDeletion(Data data) {
-    switch (data.fileType) {
-      case 'pdf':
-        AllFiles.remove(data);
-        PDFFiles.remove(data);
-        break;
-      case 'doc':
-      case 'docx':
-        AllFiles.remove(data);
-        DocFiles.remove(data);
-        break;
-      case 'xls':
-      case 'xlsx':
-        AllFiles.remove(data);
-        XlsFiles.remove(data);
-        break;
-      case 'ppt':
-      case 'pptx':
-        AllFiles.remove(data);
-        PptFiles.remove(data);
-        break;
-    }
+    AllFiles.remove(data);
   }
 
   void _showMessage(String title, String content, VoidCallback onClick) {
@@ -189,23 +131,11 @@ class Read {
 
   static void sortBy(String sort) async {
     if (sort == SortType.NAME) {
-      AllFiles = Sort(filesData: AllFiles).sortByName();
-      PDFFiles = Sort(filesData: PDFFiles).sortByName();
-      DocFiles = Sort(filesData: DocFiles).sortByName();
-      XlsFiles = Sort(filesData: XlsFiles).sortByName();
-      PptFiles = Sort(filesData: PptFiles).sortByName();
+      AllFiles = await Sort(filesData: AllFiles).sortByName();
     } else if (sort == SortType.DATE) {
-      AllFiles = Sort(filesData: AllFiles).sortByDate();
-      PDFFiles = Sort(filesData: PDFFiles).sortByDate();
-      DocFiles = Sort(filesData: DocFiles).sortByDate();
-      XlsFiles = Sort(filesData: XlsFiles).sortByDate();
-      PptFiles = Sort(filesData: PptFiles).sortByDate();
+      AllFiles = await Sort(filesData: AllFiles).sortByDate();
     } else if (sort == SortType.SIZE) {
-      AllFiles = Sort(filesData: AllFiles).sortBySize();
-      PDFFiles = Sort(filesData: PDFFiles).sortBySize();
-      DocFiles = Sort(filesData: DocFiles).sortBySize();
-      XlsFiles = Sort(filesData: XlsFiles).sortBySize();
-      PptFiles = Sort(filesData: PptFiles).sortBySize();
+      AllFiles = await Sort(filesData: AllFiles).sortBySize();
     }
   }
 
@@ -220,25 +150,21 @@ class Read {
 
   Future<List<String>> _listFilesRecursively(Directory dir) async {
     List<String> paths = [];
+
     if (_shouldSkipDirectory(dir.path)) {
       return paths;
     }
 
     try {
-      List<FileSystemEntity> entities = dir.listSync();
-      for (var entity in entities) {
+      await for (var entity in dir.list()) {
         if (entity is Directory) {
-          //  paths.add(entity.path);
           paths.addAll(await _listFilesRecursively(entity));
         } else if (entity is File) {
           String extension = entity.path.split('.').last.toLowerCase();
-          if (extension == 'pdf' ||
-              extension == 'docx' ||
-              extension == 'ppt' ||
-              extension == 'xls' ||
-              extension == 'doc' ||
-              extension == 'xlsx' ||
-              extension == 'pptx') {
+          Set<String> validExtensions = {
+            'pdf', 'docx', 'ppt', 'xls', 'doc', 'xlsx', 'pptx'
+          };
+          if (validExtensions.contains(extension)) {
             paths.add(entity.path);
           }
         }
@@ -250,23 +176,16 @@ class Read {
   }
 
   bool _shouldSkipDirectory(String path) {
-    // List known system directories to skip
     List<String> skipPaths = [
-      '/system', // Android system folder
-      '/proc', // Virtual files in proc (process information)
-      '/dev', // Device files
-      '/data', // App data directories (restricted)
-      // '/storage/emulated/0/Android', // Android specific folders
+      '/system',  // Android system folder
+      '/proc',    // Virtual files in proc (process information)
+      '/dev',     // Device files
+      '/data',    // App data directories (restricted)
       '/storage/emulated/0/Android/data',
       '/storage/emulated/0/Android/obb'
-
     ];
 
-    for (var skip in skipPaths) {
-      if (path.startsWith(skip)) {
-        return true;
-      }
-    }
-    return false;
+    return skipPaths.any((skip) => path.startsWith(skip));
   }
+
 }
