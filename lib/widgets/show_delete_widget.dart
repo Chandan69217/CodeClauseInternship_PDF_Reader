@@ -10,6 +10,7 @@ void showDeleteWidget(
     BuildContext home_context, Data data, OnDeleted onDeleted) {
   showModalBottomSheet(
       context: home_context,
+      constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
       builder: (context) {
         return Padding(
           padding: EdgeInsets.all(0),

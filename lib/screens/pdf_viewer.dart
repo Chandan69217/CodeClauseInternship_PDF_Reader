@@ -1,10 +1,6 @@
 // ignore_for_file: must_be_immutable
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
-import 'package:pdf_reader/screens/navigation_screens/tab/all_file_tab.dart';
 import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:pdf_reader/widgets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/show_file_details_widget.dart';
@@ -19,8 +15,7 @@ class PdfViewer extends StatefulWidget {
   Data data;
   OnRenamed? onRenamed;
   OnDeleted? onDeleted;
-  final GlobalKey<AllFilesTabStates> _allFilesKey = GlobalKey();
-  PdfViewer({
+  PdfViewer({super.key,
     this.onRenamed,
     this.onDeleted,
     required this.data,
@@ -45,50 +40,8 @@ class _PdfViewerStates extends State<PdfViewer> {
 
   @override
   Widget build(BuildContext context) {
-    String title = widget.data.filePath.split('/').last;
     return Scaffold(
-      appBar: AppBar(
-          title: Text(title),
-          bottom: PreferredSize(
-              preferredSize: Size(35.ss, 35.ss),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.ss),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Total Pages: $_totalPage',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          controllerPinch!.previousPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.linear);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 18.ss,
-                        )),
-                    Text(
-                      'Current Page: $_currentPage',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          controllerPinch!.nextPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.linear);
-                        },
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 18.ss,
-                        )),
-                  ],
-                ),
-              )),
-          actions: _actionsButton()),
+      appBar: _appBar(),
       body: SafeArea(
           child: Expanded(
         child: PdfViewPinch(
@@ -114,30 +67,30 @@ class _PdfViewerStates extends State<PdfViewer> {
       PopupMenuButton(
         menuPadding: EdgeInsets.all(5.ss),
         onSelected: (value) => _onSelected(value, widget.data),
-        style: ButtonStyle(
+        style: const ButtonStyle(
           overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
         ),
         itemBuilder: (context) {
           return <PopupMenuItem>[
             PopupMenuItem(
+              value: 1,
               child: _popupMenuItemUI(
                   title: 'Rename',
                   icon: Icons.drive_file_rename_outline_rounded),
-              value: 1,
             ),
             PopupMenuItem(
-              child: _popupMenuItemUI(title: 'Share', icon: Icons.share),
               value: 2,
+              child: _popupMenuItemUI(title: 'Share', icon: Icons.share),
             ),
             PopupMenuItem(
+              value: 3,
               child:
                   _popupMenuItemUI(title: 'Delete', icon: Icons.delete_rounded),
-              value: 3,
             ),
             PopupMenuItem(
+              value: 4,
               child: _popupMenuItemUI(
                   title: 'Details', icon: Icons.info_outline_rounded),
-              value: 4,
             )
           ];
         },
@@ -218,5 +171,50 @@ class _PdfViewerStates extends State<PdfViewer> {
     setState(() {
       widget.data = newData;
     });
+  }
+
+  AppBar _appBar() {
+   return AppBar(
+       title: Text(widget.data.fileName),
+       bottom: PreferredSize(
+           preferredSize: Size(35.ss, 35.ss),
+           child: Padding(
+             padding: EdgeInsets.symmetric(horizontal: 10.ss),
+             child: Row(
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 Text(
+                   'Total Pages: $_totalPage',
+                   style: Theme.of(context).textTheme.bodySmall,
+                 ),
+                 IconButton(
+                     onPressed: () {
+                       controllerPinch!.previousPage(
+                           duration: const Duration(milliseconds: 500),
+                           curve: Curves.linear);
+                     },
+                     icon: Icon(
+                       Icons.arrow_back_ios,
+                       size: 18.ss,
+                     )),
+                 Text(
+                   'Current Page: $_currentPage',
+                   style: Theme.of(context).textTheme.bodySmall,
+                 ),
+                 IconButton(
+                     onPressed: () {
+                       controllerPinch!.nextPage(
+                           duration: const Duration(milliseconds: 500),
+                           curve: Curves.linear);
+                     },
+                     icon: Icon(
+                       Icons.arrow_forward_ios_rounded,
+                       size: 18.ss,
+                     )),
+               ],
+             ),
+           )),
+       actions: _actionsButton());
   }
 }

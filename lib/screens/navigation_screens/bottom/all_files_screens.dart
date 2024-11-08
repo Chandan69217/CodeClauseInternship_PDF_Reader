@@ -7,7 +7,6 @@ import 'package:pdf_reader/screens/navigation_screens/tab/pdf_file_tab.dart';
 import 'package:pdf_reader/screens/navigation_screens/tab/ppt_file_tab.dart';
 import 'package:pdf_reader/utilities/color.dart';
 
-
 class AllFilesScreens extends StatefulWidget{
   AllFilesScreens._({Key? key}):super(key: key);
   factory AllFilesScreens({Key? key}){
@@ -35,6 +34,7 @@ class AllFilesStates extends State<AllFilesScreens>{
     _xlsFileTabKey.currentState?.sort();
     _pptFileTabKey.currentState?.sort();
   }
+
 
   @override
   Widget build(BuildContext context) {

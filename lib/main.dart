@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key});
+  const MyHomePage({super.key});
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -41,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double _appliedSortingDate = 0;
   double _appliedSortingName = 0;
   double _appliedSortingSize = 0;
+  late final Future<bool> _scanFiles;
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
   final List<Widget> _screens = <Widget>[
     AllFilesScreens(
@@ -50,16 +51,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     BookmarkScreen(),
     ToolsScreen()
   ];
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _scanFiles = Read(context).scanForAllFiles();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +66,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         appBar: _appBar(),
         body: SafeArea(
             child: FutureBuilder(
-                future: Read(context).scanForAllFiles(),
+                future: _scanFiles,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                       setSorting(Read.sortingType);
                     return _screens[_currentIndex];
-                  } else if (snapshot.hasError) {
+                  }else if (snapshot.hasError) {
                     return ScaffoldMessenger(
                         child: SnackBar(content: Text('error')));
                   } else {
@@ -137,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   List<Widget> _actionsButton() {
     return <Widget>[
       IconButton(
-          onPressed: () {},
+          onPressed: _onSearch,
           icon: Image.asset(
             'assets/icons/search_icon.png',
             width: 30.ss,
@@ -153,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               value: 'DATE',
             ),
             PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'NAME', opacity: _appliedSortingName),
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', opacity: _appliedSortingName),
               value: 'NAME',
             ),
             PopupMenuItem(
@@ -272,40 +271,43 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.amberAccent,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.ss)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: Image.asset(
-                                    'assets/icons/crown_icon.png',
-                                    width: 25.ss,
-                                    height: 25.ss,
-                                    color: ColorTheme.RED,
-                                  )),
-                              Expanded(
-                                  flex: 3,
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: 'Design',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .copyWith(color: ColorTheme.RED),
-                                        children: [
-                                          TextSpan(
-                                              text: ' By Chandan',
-                                              style: TextStyle(
-                                                  color: ColorTheme.BLACK))
-                                        ]),
-                                  )),
-                            ],
+                        ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: 50.ss),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.amberAccent,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.ss)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Image.asset(
+                                      'assets/icons/crown_icon.png',
+                                      width: 25.ss,
+                                      height: 25.ss,
+                                      color: ColorTheme.RED,
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: RichText(
+                                      text: TextSpan(
+                                          text: 'Design',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: ColorTheme.RED),
+                                          children: [
+                                            TextSpan(
+                                                text: ' By Chandan',
+                                                style: TextStyle(
+                                                    color: ColorTheme.BLACK))
+                                          ]),
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -549,4 +551,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
+
+  _onSearch(){}
+
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';

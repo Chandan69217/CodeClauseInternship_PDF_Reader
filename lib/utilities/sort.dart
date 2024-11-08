@@ -15,7 +15,6 @@ class Sort{
   Sort({required this.filesData}): length = filesData.length;
 
   List<Data> sortByName(){
-    print('all files : ${length}');
     for(int i = 1; i < length; i++){
       for(int j = 0; j< (length-i); j++){
         var file1 = filesData[j].fileName;
