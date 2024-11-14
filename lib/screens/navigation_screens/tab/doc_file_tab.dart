@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
-
 import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
 import '../../../widgets/custom_list_tile.dart';
@@ -59,9 +58,10 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
                             });
                         });
                   },
-                  onTap: () {
+                  onTap: () async{
                     // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
                     fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
+
                   },
                 );
               })

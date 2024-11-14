@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.chandan.pdf_reader"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -17,6 +17,10 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    dependencies {
+
     }
 
     defaultConfig {
@@ -38,6 +42,7 @@ android {
         }
     }
 }
+
 
 flutter {
     source = "../.."

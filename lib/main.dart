@@ -1,9 +1,12 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/tools_screen.dart';
+import 'package:pdf_reader/screens/search_screen.dart';
 import 'package:pdf_reader/utilities/color.dart';
 import 'package:pdf_reader/utilities/sort.dart';
 import 'package:pdf_reader/utilities/theme_data.dart';
@@ -54,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-   //_scanFiles = Read(context).scanForAllFiles();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -72,8 +74,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       setSorting(Read.sortingType);
                     return _screens[_currentIndex];
                   }else if (snapshot.hasError) {
-                    return ScaffoldMessenger(
-                        child: SnackBar(content: Text('error')));
+                    print('${snapshot.error}');
+                    return const Center(child: Text('Error while fetching files.'),);
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(
@@ -552,6 +554,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  _onSearch(){}
+  _onSearch(){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen()));
+  }
 
 }
