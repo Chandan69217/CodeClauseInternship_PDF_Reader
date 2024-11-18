@@ -16,11 +16,11 @@ class _SearchScreenState extends State<SearchScreen> {
   List<Data> _searchedItem = [];
   bool _isAvailable = false;
   bool _iconVisibility = false;
-  TextEditingController searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    searchController.addListener(_search);
+    _searchController.addListener(_search);
   }
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 maxWidth: MediaQuery.of(context).size.width * 0.62,
                 maxHeight: 40.ss),
             child: TextField(
-              controller: searchController,
+              controller: _searchController,
               cursorColor: ColorTheme.RED,
               maxLines: 1,
               autofocus: true,
@@ -74,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     visible: _iconVisibility,
                     child: IconButton(
                       onPressed: () {setState(() {
-                        searchController.text = '';
+                        _searchController.text = '';
                         _iconVisibility = false;
                       });},
                       icon: Icon(Icons.cancel,
@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
   _search(){
-    var searchedQuery = searchController.text;
+    var searchedQuery = _searchController.text;
     if(searchedQuery.isNotEmpty){
       setState(() {
         _searchedItem = Read.AllFiles.where((data)=> data.fileName.toLowerCase().contains(searchedQuery.toLowerCase())).toList();
