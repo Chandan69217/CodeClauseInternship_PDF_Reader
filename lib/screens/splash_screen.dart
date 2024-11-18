@@ -16,29 +16,19 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
+  var _loadingStatus = true;
+  var _onLoadingError = '';
   @override
   void initState() {
     super.initState();
+    _loading();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: FutureBuilder(
-            future: Read(context).scanForAllFiles(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const Dashboard();
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Error while fetching files.'),
-                );
-              } else {
-                return _splashDesign();
-              }
-            }),
-      ),
+    return Scaffold(
+
+      body: _loadingStatus ? _splashDesign():Center(child: Text(_onLoadingError,style: Theme.of(context).textTheme.headlineMedium,),),
     );
   }
 
@@ -101,6 +91,16 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Future<void> _loading() async{
+    _loadingStatus = await Read(context).scanForAllFiles();
+    if(_loadingStatus){
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const Dashboard()));
+    }else{
+      _onLoadingError = 'Error while fetching files... ';
+    }
+    setState(() {
+    });
+  }
   @override
   void dispose() {
     super.dispose();

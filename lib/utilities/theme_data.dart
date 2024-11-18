@@ -8,6 +8,7 @@ ThemeData themeData(){
   return ThemeData(
     appBarTheme: AppBarTheme(color: ColorTheme.PRIMARY),
     useMaterial3: true,
+
     textTheme: TextTheme(
       headlineLarge: TextStyle(color: ColorTheme.BLACK,fontSize: 24.fss,fontFamily: 'Inter',fontWeight: FontWeight.bold),
       headlineMedium: TextStyle(color: ColorTheme.BLACK,fontSize: 20.fss,fontFamily: 'Inter',fontWeight: FontWeight.bold),

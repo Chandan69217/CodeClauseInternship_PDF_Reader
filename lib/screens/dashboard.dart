@@ -20,10 +20,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   int _currentIndex = 0;
-  double _appliedSortingDate = 0;
-  double _appliedSortingName = 0;
-  double _appliedSortingSize = 0;
-  late final Future<bool> _scanFiles = Read(context).scanForAllFiles();
+  bool _appliedSortingDate = false;
+  bool _appliedSortingName = false;
+  bool _appliedSortingSize = false;
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
   final List<Widget> _screens = <Widget>[
     AllFilesScreens(
@@ -37,9 +36,10 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    setSorting(Read.sortingType);
+    _setSortingTicker(Read.sortingType);
     WidgetsBinding.instance.addObserver(this);
   }
+
 
 
   @override
@@ -53,28 +53,29 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         bottomNavigationBar: _bottomNavigationBar());
   }
 
-  setSorting(String sortType) {
+  _setSortingTicker(String sortType) {
     if (sortType == SortType.DATE) {
-      _appliedSortingDate = 1;
-      _appliedSortingName = 0;
-      _appliedSortingSize = 0;
+      _appliedSortingDate = true;
+      _appliedSortingName = false;
+      _appliedSortingSize = false;
     } else if (sortType == SortType.NAME) {
-      _appliedSortingDate = 0;
-      _appliedSortingName = 1;
-      _appliedSortingSize = 0;
+      _appliedSortingDate = false;
+      _appliedSortingName = true;
+      _appliedSortingSize = false;
     } else {
-      _appliedSortingDate = 0;
-      _appliedSortingName = 0;
-      _appliedSortingSize = 1;
+      _appliedSortingDate = false;
+      _appliedSortingName = false;
+      _appliedSortingSize = true;
     }
   }
+
 
   Future<void> _saveSorting(String sortingType) async {
     var instance = await SharedPreferences.getInstance();
     instance.setString(SortType.KEY, sortingType);
     Read.sortBy(sortingType);
     _allFilesKey.currentState?.handleSortEvent();
-    setSorting(sortingType);
+    _setSortingTicker(sortingType);
   }
 
   AppBar _appBar() {
@@ -115,15 +116,15 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         itemBuilder: (context) {
           return <PopupMenuItem>[
             PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', opacity: _appliedSortingDate),
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', visibility: _appliedSortingDate),
               value: 'DATE',
             ),
             PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', opacity: _appliedSortingName),
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', visibility: _appliedSortingName),
               value: 'NAME',
             ),
             PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', opacity: _appliedSortingSize),
+              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', visibility: _appliedSortingSize),
               value: 'SIZE',
             )
           ];
@@ -143,7 +144,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     ];
   }
 
-  Widget _popupMenuItemUI({required String leading,required String title,required double opacity}){
+  Widget _popupMenuItemUI({required String leading,required String title,required bool visibility}){
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -165,8 +166,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
           ),
         ),
         Expanded(
-          child: Opacity(
-            opacity: opacity,
+          child: Visibility(
+            visible: visibility,
             child: Image.asset(
               'assets/icons/tick_icon.png',
               width: 25.ss,
