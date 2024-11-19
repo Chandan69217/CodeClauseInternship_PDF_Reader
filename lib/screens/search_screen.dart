@@ -6,21 +6,35 @@ import 'package:pdf_reader/widgets/custom_list_tile.dart';
 import 'package:sizing/sizing.dart';
 
 import '../external_storage/read_storage.dart';
+import '../utilities/file_view_handler.dart';
+import '../widgets/custom_bottomsheet.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver {
   List<Data> _searchedItem = [];
   bool _isAvailable = false;
   bool _iconVisibility = false;
   TextEditingController _searchController = TextEditingController();
+  FocusNode _searchedFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _searchController.addListener(_search);
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    if(MediaQuery.of(context).viewInsets.bottom !=0){
+      if(View.of(context).viewInsets.bottom == 0){
+        _searchedFocusNode.unfocus();
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -40,7 +54,30 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 Expanded(
                   child: _isAvailable ? ListView.builder(shrinkWrap: true,itemCount: _searchedItem.length,itemBuilder: (context,index){
-                    return CustomListTile(title: _searchedItem[index].fileName, subTitle: _searchedItem[index].details, trailing: 'assets/icons/three_dots_icon.png');
+                    return CustomListTile(title: _searchedItem[index].fileName, subTitle: _searchedItem[index].details, trailing: 'assets/icons/three_dots_icon.png',
+                      onOptionClick: () {
+                      _searchedFocusNode.unfocus();
+                      customBottomSheet(
+                          home_context: context,
+                          data: _searchedItem[index],
+                          onRenamed: (oldData,newData) {
+                            setState(() {
+                              Read.updateFilesRename(oldData,newData);
+                              _searchedItem = Read.AllFiles;
+                            });
+                          },
+                          onDeleted: (status,data) {
+                            if (status)
+                              setState(() {
+                                Read.updateFilesDeletion(data);
+                                _searchedItem = Read.AllFiles;
+                              });
+                          });
+                    },
+                      onTap: () {
+                      Navigator.of(context).pop();
+                        fileViewHandler(context, _searchedItem[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);} );
+                      },);
                   }) : Center(child: Text('No results'),),
                 ),
               ]),
@@ -62,6 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 maxWidth: MediaQuery.of(context).size.width * 0.62,
                 maxHeight: 40.ss),
             child: TextField(
+              focusNode: _searchedFocusNode,
               controller: _searchController,
               cursorColor: ColorTheme.RED,
               maxLines: 1,
@@ -135,5 +173,11 @@ class _SearchScreenState extends State<SearchScreen> {
         _iconVisibility = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 }
