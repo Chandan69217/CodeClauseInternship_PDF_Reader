@@ -5,34 +5,44 @@ import 'package:sizing/sizing.dart';
 class CustomListTile extends StatelessWidget {
   final String title;
   final String subTitle;
-  final VoidCallback? onOptionClick;
-  final VoidCallback? onTap;
+  final VoidCallback onOptionClick;
+  final VoidCallback onTap;
   final String trailing;
 
   CustomListTile(
       {super.key,
       required this.title,
       required this.subTitle,
-      this.onOptionClick,
-      this.onTap,
+      required this.onOptionClick,
+      required this.onTap,
       required this.trailing});
 
+
+  String _getIconPath(String title) {
+    String extension = title.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'pdf':
+        return 'assets/icons/pdf.png';
+      case 'doc':
+      case 'docx':
+        return 'assets/icons/doc.png';
+      case 'ppt':
+      case 'pptx':
+        return 'assets/icons/ppt.png';
+      case 'xls':
+      case 'xlsx':
+        return 'assets/icons/xls.png';
+      default:
+        return 'assets/icons/pdf.png';
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    String extension = title.split('.').last.toLowerCase();
-    String iconPath = '';
-    if (extension == 'pdf') {
-      iconPath = 'assets/icons/pdf.png';
-    } else if (extension == 'doc' || extension == 'docx') {
-      iconPath = 'assets/icons/doc.png';
-    } else if (extension == 'ppt' || extension == 'pptx') {
-      iconPath = 'assets/icons/ppt.png';
-    } else if (extension == 'xls' || extension == 'xlsx') {
-      iconPath = 'assets/icons/xls.png';
-    }
+
+    String iconPath = _getIconPath(title);
     return ListTile(
         contentPadding: EdgeInsets.only(left: 18.ss, right: 6.ss),
-        onTap: () => onTap!(),
+        onTap: ()=> onTap(),
         leading: Image.asset(
           iconPath,
           width: 45.ss,
@@ -40,20 +50,15 @@ class CustomListTile extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(fontWeight: FontWeight.bold),
-          overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
         subtitle: Text(
           subTitle,
-          style: Theme.of(context).textTheme.bodySmall,
+          maxLines: 1,
         ),
         trailing: IconButton(
             onPressed: () {
-              onOptionClick!();
+              onOptionClick();
             },
             icon: Image.asset(
               trailing,

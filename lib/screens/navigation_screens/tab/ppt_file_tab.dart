@@ -36,14 +36,15 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
           child: ListView.builder(
               itemCount: _snapshot.length,
               itemBuilder: (context, index) {
+                final item = _snapshot[index];
                 return CustomListTile(
-                  title: _snapshot[index].fileName,
-                  subTitle: _snapshot[index].details,
+                  title: item.fileName,
+                  subTitle: item.details,
                   trailing: widget.trailing,
                   onOptionClick: () {
                     customBottomSheet(
                         home_context: context,
-                        data: _snapshot[index],
+                        data: item,
                         onRenamed: (oldData, newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
@@ -73,14 +74,9 @@ class PptFileTabState extends State<PptFileTab> with WidgetsBindingObserver{
     });
   }
 
+
   List<Data> _getPpt(){
-    List<Data> ppt = [];
-    for(var data in Read.AllFiles){
-      if(data.fileType == 'ppt'||data.fileType == 'pptx'){
-        ppt.add(data);
-      }
-    }
-    return ppt;
+    return Read.AllFiles.where((data)=> data.fileType == 'ppt' || data.fileType == 'pptx').toList();
   }
 
   @override

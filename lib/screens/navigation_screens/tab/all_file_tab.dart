@@ -34,14 +34,15 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
           child: ListView.builder(
               itemCount: _snapshot.length,
               itemBuilder: (context, index) {
+                final item = _snapshot[index];
                 return CustomListTile(
-                  title: _snapshot[index].fileName,
-                  subTitle: _snapshot[index].details,
+                  title: item.fileName,
+                  subTitle: item.details,
                   trailing: widget.trailing,
                   onOptionClick: () {
                     customBottomSheet(
                         home_context: context,
-                        data: _snapshot[index],
+                        data:item,
                         onRenamed: (oldData,newData) {
                           setState(() {
                             Read.updateFilesRename(oldData,newData);
@@ -57,7 +58,7 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
                         });
                   },
                   onTap: () {
-                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
+                    fileViewHandler(context, item,onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
                   },
                 );
               })

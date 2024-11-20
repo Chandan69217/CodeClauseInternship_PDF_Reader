@@ -36,14 +36,15 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
           child: ListView.builder(
               itemCount: _snapshot.length,
               itemBuilder: (context, index) {
+                final item = _snapshot[index];
                 return CustomListTile(
-                  title: _snapshot[index].fileName,
-                  subTitle: _snapshot[index].details,
+                  title: item.fileName,
+                  subTitle: item.details,
                   trailing: widget.trailing,
                   onOptionClick: () {
                     customBottomSheet(
                         home_context: context,
-                        data: _snapshot[index],
+                        data: item,
                         onRenamed: (oldData,newData) {
                           setState(() {
                             Read.updateFilesRename(oldData, newData);
@@ -75,14 +76,8 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
     });
   }
 
-  List<Data> _getDoc(){
-    List<Data> doc = [];
-    for(var data in Read.AllFiles){
-      if(data.fileType == 'doc' || data.fileType == 'docx'){
-        doc.add(data);
-      }
-    }
-    return doc;
+  List<Data> _getDoc() {
+    return Read.AllFiles.where((data) => data.fileType == 'doc' || data.fileType == 'docx').toList();
   }
 
   @override

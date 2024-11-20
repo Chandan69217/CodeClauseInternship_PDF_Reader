@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Widget _splashDesign() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: 24.ss),
       child: ConstrainedBox(
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height,
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 10,
+                  flex: 8,
                   child: Lottie.asset(
                       'assets/lottie_animation/splash_lottie_animation.json'),
                 ),
@@ -59,33 +59,55 @@ class _SplashScreenState extends State<SplashScreen>
   Widget _linearProgressIndicator() {
     return Column(
       children: [
-        Center(
-          child: Container(
-            width: 150,
-            height: 5,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                backgroundColor:
-                    ColorTheme.PRIMARY, // Make background transparent
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    ColorTheme.RED), // Make value color transparent
+        Expanded(
+          flex: 3,
+          child: RichText(
+              text: TextSpan(
+                  text: 'PDF ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: ColorTheme.RED),
+                  children: [
+                    TextSpan(
+                        text: 'Reader',
+                        style: Theme.of(context).textTheme.headlineMedium)
+                  ])),
+        ),
+        const SizedBox(height: 10,),
+        Expanded(
+          flex: 1,
+          child: Center(
+            child: Container(
+              width: 200.ss,
+              height: 8.ss,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: const LinearProgressIndicator(
+                  backgroundColor:
+                      ColorTheme.PRIMARY, // Make background transparent
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      ColorTheme.RED), // Make value color transparent
+                ),
               ),
             ),
           ),
         ),
-        SizedBox(
-          height: 4.ss,
+        const SizedBox(
+          height: 4,
         ),
-        Text(
-          'Loading files...',
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: ColorTheme.BLACK, fontSize: 14.fss),
+        Expanded(
+          flex: 3,
+          child: Text(
+            'Loading files...',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: ColorTheme.BLACK, fontSize: 11.fss),
+          ),
         )
       ],
     );

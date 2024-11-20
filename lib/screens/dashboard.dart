@@ -198,14 +198,14 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(flex: 1, child: SizedBox()),
+                        const Expanded(flex: 1, child: SizedBox()),
                         Expanded(
                             flex: 5,
                             child: RichText(
                               text: TextSpan(
                                   text: 'Trusted PDF',
-                                  children: [
-                                    TextSpan(text: '\n'),
+                                  children: const [
+                                   TextSpan(text: '\n'),
                                     TextSpan(
                                         text: 'PDF',
                                         style:
@@ -267,7 +267,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                               .textTheme
                                               .bodyLarge!
                                               .copyWith(color: ColorTheme.RED),
-                                          children: [
+                                          children: const [
                                             TextSpan(
                                                 text: ' By Chandan',
                                                 style: TextStyle(

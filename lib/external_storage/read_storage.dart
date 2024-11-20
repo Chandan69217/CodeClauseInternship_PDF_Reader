@@ -15,10 +15,6 @@ class Read {
   // ignore: non_constant_identifier_names
   static List<String> _FilePaths = [];
   static List<Data> AllFiles = [];
-  static List<Data> PDFFiles = [];
-  static List<Data> DocFiles = [];
-  static List<Data> XlsFiles = [];
-  static List<Data> PptFiles = [];
   final BuildContext context;
   static String sortingType = '';
   VoidCallback? onClick;
