@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/callbacks.dart';
@@ -6,8 +8,9 @@ import 'package:sizing/sizing.dart';
 import '../model/data.dart';
 import '../utilities/color_theme.dart';
 
-void showDeleteWidget(
-    BuildContext home_context, Data data, OnDeleted onDeleted) {
+Future<bool> showConfirmWidget (
+{ required BuildContext home_context, required Data data, required String message}) async {
+  Completer<bool> completer = Completer<bool>();
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -31,7 +34,7 @@ void showDeleteWidget(
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                _deleteFile(data, onDeleted);
+                completer.complete(true);
               },
               style: ButtonStyle(
                   overlayColor: WidgetStatePropertyAll(
@@ -40,7 +43,7 @@ void showDeleteWidget(
                   fixedSize: WidgetStatePropertyAll(
                       Size(MediaQuery.of(home_context).size.width, 65))),
               child: Text(
-                'Delete',
+                message,
                 style: Theme.of(home_context)
                     .textTheme
                     .bodyMedium!
@@ -56,6 +59,7 @@ void showDeleteWidget(
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  completer.complete(false);
                 },
                 style: ButtonStyle(
                     overlayColor: WidgetStatePropertyAll(
@@ -70,19 +74,6 @@ void showDeleteWidget(
           ],
         );
       });
+  return completer.future;
 }
 
-void _deleteFile(Data data, OnDeleted onDeleted) async {
-  if (await data.file.exists()) {
-    try {
-      data.file.deleteSync();
-      onDeleted(true,data);
-    } catch (exception, trace) {
-      onDeleted(false,data);
-      print('$exception : $trace');
-    }
-  } else {
-    onDeleted(false,data);
-    print('file does not exist');
-  }
-}

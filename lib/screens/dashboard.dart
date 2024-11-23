@@ -497,12 +497,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                 width: 30.ss, height: 30.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/bookmark_icon.png',
+              'assets/icons/bookmark.png',
               width: 30.ss,
               height: 30.ss,
             ),
             label: 'Bookmarks',
-            activeIcon: Image.asset('assets/icons/bookmark_icon.png',
+            activeIcon: Image.asset('assets/icons/bookmark.png',
                 width: 30.ss, height: 30.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon: Image.asset(

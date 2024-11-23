@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
+import 'package:pdf_reader/widgets/confirm_bottomsheet.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
 import '../../../external_storage/database_helper.dart';
 import '../../../external_storage/read_storage.dart';
@@ -89,13 +90,15 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
   }
 
   _bookmarkOptionBtn(Data data,int index)async{
-    var database = await DatabaseHelper.getInstance();
-    var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: _snapshot[index].filePath);
-    if(isBookmarked){
-      var oldData = data;
-      data.isBookmarked = false;
-      Read.updateFiles(oldData,data);
-      refresh();
+    if(await showConfirmWidget(home_context: context, data: data, message: 'Remove')){
+      var database = await DatabaseHelper.getInstance();
+      var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: _snapshot[index].filePath);
+      if(isBookmarked){
+        var oldData = data;
+        data.isBookmarked = false;
+        Read.updateFiles(oldData,data);
+        refresh();
+      }
     }
   }
 

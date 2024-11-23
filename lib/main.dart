@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf_reader/screens/splash_screen.dart';
-import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/utilities/theme_data.dart';
 import 'package:sizing/sizing.dart';
 

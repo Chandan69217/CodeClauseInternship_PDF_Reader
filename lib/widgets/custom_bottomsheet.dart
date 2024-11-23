@@ -164,8 +164,8 @@ class _SheetDesignState extends State<_SheetDesign>{
                 onPressed: !widget.data.isBookmarked ? _addToBookmark : _removeFromBookmark,
                 icon: Image.asset(
                   widget.data.isBookmarked ? 'assets/icons/bookmark_filled.png' : 'assets/icons/bookmark_icon.png',
-                  width: 40.ss,
-                  height: 40.ss,
+                  width: 25.ss,
+                  height: 25.ss,
                 )))
       ],
     );

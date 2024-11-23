@@ -83,5 +83,4 @@ class BookmarkScreenState extends State<BookmarkScreen> {
   }
 
 
-
 }
