@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/screens/permission_screen.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:pdf_reader/utilities/sort.dart';
@@ -17,6 +18,7 @@ class Read {
   static List<Data> AllFiles = [];
   final BuildContext context;
   static String sortingType = '';
+  static List<Map<String,dynamic>> _bookmarks = [];
   VoidCallback? onClick;
 
   Read._(this.context);
@@ -24,9 +26,11 @@ class Read {
   factory Read(BuildContext context) => Read._(context);
 
   Future<bool> scanForAllFiles() async {
+    var database = await DatabaseHelper.getInstance();
     if (await requestPermission()) {
       if (_FilePaths.isEmpty) {
         _FilePaths = await _getAllPathsFromDirectory();
+        _bookmarks = await database.getFiles(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME);
         for (var path in _FilePaths) {
           String extension = path.split('.').last.toLowerCase();
           await FileDetails.fetch(File(path));
@@ -38,7 +42,10 @@ class Read {
               details: FileDetails.getDetails(),
               fileSize: FileDetails.getSize(),
               date: FileDetails.getDate(),
-              bytes: FileDetails.getBytes()));
+              bytes: FileDetails.getBytes(),
+            isBookmarked: _isBookmarked(path)
+          )
+          );
         }
         sortingType = await _checkSortingSetup();
         sortBy(sortingType);
@@ -46,6 +53,10 @@ class Read {
       }
     }
     return false;
+  }
+
+  bool _isBookmarked(String path) {
+    return _bookmarks.any((bookmark) => bookmark[DatabaseHelper.FILE_PATH] == path);
   }
 
   Future<String> _checkSortingSetup() async {
@@ -98,11 +109,11 @@ class Read {
     return status.isGranted;
   }
 
-  static void updateFilesRename(Data oldData, newData) {
+  static void updateFiles(Data oldData, Data newData) {
     AllFiles[AllFiles.indexOf(oldData)] = newData;
   }
 
-  static void updateFilesDeletion(Data data) {
+  static void removeFiles(Data data) {
     AllFiles.remove(data);
   }
 

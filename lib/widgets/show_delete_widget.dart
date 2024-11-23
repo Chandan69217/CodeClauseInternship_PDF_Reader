@@ -4,7 +4,7 @@ import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:sizing/sizing.dart';
 
 import '../model/data.dart';
-import '../utilities/color.dart';
+import '../utilities/color_theme.dart';
 
 void showDeleteWidget(
     BuildContext home_context, Data data, OnDeleted onDeleted) {

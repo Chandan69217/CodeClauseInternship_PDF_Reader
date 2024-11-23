@@ -1,16 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/file_view_handler.dart';
+import 'package:pdf_reader/utilities/screen_type.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
+import '../../../external_storage/database_helper.dart';
 import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
 
 class AllFileTab extends StatefulWidget {
   final String trailing;
+  final ScreenType screenType;
   AllFileTab({
     Key? key,
     this.trailing = 'assets/icons/three_dots_icon.png',
+    required this.screenType
   }):super(key: key);
 
   @override
@@ -22,11 +26,22 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-    _snapshot = Read.AllFiles;
+   _handleFileData(widget.screenType);
     WidgetsBinding.instance.addObserver(this);
   }
 
 
+  _handleFileData(ScreenType screenType){
+    switch(screenType){
+      case ScreenType.ALL_FILES : _snapshot = Read.AllFiles;
+      break;
+      case ScreenType.HISTORY :  _snapshot = [];
+      break;
+      case ScreenType.BOOKMARKS: _snapshot = _getBookmark();
+      break;
+      default : _snapshot = [];
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,25 +55,14 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
                   subTitle: item.details,
                   trailing: widget.trailing,
                   onOptionClick: () {
-                    customBottomSheet(
-                        home_context: context,
-                        data:item,
-                        onRenamed: (oldData,newData) {
-                          setState(() {
-                            Read.updateFilesRename(oldData,newData);
-                            _snapshot = Read.AllFiles;
-                          });
-                        },
-                        onDeleted: (status,data) {
-                          if (status)
-                            setState(() {
-                              Read.updateFilesDeletion(data);
-                              _snapshot = Read.AllFiles;
-                            });
-                        });
+                    if(widget.screenType == ScreenType.BOOKMARKS){
+                      _bookmarkOptionBtn(item,index);
+                    }else{
+                      _threeDotOptionBtn(item);
+                    }
                   },
                   onTap: () {
-                    fileViewHandler(context, item,onDelete: (status,data){if(status){Read.updateFilesDeletion(data);refresh();}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);refresh();} );
+                    fileViewHandler(context, item,onDelete: (status,data){if(status){Read.removeFiles(data);refresh();}},onRenamed:(oldData,newData){Read.updateFiles(oldData, newData);refresh();} );
                   },
                 );
               })
@@ -66,9 +70,40 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
     );
   }
 
+  _bookmarkOptionBtn(Data data,int index)async{
+    var database = await DatabaseHelper.getInstance();
+    var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: _snapshot[index].filePath);
+    if(isBookmarked){
+      var oldData = data;
+      data.isBookmarked = false;
+      Read.updateFiles(oldData,data);
+      refresh();
+    }
+  }
+
+  _threeDotOptionBtn(Data item){
+    customBottomSheet(
+        home_context: context,
+        data:item,
+        onRenamed: (oldData,newData) {
+          Read.updateFiles(oldData, newData);
+          refresh();
+        },
+        onDeleted: (status,data) {
+          if (status) {
+            Read.removeFiles(data);
+            refresh();
+          }
+        });
+  }
+
+  List<Data> _getBookmark() {
+    return Read.AllFiles.where((data) => data.isBookmarked).toList();
+  }
+
   void refresh(){
     setState(() {
-      _snapshot = Read.AllFiles;
+      _handleFileData(widget.screenType);
     });
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf_reader/main.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:sizing/sizing.dart';
 
 class PermissionScreen extends StatefulWidget{

@@ -5,7 +5,8 @@ import 'package:pdf_reader/screens/navigation_screens/tab/doc_file_tab.dart';
 import 'package:pdf_reader/screens/navigation_screens/tab/excel_file_tab.dart';
 import 'package:pdf_reader/screens/navigation_screens/tab/pdf_file_tab.dart';
 import 'package:pdf_reader/screens/navigation_screens/tab/ppt_file_tab.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
+import 'package:pdf_reader/utilities/screen_type.dart';
 
 class AllFilesScreens extends StatefulWidget{
   AllFilesScreens._({Key? key}):super(key: key);
@@ -53,11 +54,11 @@ class AllFilesStates extends State<AllFilesScreens>{
                 Tab(text: 'PPT'),
               ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
-                AllFileTab(key:_allFileTabKey,),
-                PdfFileTab(key: _pdfFileTabKey,),
-                DocFileTab(key: _docFileTabKey,),
-                ExcelFileTab(key: _xlsFileTabKey,),
-                PptFileTab(key: _pptFileTabKey,)
+                AllFileTab(key:_allFileTabKey,screenType: ScreenType.ALL_FILES,),
+                PdfFileTab(key: _pdfFileTabKey,screenType: ScreenType.ALL_FILES,),
+                DocFileTab(key: _docFileTabKey,screenType: ScreenType.ALL_FILES,),
+                ExcelFileTab(key: _xlsFileTabKey,screenType: ScreenType.ALL_FILES,),
+                PptFileTab(key: _pptFileTabKey,screenType: ScreenType.ALL_FILES,)
               ]))
             ],
           )),

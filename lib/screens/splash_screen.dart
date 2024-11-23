@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:sizing/sizing.dart';
 
 import '../external_storage/read_storage.dart';
-import '../utilities/color.dart';
+import '../utilities/color_theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

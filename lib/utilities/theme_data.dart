@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:sizing/sizing.dart';
 
 ThemeData themeData() {

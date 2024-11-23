@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
 import 'package:sizing/sizing.dart';
 
-import '../utilities/color.dart';
+import '../utilities/color_theme.dart';
 
 void showFileDetails({required BuildContext home_context, required Data data}) {
   showModalBottomSheet(

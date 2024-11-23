@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
 import 'package:sizing/sizing.dart';
 
@@ -62,21 +62,21 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
                           data: _searchedItem[index],
                           onRenamed: (oldData,newData) {
                             setState(() {
-                              Read.updateFilesRename(oldData,newData);
+                              Read.updateFiles(oldData,newData);
                               _searchedItem = Read.AllFiles;
                             });
                           },
                           onDeleted: (status,data) {
                             if (status)
                               setState(() {
-                                Read.updateFilesDeletion(data);
+                                Read.removeFiles(data);
                                 _searchedItem = Read.AllFiles;
                               });
                           });
                     },
                       onTap: () {
                       Navigator.of(context).pop();
-                        fileViewHandler(context, _searchedItem[index],onDelete: (status,data){if(status){Read.updateFilesDeletion(data);}},onRenamed:(oldData,newData){Read.updateFilesRename(oldData, newData);} );
+                        fileViewHandler(context, _searchedItem[index],onDelete: (status,data){if(status){Read.removeFiles(data);}},onRenamed:(oldData,newData){Read.updateFiles(oldData, newData);} );
                       },);
                   }) : Center(child: Text('No results'),),
                 ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/tools_screen.dart';
 import 'package:pdf_reader/screens/search_screen.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/sort.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizing/sizing.dart';
@@ -24,12 +25,13 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   bool _appliedSortingName = false;
   bool _appliedSortingSize = false;
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
+  static final GlobalKey<BookmarkScreenState> _bookmarksKey = GlobalKey();
   final List<Widget> _screens = <Widget>[
     AllFilesScreens(
       key: _allFilesKey,
     ),
     HistoryScreen(),
-    BookmarkScreen(),
+    BookmarkScreen(key: _bookmarksKey,),
     ToolsScreen()
   ];
 
@@ -74,7 +76,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     var instance = await SharedPreferences.getInstance();
     instance.setString(SortType.KEY, sortingType);
     Read.sortBy(sortingType);
-    _allFilesKey.currentState?.handleSortEvent();
+   _allFilesKey.currentState?.handleSortEvent();
+    _bookmarksKey.currentState?.handleSortEvent();
     _setSortingTicker(sortingType);
   }
 
@@ -515,9 +518,10 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() {
+  void dispose(){
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    DatabaseHelper.getInstance().then((instance){instance.close();});
   }
 
   _onSearch(){

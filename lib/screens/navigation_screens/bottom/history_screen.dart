@@ -2,7 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
+import 'package:pdf_reader/utilities/screen_type.dart';
 
 import '../tab/all_file_tab.dart';
 import '../tab/doc_file_tab.dart';
@@ -38,11 +39,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Tab(text: 'PPT'),
                 ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
-                AllFileTab(),
-                PdfFileTab(),
-                DocFileTab(),
-                ExcelFileTab(),
-                PptFileTab()
+                AllFileTab(screenType: ScreenType.HISTORY,),
+                PdfFileTab(screenType: ScreenType.HISTORY,),
+                DocFileTab(screenType: ScreenType.HISTORY,),
+                ExcelFileTab(screenType: ScreenType.HISTORY,),
+                PptFileTab(screenType: ScreenType.HISTORY,)
               ]))
             ],
           )),

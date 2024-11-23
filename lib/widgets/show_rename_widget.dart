@@ -6,7 +6,7 @@ import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:sizing/sizing.dart';
 
 import '../utilities/callbacks.dart';
-import '../utilities/color.dart';
+import '../utilities/color_theme.dart';
 
 void showRenameWidget(
     {required BuildContext home_context,

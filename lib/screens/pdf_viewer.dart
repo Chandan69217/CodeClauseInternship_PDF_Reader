@@ -9,7 +9,7 @@ import 'package:pdfx/pdfx.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizing/sizing.dart';
 
-import '../utilities/color.dart';
+import '../utilities/color_theme.dart';
 
 class PdfViewer extends StatefulWidget {
   Data data;

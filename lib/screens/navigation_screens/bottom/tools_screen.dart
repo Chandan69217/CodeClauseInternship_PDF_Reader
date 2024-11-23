@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:pdf_reader/utilities/color.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 
 class ToolsScreen extends StatefulWidget {
   ToolsScreen._();
