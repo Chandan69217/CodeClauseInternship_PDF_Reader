@@ -150,6 +150,8 @@ class _State extends State<_BottomSheetUI> {
             fileSize: FileDetails.getSize(),
             date: FileDetails.getDate(),
             bytes: FileDetails.getBytes(),
+          isHistory: oldData.isHistory,
+          isBookmarked: oldData.isBookmarked
         );
         Navigator.pop(context);
         widget.onRenamed!(widget.data,newData);

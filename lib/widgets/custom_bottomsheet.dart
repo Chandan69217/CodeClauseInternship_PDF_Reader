@@ -144,7 +144,7 @@ class _SheetDesignState extends State<_SheetDesign>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.data.filePath,
+                  widget.data.fileName,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!

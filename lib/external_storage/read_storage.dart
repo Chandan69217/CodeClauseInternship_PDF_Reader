@@ -19,6 +19,7 @@ class Read {
   final BuildContext context;
   static String sortingType = '';
   static List<Map<String,dynamic>> _bookmarks = [];
+  static List<Map<String,dynamic>> _history = [];
   VoidCallback? onClick;
 
   Read._(this.context);
@@ -31,6 +32,7 @@ class Read {
       if (_FilePaths.isEmpty) {
         _FilePaths = await _getAllPathsFromDirectory();
         _bookmarks = await database.getFiles(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME);
+        _history = await database.getFiles(table_name: DatabaseHelper.HISTORY_TABLE_NAME);
         for (var path in _FilePaths) {
           String extension = path.split('.').last.toLowerCase();
           await FileDetails.fetch(File(path));
@@ -43,7 +45,8 @@ class Read {
               fileSize: FileDetails.getSize(),
               date: FileDetails.getDate(),
               bytes: FileDetails.getBytes(),
-            isBookmarked: _isBookmarked(path)
+            isBookmarked: _isBookmarked(path),
+            isHistory:  _isHistory(path),
           )
           );
         }
@@ -61,11 +64,12 @@ class Read {
 
   Future<String> _checkSortingSetup() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
-    final bool isKeyContains = instance.containsKey('SORTED_TYPE');
-    if (!isKeyContains) {
+
+    if (!instance.containsKey(SortType.KEY)) {
       instance.setString(SortType.KEY, SortType.NAME);
+      return SortType.NAME;
     }
-    final getType = instance.get('SORTED_TYPE');
+    final getType = instance.get(SortType.KEY);
     if (getType == SortType.DATE) {
       return SortType.DATE;
     } else if (getType == SortType.NAME) {
@@ -193,6 +197,10 @@ class Read {
     ];
 
     return skipPaths.any((skip) => path.startsWith(skip));
+  }
+
+  bool _isHistory(String path) {
+    return _history.any((history) => history[DatabaseHelper.FILE_PATH] == path);
   }
 
 }

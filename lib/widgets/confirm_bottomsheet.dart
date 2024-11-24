@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:sizing/sizing.dart';
 
 import '../model/data.dart';

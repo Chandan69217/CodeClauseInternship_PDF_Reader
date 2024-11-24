@@ -36,7 +36,7 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
     switch(screenType){
       case ScreenType.ALL_FILES : _snapshot = Read.AllFiles;
       break;
-      case ScreenType.HISTORY :  _snapshot = [];
+      case ScreenType.HISTORY :  _snapshot = _getHistory();
       break;
       case ScreenType.BOOKMARKS: _snapshot = _getBookmark();
       break;
@@ -114,5 +114,9 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver{
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+  }
+
+  List<Data> _getHistory() {
+    return Read.AllFiles.where((data) => data.isHistory).toList();
   }
 }

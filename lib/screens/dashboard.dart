@@ -26,11 +26,10 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   bool _appliedSortingSize = false;
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
   static final GlobalKey<BookmarkScreenState> _bookmarksKey = GlobalKey();
+  static final GlobalKey<HistoryScreenState> _historysKey = GlobalKey();
   final List<Widget> _screens = <Widget>[
-    AllFilesScreens(
-      key: _allFilesKey,
-    ),
-    HistoryScreen(),
+    AllFilesScreens(key: _allFilesKey,),
+    HistoryScreen(key: _historysKey,),
     BookmarkScreen(key: _bookmarksKey,),
     ToolsScreen()
   ];
@@ -78,6 +77,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     Read.sortBy(sortingType);
    _allFilesKey.currentState?.handleSortEvent();
     _bookmarksKey.currentState?.handleSortEvent();
+    _historysKey.currentState?.handleSortEvent();
     _setSortingTicker(sortingType);
   }
 

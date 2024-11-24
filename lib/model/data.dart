@@ -12,6 +12,7 @@ class Data{
   String date;
   int bytes;
   bool isBookmarked;
+  bool isHistory;
 
   Data({required this.file,
     required this.fileName,
@@ -21,7 +22,8 @@ class Data{
     required this.fileSize,
     required this.date,
     required this.bytes,
-    this.isBookmarked = false
+    this.isBookmarked = false,
+    this.isHistory = false
   });
 
 }

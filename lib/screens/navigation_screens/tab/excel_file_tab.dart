@@ -39,7 +39,7 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
     switch(screenType){
       case ScreenType.ALL_FILES : _snapshot = _getXls();
       break;
-      case ScreenType.HISTORY :  _snapshot = [];
+      case ScreenType.HISTORY :  _snapshot = _getHistory();
       break;
       case ScreenType.BOOKMARKS: _snapshot = _getBookmark();
       break;
@@ -119,9 +119,15 @@ class ExcelFileTabState extends State<ExcelFileTab> with WidgetsBindingObserver{
     return Read.AllFiles.where((data) => data.isBookmarked && _extension.contains(data.fileType)).toList();
   }
 
+  List<Data> _getHistory() {
+    return Read.AllFiles.where((data) => data.isHistory && _extension.contains(data.fileType)).toList();
+  }
+
   @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
+
+
 }

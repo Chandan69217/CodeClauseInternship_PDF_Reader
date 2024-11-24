@@ -38,7 +38,7 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
     switch(screenType){
       case ScreenType.ALL_FILES : _snapshot = _getDoc();
       break;
-      case ScreenType.HISTORY :  _snapshot = [];
+      case ScreenType.HISTORY :  _snapshot = _getHistory();
       break;
       case ScreenType.BOOKMARKS: _snapshot = _getBookmark();
       break;
@@ -89,6 +89,10 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
     return Read.AllFiles.where((data) => data.isBookmarked && _extension.contains(data.fileType)).toList();
   }
 
+  List<Data> _getHistory() {
+    return Read.AllFiles.where((data) => data.isHistory && _extension.contains(data.fileType)).toList();
+  }
+
   _bookmarkOptionBtn(Data data,int index)async{
     if(await showConfirmWidget(home_context: context, data: data, message: 'Remove')){
       var database = await DatabaseHelper.getInstance();
@@ -123,4 +127,6 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
+
+  
 }

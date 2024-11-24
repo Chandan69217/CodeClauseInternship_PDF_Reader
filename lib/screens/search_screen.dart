@@ -75,7 +75,6 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
                           });
                     },
                       onTap: () {
-                      Navigator.of(context).pop();
                         fileViewHandler(context, _searchedItem[index],onDelete: (status,data){if(status){Read.removeFiles(data);}},onRenamed:(oldData,newData){Read.updateFiles(oldData, newData);} );
                       },);
                   }) : Center(child: Text('No results'),),
@@ -171,6 +170,7 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
       setState(() {
         _searchedItem = [];
         _iconVisibility = false;
+        _isAvailable = false;
       });
     }
   }
