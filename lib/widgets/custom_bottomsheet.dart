@@ -15,14 +15,14 @@ import '../utilities/callbacks.dart';
 void customBottomSheet(
     {required BuildContext home_context,
     required Data data,
-    required OnRenamed onRenamed,
-    required OnDeleted onDeleted}) {
+    required OnChanged onChanged,}
+    ) {
   showModalBottomSheet(
       context: home_context,
       sheetAnimationStyle: AnimationStyle(curve: Curves.linear),
       useSafeArea: true,
       builder: (context) {
-        return _SheetDesign(home_context: home_context, data: data, onRenamed: onRenamed, onDeleted: onDeleted);
+        return _SheetDesign(home_context: home_context, data: data, onChanged: onChanged,);
       });
 }
 
@@ -30,12 +30,10 @@ void customBottomSheet(
 class _SheetDesign extends StatefulWidget{
    BuildContext home_context;
    Data data;
-   OnRenamed onRenamed;
-   OnDeleted onDeleted;
+   OnChanged onChanged;
   _SheetDesign({required this.home_context ,
     required this.data,
-    required this.onRenamed,
-    required this.onDeleted});
+    required this.onChanged,});
   @override
   State<StatefulWidget> createState() => _SheetDesignState();
 }
@@ -70,7 +68,7 @@ class _SheetDesignState extends State<_SheetDesign>{
               showRenameWidget(
                   home_context: widget.home_context,
                   data: widget.data,
-                  onRenamed: widget.onRenamed);
+                  onChanged: widget.onChanged);
             },
           ),
           ListTile(
@@ -92,7 +90,7 @@ class _SheetDesignState extends State<_SheetDesign>{
             ),
             onTap: () {
               Navigator.pop(context);
-              showDeleteWidget(widget.home_context, widget.data, widget.onDeleted);
+              showDeleteWidget(widget.home_context, widget.data, widget.onChanged);
             },
           ),
           ListTile(
@@ -179,10 +177,8 @@ class _SheetDesignState extends State<_SheetDesign>{
     var database = await DatabaseHelper.getInstance();
     var isBookmarked = await database.insertInto(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
     if(isBookmarked) {
-      var oldData = widget.data;
-      widget.data.isBookmarked = isBookmarked;
       setState(() {
-        Read.updateFiles(oldData, widget.data);
+        Read.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
       });
     }
   }
@@ -190,10 +186,8 @@ class _SheetDesignState extends State<_SheetDesign>{
     var database = await DatabaseHelper.getInstance();
     var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
     if(isBookmarked) {
-      var oldData = widget.data;
-      widget.data.isBookmarked = !isBookmarked;
       setState(() {
-        Read.updateFiles(oldData, widget.data);
+        Read.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
       });
     }
   }

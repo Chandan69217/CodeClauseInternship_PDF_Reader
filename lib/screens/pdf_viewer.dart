@@ -13,11 +13,9 @@ import '../utilities/color_theme.dart';
 
 class PdfViewer extends StatefulWidget {
   Data data;
-  OnRenamed? onRenamed;
-  OnDeleted? onDeleted;
+  OnChanged? onChanged;
   PdfViewer({super.key,
-    this.onRenamed,
-    this.onDeleted,
+    this.onChanged,
     required this.data,
   });
 
@@ -146,18 +144,20 @@ class _PdfViewerStates extends State<PdfViewer> {
         showRenameWidget(
             home_context: context,
             data: data,
-            onRenamed: (oldData, newData) {
-              widget.onRenamed!(oldData,newData);
-              _refresh(newData);
+            onChanged: (status,{Data? newData}) {
+              if(status && newData!=null){
+                _refresh(newData);
+                widget.onChanged!(status);
+              }
             });
         break;
       case 2:
         Share.shareXFiles([XFile(data.filePath)]);
         break;
       case 3:
-        showDeleteWidget(context, data, (status,data){
+        showDeleteWidget(context, data, (status,{Data? newData}){
           if(status){
-            widget.onDeleted!(status,data);
+            widget.onChanged!(status);
             Navigator.pop(context);
           }
         });

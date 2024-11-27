@@ -24,7 +24,7 @@ class BookmarkScreenState extends State<BookmarkScreen> {
   static GlobalKey<ExcelFileTabState> _xlsFileTabKey = GlobalKey();
   static GlobalKey<PptFileTabState> _pptFileTabKey = GlobalKey();
 
-  void handleSortEvent(){
+  void refreshAllBookmarks(){
     _allFileTabKey.currentState?.refresh();
     _pdfFileTabKey.currentState?.refresh();
     _docFileTabKey.currentState?.refresh();

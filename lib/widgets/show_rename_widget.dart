@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:sizing/sizing.dart';
@@ -11,7 +12,7 @@ import '../utilities/color_theme.dart';
 void showRenameWidget(
     {required BuildContext home_context,
     required Data data,
-    required OnRenamed onRenamed}) {
+    required OnChanged onChanged}) {
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -19,7 +20,7 @@ void showRenameWidget(
       builder: (context) {
         return _BottomSheetUI(
           data: data,
-          onRenamed: onRenamed,
+          onChanged: onChanged,
         );
       });
 }
@@ -27,8 +28,8 @@ void showRenameWidget(
 // ignore: must_be_immutable
 class _BottomSheetUI extends StatefulWidget {
   Data data;
-  OnRenamed? onRenamed;
-  _BottomSheetUI({required this.data, this.onRenamed});
+  OnChanged? onChanged;
+  _BottomSheetUI({required this.data, this.onChanged});
   @override
   State<_BottomSheetUI> createState() => _State();
 }
@@ -154,7 +155,7 @@ class _State extends State<_BottomSheetUI> {
           isBookmarked: oldData.isBookmarked
         );
         Navigator.pop(context);
-        widget.onRenamed!(widget.data,newData);
+        widget.onChanged!(await Read.updateFiles(widget.data,newData: newData,typeOfUpdate: TypeOfUpdate.RENAME,),newData: newData);
       }
     } catch (exception, track) {
       print('${exception.toString()} : ${track.toString()}');

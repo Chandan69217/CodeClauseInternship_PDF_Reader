@@ -12,6 +12,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/data.dart';
 
+enum TypeOfUpdate{
+  BOOKMARK,
+  HISTORY,
+  RENAME,
+}
+
 class Read {
   // ignore: non_constant_identifier_names
   static List<String> _FilePaths = [];
@@ -113,13 +119,49 @@ class Read {
     return status.isGranted;
   }
 
-  static void updateFiles(Data oldData, Data newData) {
-    AllFiles[AllFiles.indexOf(oldData)] = newData;
+  // static void updateFiles(Data oldData, Data newData) {
+  //   AllFiles[AllFiles.indexOf(oldData)] = newData;
+  // }
+
+  static Future<bool> updateFiles(Data data,{TypeOfUpdate? typeOfUpdate,Data? newData})async {
+    final oldData = data;
+    if(typeOfUpdate == TypeOfUpdate.BOOKMARK){
+      data.isBookmarked = !data.isBookmarked;
+      AllFiles[AllFiles.indexOf(oldData)] = data ;
+      return true;
+    }else if(typeOfUpdate == TypeOfUpdate.HISTORY){
+      data.isHistory = !data.isHistory;
+      AllFiles[AllFiles.indexOf(oldData)] = data;
+      return true;
+    }else{
+      if(newData!=null){
+        AllFiles[AllFiles.indexOf(oldData)] = newData;
+        return true;
+      }
+      return false;
+    }
   }
 
-  static void removeFiles(Data data) {
-    AllFiles.remove(data);
+  static Future<bool> removeFiles(Data data) async{
+    try{
+      if(await data.file.exists()){
+       try{
+         await data.file.delete();
+         return AllFiles.remove(data);
+       }catch(exception){
+         print('Unable to delete file from storage ${data.fileName} : $exception');
+         return false;
+       }
+      }else{
+        print('File does not exists');
+        return false;
+      }
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
   }
+
 
   void _showMessage(String title, String content, VoidCallback onClick) {
     AwesomeDialog(

@@ -1,20 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
 import 'package:sizing/sizing.dart';
-
 import '../external_storage/read_storage.dart';
 import '../utilities/file_view_handler.dart';
 import '../widgets/custom_bottomsheet.dart';
 
 class SearchScreen extends StatefulWidget {
+  final OnChanged onChanged;
+  SearchScreen({required this.onChanged});
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver {
+class _SearchScreenState extends State<SearchScreen>
+    with WidgetsBindingObserver {
   List<Data> _searchedItem = [];
   bool _isAvailable = false;
   bool _iconVisibility = false;
@@ -30,12 +33,13 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    if(MediaQuery.of(context).viewInsets.bottom !=0){
-      if(View.of(context).viewInsets.bottom == 0){
+    if (MediaQuery.of(context).viewInsets.bottom != 0) {
+      if (View.of(context).viewInsets.bottom == 0) {
         _searchedFocusNode.unfocus();
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,31 +57,38 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
                   color: ColorTheme.BLACK.withOpacity(0.1),
                 ),
                 Expanded(
-                  child: _isAvailable ? ListView.builder(shrinkWrap: true,itemCount: _searchedItem.length,itemBuilder: (context,index){
-                    return CustomListTile(title: _searchedItem[index].fileName, subTitle: _searchedItem[index].details, trailing: 'assets/icons/three_dots_icon.png',
-                      onOptionClick: () {
-                      _searchedFocusNode.unfocus();
-                      customBottomSheet(
-                          home_context: context,
-                          data: _searchedItem[index],
-                          onRenamed: (oldData,newData) {
-                            setState(() {
-                              Read.updateFiles(oldData,newData);
-                              _searchedItem = Read.AllFiles;
-                            });
-                          },
-                          onDeleted: (status,data) {
-                            if (status)
-                              setState(() {
-                                Read.removeFiles(data);
-                                _searchedItem = Read.AllFiles;
-                              });
-                          });
-                    },
-                      onTap: () {
-                        fileViewHandler(context, _searchedItem[index],onDelete: (status,data){if(status){Read.removeFiles(data);}},onRenamed:(oldData,newData){Read.updateFiles(oldData, newData);} );
-                      },);
-                  }) : Center(child: Text('No results'),),
+                  child: _isAvailable
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _searchedItem.length,
+                          itemBuilder: (context, index) {
+                            return CustomListTile(
+                              data: _searchedItem[index],
+                              onOptionClick: () {
+                                _searchedFocusNode.unfocus();
+                                customBottomSheet(
+                                    home_context: context,
+                                    data: _searchedItem[index],
+                                    onChanged: (status,{Data? newData}) {
+                                     if(status){
+                                       setState(() {
+                                         _searchedItem = Read.AllFiles;
+                                         _search();
+                                         widget.onChanged(status);
+                                       });
+                                     }
+                                    },
+                                );
+                              },
+                              onTap: () {
+                                fileViewHandler(context, _searchedItem[index],
+                                    onChanged: _onChanged );
+                              },
+                            );
+                          })
+                      : Center(
+                          child: Text('No results'),
+                        ),
                 ),
               ]),
         ),
@@ -85,7 +96,7 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
     );
   }
 
-  _topSearchDesign(){
+  _topSearchDesign() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -110,15 +121,17 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
                   suffixIcon: Visibility(
                     visible: _iconVisibility,
                     child: IconButton(
-                      onPressed: () {setState(() {
-                        _searchController.text = '';
-                        _iconVisibility = false;
-                      });},
+                      onPressed: () {
+                        setState(() {
+                          _searchController.text = '';
+                          _iconVisibility = false;
+                        });
+                      },
                       icon: Icon(Icons.cancel,
                           color: ColorTheme.BLACK.withOpacity(0.3)),
                       style: ButtonStyle(
-                          overlayColor: WidgetStatePropertyAll(
-                              ColorTheme.PRIMARY),
+                          overlayColor:
+                              WidgetStatePropertyAll(ColorTheme.PRIMARY),
                           iconSize: WidgetStatePropertyAll(20.ss)),
                     ),
                   ),
@@ -126,30 +139,27 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
                   hintStyle: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(
-                      color:
-                      ColorTheme.BLACK.withOpacity(0.5))),
+                      .copyWith(color: ColorTheme.BLACK.withOpacity(0.5))),
             ),
           ),
         ),
         SizedBox(
           height: 17,
           child: VerticalDivider(
-            color: ColorTheme.BLACK
-                .withOpacity(0.1), // Color of the divider
+            color: ColorTheme.BLACK.withOpacity(0.1), // Color of the divider
             thickness: 1.5, // Thickness of the divider
           ),
         ),
         TextButton(
-          onPressed: () {Navigator.of(context).pop();},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           child: Text(
             'Cancel',
           ),
           style: ButtonStyle(
-              overlayColor:
-              WidgetStatePropertyAll(ColorTheme.PRIMARY),
-              foregroundColor:
-              WidgetStatePropertyAll(ColorTheme.BLACK),
+              overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+              foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
               textStyle: WidgetStatePropertyAll(Theme.of(context)
                   .textTheme
                   .titleMedium!
@@ -158,15 +168,18 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
       ],
     );
   }
-  _search(){
+
+  _search() {
     var searchedQuery = _searchController.text;
-    if(searchedQuery.isNotEmpty){
+    if (searchedQuery.isNotEmpty) {
       setState(() {
-        _searchedItem = Read.AllFiles.where((data)=> data.fileName.toLowerCase().contains(searchedQuery.toLowerCase())).toList();
+        _searchedItem = Read.AllFiles.where((data) => data.fileName
+            .toLowerCase()
+            .contains(searchedQuery.toLowerCase())).toList();
         _searchedItem.isNotEmpty ? _isAvailable = true : _isAvailable = false;
         _iconVisibility = true;
       });
-    }else{
+    } else {
       setState(() {
         _searchedItem = [];
         _iconVisibility = false;
@@ -180,4 +193,13 @@ class _SearchScreenState extends State<SearchScreen> with WidgetsBindingObserver
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
+
+  void _onChanged(bool status,{Data? newData}) {
+   if(status){
+     _search();
+     widget.onChanged(status);
+
+   }
+  }
+
 }

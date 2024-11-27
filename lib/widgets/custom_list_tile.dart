@@ -1,59 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/get_icon_path.dart';
 import 'package:sizing/sizing.dart';
 
 class CustomListTile extends StatelessWidget {
-  final String title;
-  final String subTitle;
   final VoidCallback onOptionClick;
   final VoidCallback onTap;
-  final String trailing;
+  final Data data;
 
   CustomListTile(
       {super.key,
-      required this.title,
-      required this.subTitle,
+      required this.data,
       required this.onOptionClick,
       required this.onTap,
-      required this.trailing});
+      }
+      );
 
 
-  String _getIconPath(String title) {
-    String extension = title.split('.').last.toLowerCase();
-    switch (extension) {
-      case 'pdf':
-        return 'assets/icons/pdf.png';
-      case 'doc':
-      case 'docx':
-        return 'assets/icons/doc.png';
-      case 'ppt':
-      case 'pptx':
-        return 'assets/icons/ppt.png';
-      case 'xls':
-      case 'xlsx':
-        return 'assets/icons/xls.png';
-      default:
-        return 'assets/icons/pdf.png';
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
 
-    String iconPath = _getIconPath(title);
+
     return ListTile(
         contentPadding: EdgeInsets.only(left: 18.ss, right: 6.ss),
         onTap: ()=> onTap(),
         leading: Image.asset(
-          iconPath,
+          getIconPath(data.fileType),
           width: 45.ss,
           height: 45.ss,
         ),
         title: Text(
-          title,
+          data.fileName,
           maxLines: 1,
         ),
         subtitle: Text(
-          subTitle,
+          data.details,
           maxLines: 1,
         ),
         trailing: IconButton(
@@ -61,7 +44,7 @@ class CustomListTile extends StatelessWidget {
               onOptionClick();
             },
             icon: Image.asset(
-              trailing,
+              'assets/icons/three_dots_icon.png',
               width: 25.ss,
               height: 25.ss,
             )));

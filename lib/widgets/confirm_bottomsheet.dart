@@ -8,7 +8,7 @@ import '../model/data.dart';
 import '../utilities/color_theme.dart';
 
 Future<bool> showConfirmWidget (
-{ required BuildContext home_context, required Data data, required String message}) async {
+{ required BuildContext home_context, Data? data, required String label,String? message}) async {
   Completer<bool> completer = Completer<bool>();
   showModalBottomSheet(
       context: home_context,
@@ -19,7 +19,7 @@ Future<bool> showConfirmWidget (
           children: [
             Padding(
               padding: EdgeInsets.all(8.ss),
-              child: RichText(
+              child: data != null ? RichText(
                 text: TextSpan(
                     text: 'Total size ',
                     style: Theme.of(home_context)
@@ -27,6 +27,15 @@ Future<bool> showConfirmWidget (
                         .bodySmall!
                         .copyWith(fontSize: 11.fss),
                     children: [TextSpan(text: data.fileSize)]),
+                textAlign: TextAlign.center,
+              ) : RichText(
+                text: TextSpan(
+                    text: message,
+                    style: Theme.of(home_context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 11.fss),
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -42,7 +51,7 @@ Future<bool> showConfirmWidget (
                   fixedSize: WidgetStatePropertyAll(
                       Size(MediaQuery.of(home_context).size.width, 65))),
               child: Text(
-                message,
+                label,
                 style: Theme.of(home_context)
                     .textTheme
                     .bodyMedium!

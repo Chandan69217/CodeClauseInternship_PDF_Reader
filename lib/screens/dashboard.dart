@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
+import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/all_files_screens.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
@@ -75,9 +76,9 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     var instance = await SharedPreferences.getInstance();
     instance.setString(SortType.KEY, sortingType);
     Read.sortBy(sortingType);
-   _allFilesKey.currentState?.handleSortEvent();
-    _bookmarksKey.currentState?.handleSortEvent();
-    _historysKey.currentState?.handleSortEvent();
+   _allFilesKey.currentState?.refreshAllFiles();
+    _bookmarksKey.currentState?.refreshAllBookmarks();
+    _historysKey.currentState?.refreshAllHistory();
     _setSortingTicker(sortingType);
   }
 
@@ -525,7 +526,20 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   }
 
   _onSearch(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen(onChanged: _onChanged)));
   }
+
+
+  _refreshAll(){
+    _allFilesKey.currentState?.refreshAllFiles();
+    _historysKey.currentState?.refreshAllHistory();
+    _bookmarksKey.currentState?.refreshAllBookmarks();
+  }
+  void _onChanged(status,{Data? newData}) {
+    if(status){
+      _refreshAll();
+    }
+  }
+
 
 }

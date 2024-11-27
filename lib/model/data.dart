@@ -23,7 +23,7 @@ class Data{
     required this.date,
     required this.bytes,
     this.isBookmarked = false,
-    this.isHistory = false
+    this.isHistory = false,
   });
 
 }

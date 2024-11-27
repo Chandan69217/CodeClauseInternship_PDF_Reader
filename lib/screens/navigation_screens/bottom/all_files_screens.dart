@@ -28,7 +28,7 @@ class AllFilesStates extends State<AllFilesScreens>{
     super.initState();
   }
 
-  void handleSortEvent(){
+  void refreshAllFiles(){
     _allFileTabKey.currentState?.refresh();
     _pdfFileTabKey.currentState?.refresh();
     _docFileTabKey.currentState?.refresh();

@@ -28,7 +28,7 @@ class HistoryScreenState extends State<HistoryScreen> {
   static GlobalKey<ExcelFileTabState> _xlsFileTabKey = GlobalKey();
   static GlobalKey<PptFileTabState> _pptFileTabKey = GlobalKey();
 
-  void handleSortEvent(){
+  void refreshAllHistory(){
     _allFileTabKey.currentState?.refresh();
     _pdfFileTabKey.currentState?.refresh();
     _docFileTabKey.currentState?.refresh();

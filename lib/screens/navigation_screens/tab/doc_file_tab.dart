@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/utilities/file_view_handler.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
 import 'package:pdf_reader/widgets/confirm_bottomsheet.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheet.dart';
 import '../../../external_storage/database_helper.dart';
 import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
-import '../../../widgets/custom_list_tile.dart';
+import '../../../widgets/custom_listview_widget.dart';
 
 class DocFileTab extends StatefulWidget {
   final String trailing;
@@ -49,35 +48,20 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: ListView.builder(
-              itemCount: _snapshot.length,
-              itemBuilder: (context, index) {
-                final item = _snapshot[index];
-                return CustomListTile(
-                  title: item.fileName,
-                  subTitle: item.details,
-                  trailing: widget.trailing,
-                  onOptionClick: () {
-                    if(widget.screenType == ScreenType.BOOKMARKS){
-                      _bookmarkOptionBtn(item,index);
-                    }else{
-                      _threeDotOptionBtn(item);
-                    }
-                  },
-                  onTap: () async{
-                    // Navigator.push(context,MaterialPageRoute(builder: (context)=>FileViewer(filePath: snapshot.data![index].filePath,)));
-                    fileViewHandler(context, _snapshot[index],onDelete: (status,data){if(status){Read.removeFiles(data);refresh();}},onRenamed:(oldData,newData){Read.updateFiles(oldData, newData);refresh();} );
-
-                  },
-                );
-              })
+          child: CustomListView(
+            snapshot: _snapshot,
+            screenType: widget.screenType,
+            refresh: refresh,
+          )
       ),
     );
   }
 
-  refresh(){
-    setState(() {
-      _handleFileData(widget.screenType);
+  void refresh() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _handleFileData(widget.screenType);
+      });
     });
   }
 
@@ -94,14 +78,13 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
   }
 
   _bookmarkOptionBtn(Data data,int index)async{
-    if(await showConfirmWidget(home_context: context, data: data, message: 'Remove')){
+    if(await showConfirmWidget(home_context: context, data: data, label: 'Remove')){
       var database = await DatabaseHelper.getInstance();
       var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: _snapshot[index].filePath);
       if(isBookmarked){
-        var oldData = data;
-        data.isBookmarked = false;
-        Read.updateFiles(oldData,data);
-        refresh();
+        if(await Read.updateFiles(data,typeOfUpdate: TypeOfUpdate.BOOKMARK)){
+          refresh();
+        }
       }
     }
   }
@@ -110,16 +93,12 @@ class DocFileTabState extends State<DocFileTab> with WidgetsBindingObserver{
     customBottomSheet(
         home_context: context,
         data:item,
-        onRenamed: (oldData,newData) {
-          Read.updateFiles(oldData, newData);
-          refresh();
-        },
-        onDeleted: (status,data) {
-          if (status) {
-            Read.removeFiles(data);
+        onChanged: (status,{Data? newData}) {
+          if(status){
             refresh();
           }
-        });
+        },
+    );
   }
 
   @override

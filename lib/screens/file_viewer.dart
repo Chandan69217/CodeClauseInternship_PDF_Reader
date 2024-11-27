@@ -15,8 +15,13 @@ class FileViewer extends StatefulWidget{
 class _FileViewerState extends State<FileViewer> {
 
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+    );
   }
 
 }

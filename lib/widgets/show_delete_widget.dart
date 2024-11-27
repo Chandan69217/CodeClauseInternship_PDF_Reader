@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:sizing/sizing.dart';
 
@@ -7,7 +8,7 @@ import '../model/data.dart';
 import '../utilities/color_theme.dart';
 
 void showDeleteWidget(
-    BuildContext home_context, Data data, OnDeleted onDeleted) {
+    BuildContext home_context, Data data, OnChanged onDeleted) {
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -72,17 +73,25 @@ void showDeleteWidget(
       });
 }
 
-void _deleteFile(Data data, OnDeleted onDeleted) async {
-  if (await data.file.exists()) {
+void _deleteFile(Data data, OnChanged onDeleted) async {
     try {
-      data.file.deleteSync();
-      onDeleted(true,data);
+      onDeleted(await Read.removeFiles(data));
     } catch (exception, trace) {
-      onDeleted(false,data);
       print('$exception : $trace');
     }
-  } else {
-    onDeleted(false,data);
-    print('file does not exist');
-  }
 }
+
+// void _deleteFile(Data data, OnDeleted onDeleted) async {
+//   if (await data.file.exists()) {
+//     try {
+//       data.file.deleteSync();
+//       onDeleted(true,data);
+//     } catch (exception, trace) {
+//       onDeleted(false,data);
+//       print('$exception : $trace');
+//     }
+//   } else {
+//     onDeleted(false,data);
+//     print('file does not exist');
+//   }
+// }
