@@ -65,8 +65,8 @@ class _CustomListViewState extends State<CustomListView> {
                 icon: Image.asset(
                   widget.screenType == ScreenType.ALL_FILES ||
                           widget.screenType == ScreenType.HISTORY
-                      ? 'assets/icons/three_dots_icon.png'
-                      : 'assets/icons/bookmark_filled.png',
+                      ? 'assets/icons/three_dots_icon.webp'
+                      : 'assets/icons/bookmark_filled.webp',
                   width: 25.ss,
                   height: 25.ss,
                   fit: BoxFit.cover,

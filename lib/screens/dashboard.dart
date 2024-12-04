@@ -115,7 +115,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         child: IconButton(
             onPressed: _onSearch,
             icon: Image.asset(
-              'assets/icons/search_icon.png',
+              'assets/icons/search_icon.webp',
               width: 30.ss,
               height: 30.ss,
             )),
@@ -128,21 +128,21 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
           itemBuilder: (context) {
             return <PopupMenuItem>[
               PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', visibility: _appliedSortingDate),
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.webp', title: 'Last Modified', visibility: _appliedSortingDate),
                 value: 'DATE',
               ),
               PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', visibility: _appliedSortingName),
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.webp', title: 'Name', visibility: _appliedSortingName),
                 value: 'NAME',
               ),
               PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', visibility: _appliedSortingSize),
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.webp', title: 'File Size', visibility: _appliedSortingSize),
                 value: 'SIZE',
               )
             ];
           },
           icon: Image.asset(
-            'assets/icons/sort_icon.png',
+            'assets/icons/sort_icon.webp',
             width: 30.ss,
             height: 30.ss,
           ),
@@ -182,7 +182,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
           child: Visibility(
             visible: visibility,
             child: Image.asset(
-              'assets/icons/tick_icon.png',
+              'assets/icons/tick_icon.webp',
               width: 25.ss,
               height: 25.ss,
             ),
@@ -266,7 +266,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/crown_icon.png',
+                                      'assets/icons/crown_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.RED,
@@ -302,7 +302,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/language_icon.png',
+                                      'assets/icons/language_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -329,7 +329,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/share_icon.png',
+                                      'assets/icons/share_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -356,7 +356,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/app_like_icon.png',
+                                      'assets/icons/app_like_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -383,7 +383,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/feedback_icon.png',
+                                      'assets/icons/feedback_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -410,7 +410,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/privacy_icon.png',
+                                      'assets/icons/privacy_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -437,7 +437,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                 Expanded(
                                     flex: 1,
                                     child: Image.asset(
-                                      'assets/icons/application_icon.png',
+                                      'assets/icons/application_icon.webp',
                                       width: 25.ss,
                                       height: 25.ss,
                                       color: ColorTheme.WHITE,
@@ -485,44 +485,44 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/file_icon.png',
+              'assets/icons/file_icon.webp',
               width: 25.ss,
               height: 25.ss,
             ),
             label: 'All File',
             activeIcon: Image.asset(
-              'assets/icons/file_icon.png',
+              'assets/icons/file_icon.webp',
               width: 25.ss,
               height:25.ss,
               color: ColorTheme.RED,
             )),
         BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/history_icon.png',
+              'assets/icons/history_icon.webp',
               width: 25.ss,
               height: 25.ss,
             ),
             label: 'History',
-            activeIcon: Image.asset('assets/icons/history_icon.png',
+            activeIcon: Image.asset('assets/icons/history_icon.webp',
                 width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon:
             Image.asset(
-              'assets/icons/bookmark.png',
+              'assets/icons/bookmark.webp',
               width: 25.ss,
               height: 25.ss,
             ),
             label: 'Bookmarks',
-            activeIcon: Image.asset('assets/icons/bookmark.png',
+            activeIcon: Image.asset('assets/icons/bookmark.webp',
                 width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/tools_icon.png',
+              'assets/icons/tools_icon.webp',
               width: 25.ss,
               height: 25.ss,
             ),
             label: 'Tools',
-            activeIcon: Image.asset('assets/icons/tools_icon.png',
+            activeIcon: Image.asset('assets/icons/tools_icon.webp',
                 width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
       ],
     );

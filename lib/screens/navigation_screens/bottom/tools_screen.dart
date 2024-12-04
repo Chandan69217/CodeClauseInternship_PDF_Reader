@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:sizing/sizing.dart';
 
@@ -64,10 +65,10 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
-              _items(iconData: Icons.picture_as_pdf_rounded, label: 'Image to PDF',onTap: (){}),
-              _items(iconData: Icons.document_scanner, label: 'Scan to PDF',onTap: (){}),
-              _items(iconData: Icons.wordpress_rounded, label: 'Word to PDF',onTap: (){}),
-              _items(iconData: Icons.image_rounded, label: 'Image to PDF',onTap: (){}),
+              _items(iconData: Icons.picture_as_pdf_rounded, label: 'Image to PDF',onTap: _message),
+              _items(iconData: Icons.document_scanner, label: 'Scan to PDF',onTap: _message),
+              _items(iconData: Icons.wordpress_rounded, label: 'Word to PDF',onTap: _message),
+              _items(iconData: Icons.image_rounded, label: 'Image to PDF',onTap: _message),
             ]),
           )
         ],
@@ -100,11 +101,11 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
-                  _items(iconData: Icons.account_balance_wallet_rounded, label: 'Annotate',onTap: (){}),
-                  _items(iconData: Icons.follow_the_signs, label: 'Sign',onTap: (){}),
-                  _items(iconData: Icons.picture_as_pdf_rounded, label: 'Merge PDF',onTap: (){}),
-                  _items(iconData: Icons.splitscreen_outlined, label: 'Split PDF',onTap: (){}),
-                  _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: (){}),
+                  _items(iconData: Icons.account_balance_wallet_rounded, label: 'Annotate',onTap: _message),
+                  _items(iconData: Icons.follow_the_signs, label: 'Sign',onTap: _message),
+                  _items(iconData: Icons.picture_as_pdf_rounded, label: 'Merge PDF',onTap: _message),
+                  _items(iconData: Icons.splitscreen_outlined, label: 'Split PDF',onTap: _message),
+                  _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
                 ]),
           )
         ],
@@ -138,10 +139,10 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
-                  _items(iconData: Icons.insert_drive_file_sharp, label: 'Import Files',onTap: (){}),
-                  _items(iconData: Icons.print, label: 'Print PDF',onTap: (){}),
-                  _items(iconData: Icons.lock, label: 'Lock PDF',onTap: (){}),
-                  _items(iconData: Icons.lock_open_outlined, label: 'Unlock PDF',onTap: (){}),
+                  _items(iconData: Icons.insert_drive_file_sharp, label: 'Import Files',onTap: _message),
+                  _items(iconData: Icons.print, label: 'Print PDF',onTap:()=> Navigator.push(context,MaterialPageRoute(builder: (context)=> SelectionScreen()))),
+                  _items(iconData: Icons.lock, label: 'Lock PDF',onTap: _message),
+                  _items(iconData: Icons.lock_open_outlined, label: 'Unlock PDF',onTap: _message),
                 ]),
           )
         ],

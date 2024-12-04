@@ -47,6 +47,8 @@ class CustomListTile extends StatelessWidget {
               'assets/icons/three_dots_icon.png',
               width: 25.ss,
               height: 25.ss,
-            )));
+            )
+        )
+    );
   }
 }
