@@ -85,6 +85,9 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   AppBar _appBar() {
     return AppBar(
       backgroundColor: ColorTheme.PRIMARY,
+      leading: Builder(builder: (BuildContext context) {
+        return IconButton(onPressed: (){Scaffold.of(context).openDrawer();}, icon: Icon(Icons.menu_rounded));
+      },),
       title: RichText(
           text: TextSpan(
               text: 'PDF ',
@@ -107,40 +110,46 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
 
   List<Widget> _actionsButton() {
     return <Widget>[
-      IconButton(
-          onPressed: _onSearch,
+      Visibility(
+        visible: _currentIndex != 3,
+        child: IconButton(
+            onPressed: _onSearch,
+            icon: Image.asset(
+              'assets/icons/search_icon.png',
+              width: 30.ss,
+              height: 30.ss,
+            )),
+      ),
+      Visibility(
+        visible: _currentIndex !=3 ,
+        child: PopupMenuButton(
+          menuPadding: EdgeInsets.all(5.ss),
+          onSelected: _onSelected,
+          itemBuilder: (context) {
+            return <PopupMenuItem>[
+              PopupMenuItem(
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', visibility: _appliedSortingDate),
+                value: 'DATE',
+              ),
+              PopupMenuItem(
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', visibility: _appliedSortingName),
+                value: 'NAME',
+              ),
+              PopupMenuItem(
+                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', visibility: _appliedSortingSize),
+                value: 'SIZE',
+              )
+            ];
+          },
           icon: Image.asset(
-            'assets/icons/search_icon.png',
+            'assets/icons/sort_icon.png',
             width: 30.ss,
             height: 30.ss,
-          )),
-      PopupMenuButton(
-        menuPadding: EdgeInsets.all(5.ss),
-        onSelected: _onSelected,
-        itemBuilder: (context) {
-          return <PopupMenuItem>[
-            PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.png', title: 'Last Modified', visibility: _appliedSortingDate),
-              value: 'DATE',
-            ),
-            PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.png', title: 'Name', visibility: _appliedSortingName),
-              value: 'NAME',
-            ),
-            PopupMenuItem(
-              child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.png', title: 'File Size', visibility: _appliedSortingSize),
-              value: 'SIZE',
-            )
-          ];
-        },
-        icon: Image.asset(
-          'assets/icons/sort_icon.png',
-          width: 30.ss,
-          height: 30.ss,
+          ),
+          color: ColorTheme.WHITE,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.ss)),
         ),
-        color: ColorTheme.WHITE,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18.ss)),
       ),
       SizedBox(
         width: 10.ss,
@@ -477,43 +486,44 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/file_icon.png',
-              width: 30.ss,
-              height: 30.ss,
+              width: 25.ss,
+              height: 25.ss,
             ),
             label: 'All File',
             activeIcon: Image.asset(
               'assets/icons/file_icon.png',
-              width: 30.ss,
-              height: 30.ss,
+              width: 25.ss,
+              height:25.ss,
               color: ColorTheme.RED,
             )),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/history_icon.png',
-              width: 30.ss,
-              height: 30.ss,
+              width: 25.ss,
+              height: 25.ss,
             ),
             label: 'History',
             activeIcon: Image.asset('assets/icons/history_icon.png',
-                width: 30.ss, height: 30.ss, color: ColorTheme.RED)),
+                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
-            icon: Image.asset(
+            icon:
+            Image.asset(
               'assets/icons/bookmark.png',
-              width: 30.ss,
-              height: 30.ss,
+              width: 25.ss,
+              height: 25.ss,
             ),
             label: 'Bookmarks',
             activeIcon: Image.asset('assets/icons/bookmark.png',
-                width: 30.ss, height: 30.ss, color: ColorTheme.RED)),
+                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/tools_icon.png',
-              width: 30.ss,
-              height: 30.ss,
+              width: 25.ss,
+              height: 25.ss,
             ),
-            label: 'tools',
+            label: 'Tools',
             activeIcon: Image.asset('assets/icons/tools_icon.png',
-                width: 30.ss, height: 30.ss, color: ColorTheme.RED)),
+                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
       ],
     );
   }

@@ -46,7 +46,7 @@ class AllFilesStates extends State<AllFilesScreens>{
           child: DefaultTabController(length: 5,child: Column(
             children: [
               TabBar(labelStyle: Theme.of(context).textTheme.titleSmall,
-                tabs: <Tab>[
+                tabs: const <Tab>[
                 Tab(text: 'ALL',),
                 Tab(text: 'PDF'),
                 Tab(text: 'DOC'),

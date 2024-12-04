@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sizing/sizing.dart';
 
 import '../utilities/callbacks.dart';
+import '../utilities/get_icon_path.dart';
 
 void customBottomSheet(
     {required BuildContext home_context,
@@ -110,20 +111,10 @@ class _SheetDesignState extends State<_SheetDesign>{
   }
 
 
-  String _getIconPath(String extension){
-    switch(extension){
-      case 'pdf' : return 'assets/icons/pdf.png';
-      case 'doc' || 'docx': return 'assets/icons/doc.png';
-      case 'ppt' || 'pptx': return 'assets/icons/ppt.png';
-      case 'xls' || 'xlsx': return 'assets/icons/xls.png';
-      default: return '';
-    }
-  }
 
   Widget _topDesign() {
 
-    String extension = widget.data.filePath.split('.').last.toLowerCase();
-    String iconPath = _getIconPath(extension);
+    String iconPath = getIconPath(widget.data.fileType);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
