@@ -152,7 +152,7 @@ class _SheetDesignState extends State<_SheetDesign>{
             child: IconButton(
                 onPressed: !widget.data.isBookmarked ? _addToBookmark : _removeFromBookmark,
                 icon: Image.asset(
-                  widget.data.isBookmarked ? 'assets/icons/bookmark_filled.png' : 'assets/icons/bookmark_icon.png',
+                  widget.data.isBookmarked ? 'assets/icons/bookmark_filled.webp' : 'assets/icons/bookmark_icon.webp',
                   width: 25.ss,
                   height: 25.ss,
                 )))

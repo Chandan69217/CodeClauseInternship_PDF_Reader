@@ -93,7 +93,7 @@ class _PdfViewerStates extends State<PdfViewer> {
           ];
         },
         icon: Image.asset(
-          'assets/icons/three_dots_icon.png',
+          'assets/icons/three_dots_icon.webp',
           width: 20.ss,
           height: 20.ss,
         ),

@@ -2,13 +2,15 @@
 import 'dart:io';
 import 'package:printing/printing.dart';
 
+import '../model/data.dart';
+
 class ToolsFunction{
 
 
 
 
 
-  static printPDF(File files)async{
+  static Future<void> printPDF(File files)async{
     try{
       if(await files.exists()){
         var pdfData = await files.readAsBytes();
@@ -22,6 +24,12 @@ class ToolsFunction{
       print('exception : $exception , trace: $trace');
     }
   }
+
+  static Future<void> lockPDF(Data data) async{
+    
+  }
+
+
 
 
 }
