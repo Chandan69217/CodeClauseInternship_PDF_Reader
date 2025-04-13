@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sizing/sizing.dart';
-
 import '../model/data.dart';
 import '../utilities/color_theme.dart';
+
+
 
 Future<bool> showConfirmWidget (
 { required BuildContext home_context, Data? data, required String label,String? message}) async {
@@ -18,14 +17,14 @@ Future<bool> showConfirmWidget (
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.all(8.ss),
+              padding: EdgeInsets.all(8),
               child: data != null ? RichText(
                 text: TextSpan(
                     text: 'Total size ',
                     style: Theme.of(home_context)
                         .textTheme
                         .bodySmall!
-                        .copyWith(fontSize: 11.fss),
+                        .copyWith(fontSize: 11),
                     children: [TextSpan(text: data.fileSize)]),
                 textAlign: TextAlign.center,
               ) : RichText(
@@ -34,7 +33,7 @@ Future<bool> showConfirmWidget (
                     style: Theme.of(home_context)
                         .textTheme
                         .bodySmall!
-                        .copyWith(fontSize: 11.fss),
+                        .copyWith(fontSize: 11),
                 ),
                 textAlign: TextAlign.center,
               ),

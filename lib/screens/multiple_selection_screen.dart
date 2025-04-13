@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/database_helper.dart';
@@ -9,7 +8,6 @@ import 'package:pdf_reader/utilities/get_icon_path.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
 import 'package:pdf_reader/widgets/confirm_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sizing/sizing.dart';
 import '../model/data.dart';
 
 class SelectionScreen extends StatefulWidget {
@@ -66,23 +64,9 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: ColorTheme.PRIMARY,
-      //   actions: <Widget>[
-      //     const Text('All'),
-      //     Checkbox(
-      //       value: _isSelectAll,
-      //       onChanged: selectAll,
-      //       activeColor: ColorTheme.RED,
-      //       materialTapTargetSize: MaterialTapTargetSize.padded,
-      //     ),
-      //     SizedBox(
-      //       width: 5.ss,
-      //     ),
-      //   ],
-      // ),
+
       body: SafeArea(
-        child: Padding(padding: EdgeInsets.only(top: 10.ss),
+        child: Padding(padding: EdgeInsets.only(top: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,26 +75,29 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
             _topSearchDesign(),
             InkWell(
               onTap: ()=> selectAll(!_isSelectAll),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text('Select All'),
-                SizedBox(width: MediaQuery.of(context).size.width*0.29,),
-                Checkbox(
-                  value: _isSelectAll,
-                  onChanged: selectAll,
-                  activeColor: ColorTheme.RED,
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                ),
-                SizedBox(
-                  width: 5.ss,
-                ),
-                ],),
+              child: Padding(
+                padding: EdgeInsets.only(left: 18, right: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('Select All'),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.29,),
+                  Checkbox(
+                    value: _isSelectAll,
+                    onChanged: selectAll,
+                    activeColor: ColorTheme.RED,
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
+                  ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  ],),
+              ),
             ),
             Divider(
               height: 0,
-              color: ColorTheme.BLACK.withOpacity(0.1),
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.2) :ColorTheme.BLACK.withValues(alpha: 0.1),
             ),
             Expanded(
               child: ListView.builder(
@@ -121,13 +108,13 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
                   final originalIndex = widget.snapshot.indexOf(item);
                   return ListTile(
                       style: ListTileStyle.list,
-                      contentPadding: EdgeInsets.only(left: 18.ss, right: 6.ss),
+                      contentPadding: EdgeInsets.only(left: 18, right: 6),
                       onTap: () => _toggleSelection(originalIndex),
                       onLongPress: () => _longPressHandler(originalIndex),
                       leading: Image.asset(
                         getIconPath(item.fileType),
-                        width: 45.ss,
-                        height: 45.ss,
+                        width: 45,
+                        height: 45,
                         fit: BoxFit.cover,
                       ),
                       title: Text(
@@ -351,10 +338,6 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
       required VoidCallback onPressed}) {
     return Expanded(
       child: TextButton(
-          style: ButtonStyle(
-              overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-              shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-              foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK)),
           onPressed: onPressed,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -393,20 +376,19 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
       mainAxisSize: MainAxisSize.min,
       children: [
         TextSelectionTheme(
-          data: TextSelectionThemeData(
-              selectionHandleColor: ColorTheme.RED,
-              selectionColor: ColorTheme.PRIMARY),
+          data: Theme.of(context).textSelectionTheme,
           child: ConstrainedBox(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.62,
-                maxHeight: 40.ss),
+                maxHeight: 40),
             child: TextField(
               focusNode: _searchedFocusNode,
               controller: _searchController,
               cursorColor: ColorTheme.RED,
               maxLines: 1,
+              autofocus: true,
               keyboardType: TextInputType.text,
-              style: TextStyle(color: ColorTheme.BLACK),
+              style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   suffixIcon: Visibility(
@@ -418,46 +400,111 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
                           _iconVisibility = false;
                         });
                       },
-                      icon: Icon(Icons.cancel,
-                          color: ColorTheme.BLACK.withOpacity(0.3)),
-                      style: ButtonStyle(
-                          overlayColor:
-                          WidgetStatePropertyAll(ColorTheme.PRIMARY),
-                          iconSize: WidgetStatePropertyAll(20.ss)),
+                      icon: Icon(Icons.cancel,),
+
                     ),
                   ),
                   hintText: 'Search',
                   hintStyle: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(color: ColorTheme.BLACK.withOpacity(0.5))),
+                      .copyWith(color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.5):ColorTheme.BLACK.withValues(alpha: 0.5))
+              ),
             ),
           ),
         ),
         SizedBox(
           height: 17,
           child: VerticalDivider(
-            color: ColorTheme.BLACK.withOpacity(0.1), // Color of the divider
+            color:Theme.of(context).brightness == Brightness.light? ColorTheme.BLACK.withValues(alpha: 0.1):ColorTheme.WHITE.withValues(alpha: 0.5), // Color of the divider
             thickness: 1.5, // Thickness of the divider
           ),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            'Cancel',
+
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'Cancel',
+            ),
+            style: ButtonStyle(
+                overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+                foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
+                textStyle: WidgetStatePropertyAll(Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontWeight: FontWeight.bold))),
           ),
-          style: ButtonStyle(
-              overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-              foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
-              textStyle: WidgetStatePropertyAll(Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontWeight: FontWeight.bold))),
         ),
       ],
     );
   }
+  // _topSearchDesign() {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       TextSelectionTheme(
+  //         data: Theme.of(context).textSelectionTheme,
+  //         child: ConstrainedBox(
+  //           constraints: BoxConstraints(
+  //               maxWidth: MediaQuery.of(context).size.width * 0.62,
+  //               maxHeight: 40),
+  //           child: TextField(
+  //             focusNode: _searchedFocusNode,
+  //             controller: _searchController,
+  //             cursorColor: ColorTheme.RED,
+  //             maxLines: 1,
+  //             keyboardType: TextInputType.text,
+  //             style: Theme.of(context).textTheme.bodyMedium,
+  //             decoration: InputDecoration(
+  //                 border: InputBorder.none,
+  //                 suffixIcon: Visibility(
+  //                   visible: _iconVisibility,
+  //                   child: IconButton(
+  //                     onPressed: () {
+  //                       setState(() {
+  //                         _searchController.text = '';
+  //                         _iconVisibility = false;
+  //                       });
+  //                     },
+  //                     icon: Icon(Icons.cancel,),
+  //                   ),
+  //                 ),
+  //                 hintText: 'Search',
+  //                 hintStyle: Theme.of(context)
+  //                     .textTheme
+  //                     .bodyMedium!
+  //                     .copyWith(color:Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.5):ColorTheme.BLACK.withValues(alpha: 0.5))),
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 17,
+  //         child: VerticalDivider(
+  //           color:Theme.of(context).brightness == Brightness.light? ColorTheme.BLACK.withValues(alpha: 0.1):ColorTheme.WHITE.withValues(alpha: 0.5), // Color of the divider
+  //           thickness: 1.5, // Thickness of the divider
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           Navigator.of(context).pop();
+  //         },
+  //         child: Text(
+  //           'Cancel',
+  //         ),
+  //         style: ButtonStyle(
+  //             overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+  //             foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
+  //             textStyle: WidgetStatePropertyAll(Theme.of(context)
+  //                 .textTheme
+  //                 .titleMedium!
+  //                 .copyWith(fontWeight: FontWeight.bold))),
+  //       ),
+  //     ],
+  //   );
+  // }
 
 }

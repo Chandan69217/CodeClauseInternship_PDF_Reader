@@ -8,7 +8,7 @@ import 'package:pdf_reader/widgets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/show_rename_widget.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sizing/sizing.dart';
+
 
 import '../utilities/callbacks.dart';
 import '../utilities/get_icon_path.dart';
@@ -43,16 +43,16 @@ class _SheetDesignState extends State<_SheetDesign>{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(24.ss),
+      padding: EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-              padding: EdgeInsets.only(top: 12.ss),
+              padding: EdgeInsets.only(top: 12),
               child: _topDesign()),
           SizedBox(
-            height: 6.ss,
+            height: 6,
           ),
           Divider(
             height: 1,
@@ -123,8 +123,8 @@ class _SheetDesignState extends State<_SheetDesign>{
           flex: 1,
           child: Image.asset(
             iconPath,
-            width: 45.ss,
-            height: 45.ss,
+            width: 45,
+            height: 45,
           ),
         ),
         Expanded(
@@ -153,8 +153,10 @@ class _SheetDesignState extends State<_SheetDesign>{
                 onPressed: !widget.data.isBookmarked ? _addToBookmark : _removeFromBookmark,
                 icon: Image.asset(
                   widget.data.isBookmarked ? 'assets/icons/bookmark_filled.webp' : 'assets/icons/bookmark_icon.webp',
-                  width: 25.ss,
-                  height: 25.ss,
+                  width: 25,
+                  height: 25,
+                  color: widget.data.isBookmarked?
+                      null: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
                 )))
       ],
     );

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
-import 'package:sizing/sizing.dart';
 
 class ToolsScreen extends StatefulWidget {
   ToolsScreen._();
@@ -20,7 +19,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 20.ss, horizontal: 14.ss),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 14),
         child: ConstrainedBox(
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height,
@@ -31,6 +30,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
                _convert(),
+              SizedBox(height: 10.0,),
               _edit(),
               _manage()
             ],
@@ -42,7 +42,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
   Widget _convert() {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 120.ss,),
+      constraints: BoxConstraints(maxHeight: 120,),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +61,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
             flex: 5,
             child: GridView.count(
                 crossAxisCount: 4,
+                physics: NeverScrollableScrollPhysics(),
                 addRepaintBoundaries: true,
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
@@ -78,7 +79,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
   Widget _edit() {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 220.ss),
+      constraints: BoxConstraints(maxHeight: 240),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,10 +95,11 @@ class _ToolsScreenState extends State<ToolsScreen> {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: 9,
             child: GridView.count(
                 crossAxisCount: 4,
                 addRepaintBoundaries: true,
+                physics: NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
@@ -115,12 +117,13 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
   Widget _manage(){
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 120.ss),
+      constraints: BoxConstraints(maxHeight: 120),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          // SizedBox(height: 8.0,),
           Expanded(
             flex: 1,
             child: Text(
@@ -136,6 +139,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisCount: 4,
                 // crossAxisSpacing: 10,
                 addRepaintBoundaries: true,
+                physics: NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
@@ -152,22 +156,22 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
   Widget _items({required IconData iconData, required String label,required VoidCallback onTap }) {
     return InkWell(
-      overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+      overlayColor: WidgetStatePropertyAll(Theme.of(context).brightness == Brightness.dark?Colors.grey:ColorTheme.PRIMARY),
       onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             decoration: BoxDecoration(
-                color: ColorTheme.WHITE,
-                borderRadius: BorderRadius.all(Radius.circular(8.ss))),
+                color: Theme.of(context).brightness == Brightness.dark  ?ColorTheme.BLACK: ColorTheme.WHITE,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
             child: Padding(
-              padding: EdgeInsets.all(12.ss),
+              padding: EdgeInsets.all(12),
               child: Icon(iconData),
             ),
           ),
-          SizedBox(height: 8.ss,),
-          Text(label,style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11.fss,fontWeight: FontWeight.w500),)
+          SizedBox(height: 8,),
+          Text(label,style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 11,fontWeight: FontWeight.w500),)
         ],
       ),
     );

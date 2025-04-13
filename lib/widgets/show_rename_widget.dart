@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
-import 'package:sizing/sizing.dart';
-
 import '../utilities/callbacks.dart';
 import '../utilities/color_theme.dart';
+
+
 
 void showRenameWidget(
     {required BuildContext home_context,
@@ -54,7 +53,7 @@ class _State extends State<_BottomSheetUI> {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return Padding(
       padding: EdgeInsets.only(
-          left: 24.ss, right: 24.ss, top: 15.ss, bottom: bottomInset + 20.ss),
+          left: 24, right: 24, top: 15, bottom: bottomInset + 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -66,9 +65,10 @@ class _State extends State<_BottomSheetUI> {
                     Navigator.pop(context);
                   },
                   icon: Image.asset(
-                    'assets/icons/close_icon.png',
-                    width: 25.ss,
-                    height: 25.ss,
+                    'assets/icons/close_icon.webp',
+                    width: 25,
+                    height: 25,
+                    color: Theme.of(context).brightness == Brightness.dark ? ColorTheme.WHITE:null,
                   )),
               title: Text(
                 'Rename',
@@ -83,30 +83,27 @@ class _State extends State<_BottomSheetUI> {
               trailing: IconButton(
                   onPressed: _isOkIconButtonEnable ? ()=> _renameFile(widget.data) : null,
                   icon: Image.asset(
-                    'assets/icons/tick_icon.png',
-                    width: 25.ss,
-                    height: 25.ss,
+                    'assets/icons/tick_icon.webp',
+                    width: 25,
+                    height: 25,
                     color: _isOkIconButtonEnable
-                        ? ColorTheme.BLACK
+                        ? Theme.of(context).brightness == Brightness.dark ? ColorTheme.WHITE:ColorTheme.BLACK
                         : ColorTheme.BLACK.withOpacity(0.5),
                   ))),
           SizedBox(
-            height: 20.ss,
+            height: 20,
           ),
           TextSelectionTheme(
-            data: TextSelectionThemeData(
-              selectionColor: ColorTheme.PRIMARY,
-              selectionHandleColor: ColorTheme.RED,
-            ),
+            data: Theme.of(context).textSelectionTheme,
             child: TextField(
               maxLines: 1,
               autofocus: true,
-              cursorHeight: 20.ss,
+              cursorHeight: 20,
               controller: _controller,
               cursorColor: ColorTheme.RED,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(8.ss),
+                  contentPadding: EdgeInsets.all(8),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: ColorTheme.RED)),
                   focusedBorder: UnderlineInputBorder(
@@ -121,7 +118,6 @@ class _State extends State<_BottomSheetUI> {
                         },
                         icon: Icon(
                           Icons.cancel,
-                          color: ColorTheme.BLACK.withOpacity(0.5),
                         )),
                   ),
                   hintText: 'File name',

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/screens/multiple_selection_screen.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
-import 'package:sizing/sizing.dart';
 import '../external_storage/database_helper.dart';
 import '../external_storage/read_storage.dart';
 import '../model/data.dart';
@@ -37,13 +37,13 @@ class _CustomListViewState extends State<CustomListView> {
       itemBuilder: (BuildContext context, int index) {
         final item = widget.snapshot[index];
         return ListTile(
-            contentPadding: EdgeInsets.only(left: 18.ss, right: 6.ss),
+            contentPadding: EdgeInsets.only(left: 18, right: 6),
             onTap: () => _onTap(item),
             onLongPress: () async => _longPressHandler(index),
             leading: Image.asset(
               getIconPath(item.fileType),
-              width: 45.ss,
-              height: 45.ss,
+              width: 45,
+              height: 45,
               fit: BoxFit.cover,
             ),
             title: Text(
@@ -67,9 +67,12 @@ class _CustomListViewState extends State<CustomListView> {
                           widget.screenType == ScreenType.HISTORY
                       ? 'assets/icons/three_dots_icon.webp'
                       : 'assets/icons/bookmark_filled.webp',
-                  width: 25.ss,
-                  height: 25.ss,
+                  width: 25,
+                  height: 25,
                   fit: BoxFit.cover,
+                  color:  widget.screenType == ScreenType.ALL_FILES ||
+                      widget.screenType == ScreenType.HISTORY
+                      ? Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null:null,
                 )));
       },
     );
@@ -82,6 +85,7 @@ class _CustomListViewState extends State<CustomListView> {
       }
     });
   }
+
 
   _bookmarkOptionBtn(Data data, int index) async {
     if (await showConfirmWidget(

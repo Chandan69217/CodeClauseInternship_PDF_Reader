@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/utilities/get_icon_path.dart';
-import 'package:sizing/sizing.dart';
+
 
 class CustomListTile extends StatelessWidget {
   final VoidCallback onOptionClick;
@@ -24,12 +24,12 @@ class CustomListTile extends StatelessWidget {
 
 
     return ListTile(
-        contentPadding: EdgeInsets.only(left: 18.ss, right: 6.ss),
+        contentPadding: EdgeInsets.only(left: 18, right: 6),
         onTap: ()=> onTap(),
         leading: Image.asset(
           getIconPath(data.fileType),
-          width: 45.ss,
-          height: 45.ss,
+          width: 45,
+          height: 45,
         ),
         title: Text(
           data.fileName,
@@ -44,9 +44,9 @@ class CustomListTile extends StatelessWidget {
               onOptionClick();
             },
             icon: Image.asset(
-              'assets/icons/three_dots_icon.png',
-              width: 25.ss,
-              height: 25.ss,
+              'assets/icons/three_dots_icon.webp',
+              width: 25,
+              height: 25,
             )
         )
     );

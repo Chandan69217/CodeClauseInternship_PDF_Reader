@@ -43,9 +43,11 @@ class AllFilesStates extends State<AllFilesScreens>{
       length: 5,
       child: Scaffold(
         body: SafeArea(
-          child: DefaultTabController(length: 5,child: Column(
+          child: DefaultTabController(
+              length: 5,child: Column(
             children: [
-              TabBar(labelStyle: Theme.of(context).textTheme.titleSmall,
+              TabBar(
+                labelStyle: Theme.of(context).textTheme.titleSmall,
                 tabs: const <Tab>[
                 Tab(text: 'ALL',),
                 Tab(text: 'PDF'),

@@ -7,7 +7,6 @@ import 'package:pdf_reader/widgets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/show_rename_widget.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sizing/sizing.dart';
 
 import '../utilities/color_theme.dart';
 
@@ -63,7 +62,7 @@ class _PdfViewerStates extends State<PdfViewer> {
   List<Widget> _actionsButton() {
     return <Widget>[
       PopupMenuButton(
-        menuPadding: EdgeInsets.all(5.ss),
+        menuPadding: EdgeInsets.all(5),
         onSelected: (value) => _onSelected(value, widget.data),
         style: const ButtonStyle(
           overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
@@ -94,15 +93,15 @@ class _PdfViewerStates extends State<PdfViewer> {
         },
         icon: Image.asset(
           'assets/icons/three_dots_icon.webp',
-          width: 20.ss,
-          height: 20.ss,
+          width: 20,
+          height: 20,
         ),
         color: ColorTheme.WHITE,
         shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.ss)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
       SizedBox(
-        width: 10.ss,
+        width: 10,
       ),
     ];
   }
@@ -120,7 +119,7 @@ class _PdfViewerStates extends State<PdfViewer> {
           ),
         ),
         SizedBox(
-          width: 5.ss,
+          width: 5,
         ),
         Expanded(
           flex: 1,
@@ -177,9 +176,9 @@ class _PdfViewerStates extends State<PdfViewer> {
    return AppBar(
        title: Text(widget.data.fileName),
        bottom: PreferredSize(
-           preferredSize: Size(35.ss, 35.ss),
+           preferredSize: Size(35, 35),
            child: Padding(
-             padding: EdgeInsets.symmetric(horizontal: 10.ss),
+             padding: EdgeInsets.symmetric(horizontal: 10),
              child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                crossAxisAlignment: CrossAxisAlignment.center,
@@ -196,7 +195,7 @@ class _PdfViewerStates extends State<PdfViewer> {
                      },
                      icon: Icon(
                        Icons.arrow_back_ios,
-                       size: 18.ss,
+                       size: 18,
                      )),
                  Text(
                    'Current Page: $_currentPage',
@@ -210,7 +209,7 @@ class _PdfViewerStates extends State<PdfViewer> {
                      },
                      icon: Icon(
                        Icons.arrow_forward_ios_rounded,
-                       size: 18.ss,
+                       size: 18,
                      )),
                ],
              ),

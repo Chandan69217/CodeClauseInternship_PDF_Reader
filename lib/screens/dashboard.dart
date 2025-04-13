@@ -10,7 +10,6 @@ import 'package:pdf_reader/screens/search_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/sort.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizing/sizing.dart';
 
 
 
@@ -28,7 +27,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
   static final GlobalKey<BookmarkScreenState> _bookmarksKey = GlobalKey();
   static final GlobalKey<HistoryScreenState> _historysKey = GlobalKey();
-  final List<Widget> _screens = <Widget>[
+  static final List<Widget> _screens = <Widget>[
     AllFilesScreens(key: _allFilesKey,),
     HistoryScreen(key: _historysKey,),
     BookmarkScreen(key: _bookmarksKey,),
@@ -43,7 +42,6 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +50,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
             child: _screens[_currentIndex]
         ),
         drawer: _drawerUI(),
-        bottomNavigationBar: _bottomNavigationBar());
+        bottomNavigationBar: _bottomNavigationBar()
+    );
   }
 
   _setSortingTicker(String sortType) {
@@ -84,7 +83,6 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
 
   AppBar _appBar() {
     return AppBar(
-      backgroundColor: ColorTheme.PRIMARY,
       leading: Builder(builder: (BuildContext context) {
         return IconButton(onPressed: (){Scaffold.of(context).openDrawer();}, icon: Icon(Icons.menu_rounded));
       },),
@@ -116,14 +114,16 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
             onPressed: _onSearch,
             icon: Image.asset(
               'assets/icons/search_icon.webp',
-              width: 30.ss,
-              height: 30.ss,
-            )),
+              width: 30,
+              height: 30,
+              color: Theme.of(context).brightness == Brightness.dark ? ColorTheme.WHITE:null,
+            )
+        ),
       ),
       Visibility(
         visible: _currentIndex !=3 ,
         child: PopupMenuButton(
-          menuPadding: EdgeInsets.all(5.ss),
+          menuPadding: EdgeInsets.all(5),
           onSelected: _onSelected,
           itemBuilder: (context) {
             return <PopupMenuItem>[
@@ -143,16 +143,14 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
           },
           icon: Image.asset(
             'assets/icons/sort_icon.webp',
-            width: 30.ss,
-            height: 30.ss,
+            width: 30,
+            height: 30,
+            color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
           ),
-          color: ColorTheme.WHITE,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.ss)),
         ),
       ),
       SizedBox(
-        width: 10.ss,
+        width: 10,
       ),
     ];
   }
@@ -166,11 +164,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
           flex: 1,
           child: Image.asset(
             leading,
-            width: 25.ss,
-            height: 25.ss,
+            width: 25,
+            height: 25,
+            color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
           ),
         ),
-        SizedBox(width: 5.ss,),
+        SizedBox(width: 5,),
         Expanded(
           flex: 5,
           child: Text(
@@ -183,8 +182,9 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
             visible: visibility,
             child: Image.asset(
               'assets/icons/tick_icon.webp',
-              width: 25.ss,
-              height: 25.ss,
+              width: 25,
+              height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             ),
           ),
         ),
@@ -201,11 +201,11 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
               flex: 2,
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color: ColorTheme.PRIMARY,
+                color: Theme.of(context).brightness == Brightness.light?ColorTheme.PRIMARY:Colors.black26,
                 child: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 30.ss,
+                      horizontal: 30,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -244,21 +244,21 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
               flex: 5,
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color: ColorTheme.BLACK,
+                color: Theme.of(context).brightness == Brightness.light?ColorTheme.BLACK:Colors.black12,
                 child: Padding(
                   padding:
-                  EdgeInsets.symmetric(vertical: 30.ss, horizontal: 15.ss),
+                  EdgeInsets.symmetric(vertical: 30, horizontal: 15),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: 50.ss),
+                          constraints: BoxConstraints(minHeight: 50),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.amberAccent,
                               borderRadius:
-                              BorderRadius.all(Radius.circular(20.ss)),
+                              BorderRadius.all(Radius.circular(20)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -267,8 +267,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/crown_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.RED,
                                     )),
                                 Expanded(
@@ -292,7 +292,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                           ),
                         ),
                         SizedBox(
-                          height: 10.ss,
+                          height: 10,
                         ),
                         IconButton(
                             onPressed: () {},
@@ -303,12 +303,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/language_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -330,12 +330,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/share_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -357,12 +357,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/app_like_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -384,12 +384,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/feedback_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -411,12 +411,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/privacy_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -438,12 +438,12 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                                     flex: 1,
                                     child: Image.asset(
                                       'assets/icons/application_icon.webp',
-                                      width: 25.ss,
-                                      height: 25.ss,
+                                      width: 25,
+                                      height: 25,
                                       color: ColorTheme.WHITE,
                                     )),
                                 SizedBox(
-                                  width: 10.ss,
+                                  width: 10,
                                 ),
                                 Expanded(
                                     flex: 6,
@@ -474,56 +474,52 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         });
       },
       currentIndex: _currentIndex,
-      selectedItemColor: ColorTheme.RED,
-      unselectedItemColor: ColorTheme.BLACK,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      selectedLabelStyle:
-      TextStyle(fontSize: 14.fss, fontWeight: FontWeight.bold),
-      unselectedFontSize: 14.fss,
-      backgroundColor: ColorTheme.WHITE,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/file_icon.webp',
-              width: 25.ss,
-              height: 25.ss,
+              width: 25,
+              height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             ),
             label: 'All File',
             activeIcon: Image.asset(
               'assets/icons/file_icon.webp',
-              width: 25.ss,
-              height:25.ss,
+              width: 25,
+              height:25,
               color: ColorTheme.RED,
             )),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/history_icon.webp',
-              width: 25.ss,
-              height: 25.ss,
+              width: 25,
+              height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             ),
             label: 'History',
             activeIcon: Image.asset('assets/icons/history_icon.webp',
-                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
+                width: 25, height: 25, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon:
             Image.asset(
               'assets/icons/bookmark.webp',
-              width: 25.ss,
-              height: 25.ss,
+              width: 25,
+              height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             ),
             label: 'Bookmarks',
             activeIcon: Image.asset('assets/icons/bookmark.webp',
-                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
+                width: 25, height: 25, color: ColorTheme.RED)),
         BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/tools_icon.webp',
-              width: 25.ss,
-              height: 25.ss,
+              width: 25,
+              height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             ),
             label: 'Tools',
             activeIcon: Image.asset('assets/icons/tools_icon.webp',
-                width: 25.ss, height: 25.ss, color: ColorTheme.RED)),
+                width: 25, height: 25, color: ColorTheme.RED)),
       ],
     );
   }

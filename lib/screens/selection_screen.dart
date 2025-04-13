@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/tools_functions.dart';
-import 'package:sizing/sizing.dart';
 import '../external_storage/read_storage.dart';
 import '../model/data.dart';
 import '../utilities/color_theme.dart';
@@ -53,7 +52,7 @@ class _SelectionScreenState extends State<SelectionScreen>
                 _topSearchDesign(),
                 Divider(
                   height: 0,
-                  color: ColorTheme.BLACK.withOpacity(0.1),
+                  color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.2) :ColorTheme.BLACK.withValues(alpha: 0.1),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -62,9 +61,9 @@ class _SelectionScreenState extends State<SelectionScreen>
                       itemBuilder: (context, index) {
                         _isSelected = _selectedIndex == index;
                         return ListTile(
-                          tileColor: _isSelected ? ColorTheme.PRIMARY : null,
+                          selected: _isSelected,
                           contentPadding:
-                              EdgeInsets.only(left: 18.ss, right: 6.ss),
+                              EdgeInsets.only(left: 18, right: 6),
                           onTap: () async {
                             setState(() {
                               _selectedIndex = index;
@@ -73,8 +72,8 @@ class _SelectionScreenState extends State<SelectionScreen>
                           },
                           leading: Image.asset(
                             getIconPath(_ItemsToSelect[index].fileType),
-                            width: 45.ss,
-                            height: 45.ss,
+                            width: 45,
+                            height: 45,
                           ),
                           title: Text(
                             _ItemsToSelect[index].fileName,
@@ -84,14 +83,17 @@ class _SelectionScreenState extends State<SelectionScreen>
                             _ItemsToSelect[index].details,
                             maxLines: 1,
                           ),
-                          trailing: Checkbox(
-                              value: _isSelected,
-                              activeColor: ColorTheme.RED,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedIndex = value! ? index : null;
-                                });
-                              }),
+                          trailing: Visibility(
+                            visible: _isSelected,
+                            child: Checkbox(
+                                value: _isSelected,
+                                activeColor: ColorTheme.RED,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedIndex = value! ? index : null;
+                                  });
+                                }),
+                          ),
                         );
                       }),
                 ),
@@ -106,20 +108,19 @@ class _SelectionScreenState extends State<SelectionScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         TextSelectionTheme(
-          data: TextSelectionThemeData(
-              selectionHandleColor: ColorTheme.RED,
-              selectionColor: ColorTheme.PRIMARY),
+          data: Theme.of(context).textSelectionTheme,
           child: ConstrainedBox(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.62,
-                maxHeight: 40.ss),
+                maxHeight: 40),
             child: TextField(
               focusNode: _searchedFocusNode,
               controller: _searchController,
               cursorColor: ColorTheme.RED,
               maxLines: 1,
+              autofocus: true,
               keyboardType: TextInputType.text,
-              style: TextStyle(color: ColorTheme.BLACK),
+              style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   suffixIcon: Visibility(
@@ -131,43 +132,44 @@ class _SelectionScreenState extends State<SelectionScreen>
                           _iconVisibility = false;
                         });
                       },
-                      icon: Icon(Icons.cancel,
-                          color: ColorTheme.BLACK.withOpacity(0.3)),
-                      style: ButtonStyle(
-                          overlayColor:
-                              WidgetStatePropertyAll(ColorTheme.PRIMARY),
-                          iconSize: WidgetStatePropertyAll(20.ss)),
+                      icon: Icon(Icons.cancel,),
+
                     ),
                   ),
                   hintText: 'Search',
                   hintStyle: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(color: ColorTheme.BLACK.withOpacity(0.5))),
+                      .copyWith(color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.5):ColorTheme.BLACK.withValues(alpha: 0.5))
+              ),
             ),
           ),
         ),
         SizedBox(
           height: 17,
           child: VerticalDivider(
-            color: ColorTheme.BLACK.withOpacity(0.1), // Color of the divider
+            color:Theme.of(context).brightness == Brightness.light? ColorTheme.BLACK.withValues(alpha: 0.1):ColorTheme.WHITE.withValues(alpha: 0.5), // Color of the divider
             thickness: 1.5, // Thickness of the divider
           ),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            'Cancel',
+
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'Cancel',
+            ),
+            style: ButtonStyle(
+                overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+                foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
+                textStyle: WidgetStatePropertyAll(Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontWeight: FontWeight.bold))),
           ),
-          style: ButtonStyle(
-              overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-              foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
-              textStyle: WidgetStatePropertyAll(Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontWeight: FontWeight.bold))),
         ),
       ],
     );

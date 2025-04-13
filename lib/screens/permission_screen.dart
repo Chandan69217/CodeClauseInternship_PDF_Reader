@@ -1,11 +1,9 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf_reader/main.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
-import 'package:sizing/sizing.dart';
+
 
 class PermissionScreen extends StatefulWidget{
   @override
@@ -25,13 +23,13 @@ class PermissionScreenState extends State<PermissionScreen>{
        ],
      ),
      body: Padding(
-       padding: EdgeInsets.all(24.ss),
+       padding: EdgeInsets.all(24),
        child: Column(
          mainAxisAlignment: MainAxisAlignment.center,
            crossAxisAlignment: CrossAxisAlignment.center,
            children: [
          Text('Allow storage access to read all documents files in the devices!',style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
-         SizedBox(height: 20.ss,),
+         SizedBox(height: 20,),
          ElevatedButton(onPressed: () { Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> MyApp(key: Key('home screen'),)));}, child: Text('Allow Permission'),style: ButtonStyle(backgroundColor:WidgetStatePropertyAll(ColorTheme.RED),foregroundColor: WidgetStatePropertyAll(ColorTheme.WHITE)),)
        ]),
      ),

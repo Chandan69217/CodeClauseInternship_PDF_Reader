@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/utilities/callbacks.dart';
-import 'package:sizing/sizing.dart';
+
 
 import '../model/data.dart';
 import '../utilities/color_theme.dart';
@@ -17,14 +17,14 @@ void showDeleteWidget(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.all(8.ss),
+              padding: EdgeInsets.all(8),
               child: RichText(
                 text: TextSpan(
                     text: 'Total size ',
                     style: Theme.of(home_context)
                         .textTheme
                         .bodySmall!
-                        .copyWith(fontSize: 11.fss),
+                        .copyWith(fontSize: 11),
                     children: [TextSpan(text: data.fileSize)]),
                 textAlign: TextAlign.center,
               ),

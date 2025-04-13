@@ -1,11 +1,8 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pdf_reader/screens/splash_screen.dart';
-import 'package:pdf_reader/utilities/theme_data.dart';
-import 'package:sizing/sizing.dart';
+import 'package:pdf_reader/utilities/custom_theme/app_theme/app_theme.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +14,16 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarColor: Colors.transparent));
-    return SizingBuilder(
-      builder: () => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'PDF Reader',
-        theme: themeData(),
-        home: const SplashScreen(),
-      ),
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     statusBarIconBrightness: Brightness.dark,
+    //     statusBarColor: Colors.transparent));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'PDF Reader',
+      themeMode: ThemeMode.system,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      home: const SplashScreen(),
     );
   }
 }

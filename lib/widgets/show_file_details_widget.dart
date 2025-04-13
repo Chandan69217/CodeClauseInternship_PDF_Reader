@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:sizing/sizing.dart';
+
 
 import '../utilities/color_theme.dart';
 
@@ -13,7 +13,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.5,
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.ss, horizontal: 30.ss),
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -24,7 +24,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18.fss),
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   textAlign: TextAlign.start,
@@ -38,7 +38,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 30.ss,
+                          height: 30,
                         ),
                         RichText(
                             text: TextSpan(
@@ -54,7 +54,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                                       style: Theme.of(home_context).textTheme.bodySmall)
                                 ])),
                         SizedBox(
-                          height: 20.ss,
+                          height: 20,
                         ),
                         RichText(
                             text: TextSpan(
@@ -70,7 +70,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                                       style: Theme.of(home_context).textTheme.bodySmall)
                                 ])),
                         SizedBox(
-                          height: 20.ss,
+                          height: 20,
                         ),
                         RichText(
                             text: TextSpan(
@@ -86,7 +86,7 @@ void showFileDetails({required BuildContext home_context, required Data data}) {
                                       style: Theme.of(home_context).textTheme.bodySmall)
                                 ])),
                         SizedBox(
-                          height: 20.ss,
+                          height: 20,
                         ),
                         RichText(
                           text: TextSpan(

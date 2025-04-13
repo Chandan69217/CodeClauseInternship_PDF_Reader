@@ -4,7 +4,6 @@ import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/widgets/custom_list_tile.dart';
-import 'package:sizing/sizing.dart';
 import '../external_storage/read_storage.dart';
 import '../utilities/file_view_handler.dart';
 import '../widgets/custom_bottomsheet.dart';
@@ -45,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen>
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 8.ss, right: 8.ss, top: 10),
+          padding: EdgeInsets.only(left: 8, right: 8, top: 10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen>
                 _topSearchDesign(),
                 Divider(
                   height: 0,
-                  color: ColorTheme.BLACK.withOpacity(0.1),
+                  color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.2) :ColorTheme.BLACK.withValues(alpha: 0.1),
                 ),
                 Expanded(
                   child: _isAvailable
@@ -101,13 +100,11 @@ class _SearchScreenState extends State<SearchScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         TextSelectionTheme(
-          data: TextSelectionThemeData(
-              selectionHandleColor: ColorTheme.RED,
-              selectionColor: ColorTheme.PRIMARY),
+          data: Theme.of(context).textSelectionTheme,
           child: ConstrainedBox(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.62,
-                maxHeight: 40.ss),
+                maxHeight: 40),
             child: TextField(
               focusNode: _searchedFocusNode,
               controller: _searchController,
@@ -115,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen>
               maxLines: 1,
               autofocus: true,
               keyboardType: TextInputType.text,
-              style: TextStyle(color: ColorTheme.BLACK),
+              style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   suffixIcon: Visibility(
@@ -127,43 +124,44 @@ class _SearchScreenState extends State<SearchScreen>
                           _iconVisibility = false;
                         });
                       },
-                      icon: Icon(Icons.cancel,
-                          color: ColorTheme.BLACK.withOpacity(0.3)),
-                      style: ButtonStyle(
-                          overlayColor:
-                              WidgetStatePropertyAll(ColorTheme.PRIMARY),
-                          iconSize: WidgetStatePropertyAll(20.ss)),
+                      icon: Icon(Icons.cancel,),
+
                     ),
                   ),
                   hintText: 'Search',
                   hintStyle: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(color: ColorTheme.BLACK.withOpacity(0.5))),
+                      .copyWith(color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.5):ColorTheme.BLACK.withValues(alpha: 0.5))
+              ),
             ),
           ),
         ),
         SizedBox(
           height: 17,
           child: VerticalDivider(
-            color: ColorTheme.BLACK.withOpacity(0.1), // Color of the divider
+            color:Theme.of(context).brightness == Brightness.light? ColorTheme.BLACK.withValues(alpha: 0.1):ColorTheme.WHITE.withValues(alpha: 0.5), // Color of the divider
             thickness: 1.5, // Thickness of the divider
           ),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            'Cancel',
+
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'Cancel',
+            ),
+            style: ButtonStyle(
+                overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
+                foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
+                textStyle: WidgetStatePropertyAll(Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontWeight: FontWeight.bold))),
           ),
-          style: ButtonStyle(
-              overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-              foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
-              textStyle: WidgetStatePropertyAll(Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontWeight: FontWeight.bold))),
         ),
       ],
     );

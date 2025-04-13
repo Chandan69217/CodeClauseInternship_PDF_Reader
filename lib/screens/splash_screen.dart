@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/screens/dashboard.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sizing/sizing.dart';
-
 import '../external_storage/read_storage.dart';
 import '../utilities/color_theme.dart';
 
@@ -21,20 +19,21 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    _loading();
+    WidgetsBinding.instance.addPostFrameCallback((duration){
+      _loading();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: _loadingStatus ? _splashDesign():Center(child: Text(_onLoadingError,style: Theme.of(context).textTheme.headlineMedium,),),
+      body: _loadingStatus ? _splashDesign():Center(child: Text(_onLoadingError,style: Theme.of(context).textTheme.headlineSmall,),),
     );
   }
 
   Widget _splashDesign() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.ss),
+      padding: EdgeInsets.symmetric(horizontal: 24),
       child: ConstrainedBox(
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height,
@@ -71,7 +70,8 @@ class _SplashScreenState extends State<SplashScreen>
                   children: [
                     TextSpan(
                         text: 'Reader',
-                        style: Theme.of(context).textTheme.headlineMedium)
+                        style: Theme.of(context).textTheme.headlineMedium
+                  )
                   ])),
         ),
         const SizedBox(height: 10,),
@@ -79,8 +79,8 @@ class _SplashScreenState extends State<SplashScreen>
           flex: 1,
           child: Center(
             child: Container(
-              width: 200.ss,
-              height: 8.ss,
+              width: 200,
+              height: 8,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -88,9 +88,9 @@ class _SplashScreenState extends State<SplashScreen>
                 borderRadius: BorderRadius.circular(10),
                 child: const LinearProgressIndicator(
                   backgroundColor:
-                      ColorTheme.PRIMARY, // Make background transparent
+                      ColorTheme.PRIMARY,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      ColorTheme.RED), // Make value color transparent
+                      ColorTheme.RED),
                 ),
               ),
             ),
@@ -105,8 +105,7 @@ class _SplashScreenState extends State<SplashScreen>
             'Loading files...',
             style: Theme.of(context)
                 .textTheme
-                .bodySmall!
-                .copyWith(color: ColorTheme.BLACK, fontSize: 11.fss),
+                .titleSmall,
           ),
         )
       ],
@@ -123,8 +122,10 @@ class _SplashScreenState extends State<SplashScreen>
     setState(() {
     });
   }
+
   @override
   void dispose() {
     super.dispose();
   }
+
 }
