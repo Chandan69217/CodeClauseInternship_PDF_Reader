@@ -27,12 +27,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Language', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        title: const Text('Language',),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      backgroundColor: Colors.grey[100],
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: languages.length,
@@ -45,11 +42,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
               setState(() {
                 selectedLanguage = language;
               });
-              // TODO: implement actual locale change logic here
+
             },
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color: isSelected ? Colors.purple : Colors.transparent,
@@ -64,7 +60,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.purple : Colors.black)),
+                          color: isSelected ? Colors.purple : null)),
                   if (isSelected)
                     const Icon(Icons.check_circle, color: Colors.purple)
                 ],

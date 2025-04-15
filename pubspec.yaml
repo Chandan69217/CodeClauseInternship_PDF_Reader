@@ -49,6 +49,7 @@ dependencies:
   sqflite: ^2.4.1
   printing: ^5.13.4
   provider: ^6.1.4
+  url_launcher: ^6.3.1
 
 
 

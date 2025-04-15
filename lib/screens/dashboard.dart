@@ -7,13 +7,18 @@ import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dar
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/tools_screen.dart';
 import 'package:pdf_reader/screens/search_screen.dart';
+import 'package:pdf_reader/screens/settings/feedback_screen.dart';
 import 'package:pdf_reader/screens/settings/language_screen.dart';
 import 'package:pdf_reader/screens/settings/privicy_screen.dart';
 import 'package:pdf_reader/screens/settings/theme_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
+import 'package:pdf_reader/utilities/my_url.dart';
 import 'package:pdf_reader/utilities/sort.dart';
+import 'package:pdf_reader/widgets/FAB_btn/FAB_btn.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -47,6 +52,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
             child: _screens[_currentIndex]
         ),
         drawer: _drawerUI(),
+        floatingActionButton: _currentIndex!=3 ? const AnimatedFAB():null,
         bottomNavigationBar: _bottomNavigationBar()
     );
   }
@@ -280,16 +286,23 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ThemeScreen()));
                         }, iconPath: 'assets/icons/theme_icon.webp', label: 'Theme'),
                         buildMenuButton(onPressed: (){
-
+                          Share.share('Check out this amazing PDF Reader app! 📄✨\n${MyUrl.appLink}',  subject: 'PDF Reader App',);
                         }, iconPath: 'assets/icons/share_icon.webp', label: 'Share App'),
+                        buildMenuButton(onPressed: _rateApp, iconPath: 'assets/icons/app_like_icon.webp', label: 'Rate App'),
                         buildMenuButton(onPressed: (){
-
-                        }, iconPath: 'assets/icons/app_like_icon.webp', label: 'Rate App'),
-                        buildMenuButton(onPressed: (){
-
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const FeedbackScreen()));
                         }, iconPath: 'assets/icons/feedback_icon.webp', label: 'Feedback'),
+
+                        buildMenuButton(onPressed: ()async{
+                          if (await canLaunchUrl(MyUrl.myGithubUri)) {
+                          await launchUrl(MyUrl.myGithubUri, mode: LaunchMode.externalApplication);
+                          } else {
+                          throw 'Could not launch ${MyUrl.myAppUri}';
+                          }
+                        }, iconPath: 'assets/icons/github_icon.png', label: 'Github'),
+
                         buildMenuButton(onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> PrivacySecurityScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const PrivacySecurityScreen()));
                         }, iconPath: 'assets/icons/privacy_icon.webp', label: 'Privacy Policy'),
                       ],
                     ),
@@ -299,6 +312,14 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  void _rateApp() async {
+    if (await canLaunchUrl(MyUrl.myAppUri)) {
+      await launchUrl(MyUrl.myAppUri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch ${MyUrl.myAppUri}';
+    }
   }
 
   Widget buildMenuButton({

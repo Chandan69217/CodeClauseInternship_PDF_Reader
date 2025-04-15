@@ -50,32 +50,30 @@ class Read with ChangeNotifier {
   Future<bool> scanForAllFiles() async {
     var database = await DatabaseHelper.getInstance();
     if (await requestPermission()) {
-      if (_FilePaths.isEmpty) {
-        _FilePaths = await _getAllPathsFromDirectory();
-        _bookmarks = await database.getFiles(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME);
-        _history = await database.getFiles(table_name: DatabaseHelper.HISTORY_TABLE_NAME);
-        for (var path in _FilePaths) {
-          String extension = path.split('.').last.toLowerCase();
-          await FileDetails.fetch(File(path));
-          AllFiles.add(Data(
-              file: File(path),
-              fileType: extension,
-              fileName: path.split('/').last,
-              filePath: path,
-              details: FileDetails.getDetails(),
-              fileSize: FileDetails.getSize(),
-              date: FileDetails.getDate(),
-              bytes: FileDetails.getBytes(),
-            isBookmarked: _isBookmarked(path),
-            isHistory:  _isHistory(path),
-          )
-          );
-        }
-        appliedSorting = await _checkSortingSetup();
-        sortBy(appliedSorting[SortType.KEY]!);
-        notifyListeners();
-        return true;
+      _FilePaths = await _getAllPathsFromDirectory();
+      _bookmarks = await database.getFiles(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME);
+      _history = await database.getFiles(table_name: DatabaseHelper.HISTORY_TABLE_NAME);
+      for (var path in _FilePaths) {
+        String extension = path.split('.').last.toLowerCase();
+        await FileDetails.fetch(File(path));
+        AllFiles.add(Data(
+          file: File(path),
+          fileType: extension,
+          fileName: path.split('/').last,
+          filePath: path,
+          details: FileDetails.getDetails(),
+          fileSize: FileDetails.getSize(),
+          date: FileDetails.getDate(),
+          bytes: FileDetails.getBytes(),
+          isBookmarked: _isBookmarked(path),
+          isHistory:  _isHistory(path),
+        )
+        );
       }
+      appliedSorting = await _checkSortingSetup();
+      sortBy(appliedSorting[SortType.KEY]!);
+      notifyListeners();
+      return true;
     }
     return false;
   }

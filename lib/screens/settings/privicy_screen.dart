@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
+import 'package:pdf_reader/utilities/my_url.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class PrivacySecurityScreen extends StatefulWidget {
+class PrivacySecurityScreen extends StatelessWidget {
   const PrivacySecurityScreen({super.key});
 
-  @override
-  State<PrivacySecurityScreen> createState() => _PrivacySecurityScreenState();
-}
-
-class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
-  bool is2FAEnabled = true;
-  bool appLockEnabled = false;
-  bool locationAccess = true;
-  bool personalizedAds = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,64 +13,51 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Privacy & Security", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text("About App"),
       ),
-      backgroundColor: Colors.grey[100],
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
         children: [
-          const Text(
-            "Privacy Settings",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            "About PDF Reader",
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 12),
-          _settingTile(
-            title: "Location Access",
-            subtitle: "Allow app to access your location",
-            value: locationAccess,
-            onChanged: (val) => setState(() => locationAccess = val),
-          ),
-          _settingTile(
-            title: "Personalized Ads",
-            subtitle: "Receive tailored ads based on your usage",
-            value: personalizedAds,
-            onChanged: (val) => setState(() => personalizedAds = val),
+          const Text(
+            "Our PDF Reader app allows you to open, view, and manage PDF files seamlessly. Whether it's for study, work, or personal use, our intuitive interface and fast performance provide a smooth reading experience.",
           ),
           const SizedBox(height: 24),
-          const Text(
-            "Security Settings",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            "Features",
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 10),
+          _featureItem("✔ Open and view PDF files easily"),
+          _featureItem("✔ Bookmark important pages"),
+          _featureItem("✔ Dark mode for night reading"),
+          _featureItem("✔ Easy file search and sharing"),
+          const SizedBox(height: 30),
+          Text(
+            "Legal & Policies",
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 18.0),
           ),
           const SizedBox(height: 12),
-          _settingTile(
-            title: "Two-Factor Authentication",
-            subtitle: "Add an extra layer of security to your account",
-            value: is2FAEnabled,
-            onChanged: (val) => setState(() => is2FAEnabled = val),
+          _policyTile(
+            context,
+            title: "Privacy Policy",
+            url: MyUrl.privacyPolicyUrl,
           ),
-          _settingTile(
-            title: "App Lock",
-            subtitle: "Require a PIN or biometrics to open app",
-            value: appLockEnabled,
-            onChanged: (val) => setState(() => appLockEnabled = val),
+          _policyTile(
+            context,
+            title: "Terms & Conditions",
+            url: MyUrl.termsUrl,
           ),
           const SizedBox(height: 40),
-          SizedBox(
-            width: width,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                // Navigate to permissions screen or manage permissions
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.purple,
-                side: const BorderSide(color: Colors.purple),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              icon: const Icon(Icons.security_outlined),
-              label: const Text("Manage App Permissions"),
+          Center(
+            child: Text(
+              "Version 1.0.0",
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           )
         ],
@@ -84,24 +65,39 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     );
   }
 
-  Widget _settingTile({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
+  Widget _featureItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle_outline, color: Colors.green),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text)),
+        ],
+      ),
+    );
+  }
+
+  Widget _policyTile(BuildContext context, {required String title, required String url}) {
     return Card(
       elevation: 0,
+      color: ColorTheme.WHITE,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: SwitchListTile(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16,),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(subtitle),
-        value: value,
-        onChanged: onChanged,
-        activeColor: Colors.purple,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+        onTap: () async {
+          final uri = Uri.parse(url);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Could not open link')),
+            );
+          }
+        },
       ),
     );
   }
