@@ -11,6 +11,8 @@ import '../../model/data.dart';
 import '../../utilities/file_view_handler.dart';
 import '../../utilities/get_icon_path.dart';
 
+
+
 class CustomListView extends StatefulWidget {
   final List<Data> snapshot;
   final ScreenType screenType;
@@ -31,6 +33,7 @@ class _CustomListViewState extends State<CustomListView> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
