@@ -7,6 +7,9 @@ import 'package:pdf_reader/screens/navigation_screens/bottom/bookmark_screen.dar
 import 'package:pdf_reader/screens/navigation_screens/bottom/history_screen.dart';
 import 'package:pdf_reader/screens/navigation_screens/bottom/tools_screen.dart';
 import 'package:pdf_reader/screens/search_screen.dart';
+import 'package:pdf_reader/screens/settings/language_screen.dart';
+import 'package:pdf_reader/screens/settings/privicy_screen.dart';
+import 'package:pdf_reader/screens/settings/theme_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/sort.dart';
 import 'package:provider/provider.dart';
@@ -167,6 +170,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     );
   }
   Drawer _drawerUI() {
+
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.8,
       child: Column(
@@ -269,168 +273,24 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                         SizedBox(
                           height: 10,
                         ),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/language_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'Language',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/share_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'Share App',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/app_like_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'Rate App',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/feedback_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'Feedback',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/privacy_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'Privacy Policy',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      'assets/icons/application_icon.webp',
-                                      width: 25,
-                                      height: 25,
-                                      color: ColorTheme.WHITE,
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      'More App',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: ColorTheme.WHITE),
-                                    )),
-                              ],
-                            )),
+                        buildMenuButton(onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LanguageScreen()));
+                        }, iconPath: 'assets/icons/language_icon.webp', label: 'Language'),
+                        buildMenuButton(onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ThemeScreen()));
+                        }, iconPath: 'assets/icons/theme_icon.webp', label: 'Theme'),
+                        buildMenuButton(onPressed: (){
+
+                        }, iconPath: 'assets/icons/share_icon.webp', label: 'Share App'),
+                        buildMenuButton(onPressed: (){
+
+                        }, iconPath: 'assets/icons/app_like_icon.webp', label: 'Rate App'),
+                        buildMenuButton(onPressed: (){
+
+                        }, iconPath: 'assets/icons/feedback_icon.webp', label: 'Feedback'),
+                        buildMenuButton(onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> PrivacySecurityScreen()));
+                        }, iconPath: 'assets/icons/privacy_icon.webp', label: 'Privacy Policy'),
                       ],
                     ),
                   ),
@@ -440,6 +300,42 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
       ),
     );
   }
+
+  Widget buildMenuButton({
+    required VoidCallback onPressed,
+    required String iconPath,
+    required String label,
+  }) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Image.asset(
+              iconPath,
+              width: 25,
+              height: 25,
+              color: ColorTheme.WHITE,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            flex: 6,
+            child: Text(
+              label,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(color: ColorTheme.WHITE),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   BottomNavigationBar _bottomNavigationBar() {
     return BottomNavigationBar(
