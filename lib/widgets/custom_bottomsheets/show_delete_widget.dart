@@ -1,14 +1,14 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../model/data.dart';
-import '../utilities/color_theme.dart';
+import 'package:pdf_reader/external_storage/read_storage.dart';
+import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/callbacks.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 
 
 
-Future<bool> showConfirmWidget (
-{ required BuildContext home_context, Data? data, required String label,String? message}) async {
-  Completer<bool> completer = Completer<bool>();
+void showDeleteWidget(
+    BuildContext home_context, Data data,{OnChanged? onDeleted}) {
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -18,7 +18,7 @@ Future<bool> showConfirmWidget (
           children: [
             Padding(
               padding: EdgeInsets.all(8),
-              child: data != null ? RichText(
+              child: RichText(
                 text: TextSpan(
                     text: 'Total size ',
                     style: Theme.of(home_context)
@@ -27,21 +27,12 @@ Future<bool> showConfirmWidget (
                         .copyWith(fontSize: 11),
                     children: [TextSpan(text: data.fileSize)]),
                 textAlign: TextAlign.center,
-              ) : RichText(
-                text: TextSpan(
-                    text: message,
-                    style: Theme.of(home_context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontSize: 11),
-                ),
-                textAlign: TextAlign.center,
               ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                completer.complete(true);
+                _deleteFile(data, onDeleted);
               },
               style: ButtonStyle(
                   overlayColor: WidgetStatePropertyAll(
@@ -50,7 +41,7 @@ Future<bool> showConfirmWidget (
                   fixedSize: WidgetStatePropertyAll(
                       Size(MediaQuery.of(home_context).size.width, 65))),
               child: Text(
-                label,
+                'Delete',
                 style: Theme.of(home_context)
                     .textTheme
                     .bodyMedium!
@@ -66,7 +57,6 @@ Future<bool> showConfirmWidget (
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  completer.complete(false);
                 },
                 style: ButtonStyle(
                     overlayColor: WidgetStatePropertyAll(
@@ -81,6 +71,28 @@ Future<bool> showConfirmWidget (
           ],
         );
       });
-  return completer.future;
 }
 
+void _deleteFile(Data data, OnChanged? onDeleted) async {
+  try {
+    var status = await Read.instance.removeFiles(data);
+    onDeleted?.call(status);
+  } catch (exception, trace) {
+    print('$exception : $trace');
+  }
+}
+
+// void _deleteFile(Data data, OnDeleted onDeleted) async {
+//   if (await data.file.exists()) {
+//     try {
+//       data.file.deleteSync();
+//       onDeleted(true,data);
+//     } catch (exception, trace) {
+//       onDeleted(false,data);
+//       print('$exception : $trace');
+//     }
+//   } else {
+//     onDeleted(false,data);
+//     print('file does not exist');
+//   }
+// }

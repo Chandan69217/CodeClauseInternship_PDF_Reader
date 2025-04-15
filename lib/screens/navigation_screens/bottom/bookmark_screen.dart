@@ -18,19 +18,7 @@ class BookmarkScreen extends StatefulWidget {
 }
 
 class BookmarkScreenState extends State<BookmarkScreen> {
-  static GlobalKey<AllFilesTabStates> _allFileTabKey = GlobalKey();
-  static GlobalKey<PdfFileTabState> _pdfFileTabKey = GlobalKey();
-  static GlobalKey<DocFileTabState> _docFileTabKey = GlobalKey();
-  static GlobalKey<ExcelFileTabState> _xlsFileTabKey = GlobalKey();
-  static GlobalKey<PptFileTabState> _pptFileTabKey = GlobalKey();
 
-  void refreshAllBookmarks(){
-    _allFileTabKey.currentState?.refresh();
-    _pdfFileTabKey.currentState?.refresh();
-    _docFileTabKey.currentState?.refresh();
-    _xlsFileTabKey.currentState?.refresh();
-    _pptFileTabKey.currentState?.refresh();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +38,22 @@ class BookmarkScreenState extends State<BookmarkScreen> {
                 ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
                 AllFileTab(
-                  key: _allFileTabKey,
                   screenType: ScreenType.BOOKMARKS,
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 PdfFileTab(
-                  key: _pdfFileTabKey,
                   screenType: ScreenType.BOOKMARKS,
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 DocFileTab(
-                  key: _docFileTabKey,
                   screenType: ScreenType.BOOKMARKS,
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 ExcelFileTab(
-                  key: _xlsFileTabKey,
                   screenType: ScreenType.BOOKMARKS,
                   trailing: 'assets/icons/bookmark_filled.png',
                 ),
                 PptFileTab(
-                  key: _pptFileTabKey,
                   screenType: ScreenType.BOOKMARKS,
                   trailing: 'assets/icons/bookmark_filled.png',
                 )

@@ -14,7 +14,7 @@ class SelectionScreen extends StatefulWidget {
 
 class _SelectionScreenState extends State<SelectionScreen>
     with WidgetsBindingObserver {
-  List<Data> _ItemsToSelect = Read.AllFiles;
+  List<Data> _ItemsToSelect = Read.instance.AllFiles;
   bool _iconVisibility = false;
   TextEditingController _searchController = TextEditingController();
   FocusNode _searchedFocusNode = FocusNode();
@@ -43,7 +43,7 @@ class _SelectionScreenState extends State<SelectionScreen>
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,14 +179,14 @@ class _SelectionScreenState extends State<SelectionScreen>
     var searchedQuery = _searchController.text;
     if (searchedQuery.isNotEmpty) {
       setState(() {
-        _ItemsToSelect = Read.AllFiles.where((data) => data.fileName
+        _ItemsToSelect = Read.instance.AllFiles.where((data) => data.fileName
             .toLowerCase()
             .contains(searchedQuery.toLowerCase())).toList();
         _iconVisibility = true;
       });
     } else {
       setState(() {
-        _ItemsToSelect = Read.AllFiles;
+        _ItemsToSelect = Read.instance.AllFiles;
       });
     }
   }

@@ -30,7 +30,7 @@ class Sort{
     int i = low - 1;
     for(int j = low;j<high;j++){
       var fileName = filesData[j].fileName;
-      if(pivot.toLowerCase().compareTo(fileName.toLowerCase())>0){
+      if(pivot.toLowerCase().trim().compareTo(fileName.toLowerCase().trim())>0){
         i++;
         var temp = filesData[i];
         filesData[i] = filesData[j];

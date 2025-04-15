@@ -3,23 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:pdf_reader/screens/multiple_selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
-import '../external_storage/database_helper.dart';
-import '../external_storage/read_storage.dart';
-import '../model/data.dart';
-import '../utilities/file_view_handler.dart';
-import '../utilities/get_icon_path.dart';
-import 'confirm_bottomsheet.dart';
-import 'custom_bottomsheet.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/confirm_bottomsheet.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/custom_bottomsheet.dart';
+import '../../external_storage/database_helper.dart';
+import '../../external_storage/read_storage.dart';
+import '../../model/data.dart';
+import '../../utilities/file_view_handler.dart';
+import '../../utilities/get_icon_path.dart';
 
 class CustomListView extends StatefulWidget {
   final List<Data> snapshot;
   final ScreenType screenType;
-  final VoidCallback refresh;
 
   CustomListView({
     required this.snapshot,
     required this.screenType,
-    required this.refresh,
   });
 
   @override
@@ -29,6 +27,10 @@ class CustomListView extends StatefulWidget {
 class _CustomListViewState extends State<CustomListView> {
   final ScrollController _controller = ScrollController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -79,11 +81,7 @@ class _CustomListViewState extends State<CustomListView> {
   }
 
   _onTap(Data item) {
-    fileViewHandler(context, item, onChanged: (status,{Data? newData}){
-      if (status) {
-        widget.refresh();
-      }
-    });
+    fileViewHandler(context, item);
   }
 
 
@@ -95,8 +93,7 @@ class _CustomListViewState extends State<CustomListView> {
           table_name: DatabaseHelper.BOOKMARK_TABLE_NAME,
           filePath: data.filePath);
       if (isBookmarked) {
-        Read.updateFiles(data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
-        widget.refresh();
+        Read.instance.updateFiles(data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
       }
     }
   }
@@ -105,20 +102,15 @@ class _CustomListViewState extends State<CustomListView> {
     customBottomSheet(
         home_context: context,
         data: item,
-        onChanged: (status,{Data? newData}) {
-          if(status){
-            widget.refresh();
-          }
-        });
+    );
   }
 
   void _longPressHandler(int index) async {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SelectionScreen(
+            builder: (context) => MultipleSelectionScreen(
                   snapshot: widget.snapshot,
-                  refresh: widget.refresh,
                   scrollOffset: _controller.position.pixels,
                   screenType: widget.screenType,
                   selectedIndex: index,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/get_icon_path.dart';
 
 
@@ -47,6 +48,7 @@ class CustomListTile extends StatelessWidget {
               'assets/icons/three_dots_icon.webp',
               width: 25,
               height: 25,
+              color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
             )
         )
     );

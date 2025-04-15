@@ -22,19 +22,8 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class HistoryScreenState extends State<HistoryScreen> {
-  static GlobalKey<AllFilesTabStates> _allFileTabKey = GlobalKey();
-  static GlobalKey<PdfFileTabState> _pdfFileTabKey = GlobalKey();
-  static GlobalKey<DocFileTabState> _docFileTabKey = GlobalKey();
-  static GlobalKey<ExcelFileTabState> _xlsFileTabKey = GlobalKey();
-  static GlobalKey<PptFileTabState> _pptFileTabKey = GlobalKey();
 
-  void refreshAllHistory(){
-    _allFileTabKey.currentState?.refresh();
-    _pdfFileTabKey.currentState?.refresh();
-    _docFileTabKey.currentState?.refresh();
-    _xlsFileTabKey.currentState?.refresh();
-    _pptFileTabKey.currentState?.refresh();
-  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -52,11 +41,11 @@ class HistoryScreenState extends State<HistoryScreen> {
                   Tab(text: 'PPT'),
                 ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
-                AllFileTab(screenType: ScreenType.HISTORY,key: _allFileTabKey,),
-                PdfFileTab(screenType: ScreenType.HISTORY,key: _pdfFileTabKey,),
-                DocFileTab(screenType: ScreenType.HISTORY,key: _docFileTabKey,),
-                ExcelFileTab(screenType: ScreenType.HISTORY,key: _xlsFileTabKey,),
-                PptFileTab(screenType: ScreenType.HISTORY,key: _pptFileTabKey,)
+                AllFileTab(screenType: ScreenType.HISTORY,),
+                PdfFileTab(screenType: ScreenType.HISTORY,),
+                DocFileTab(screenType: ScreenType.HISTORY,),
+                ExcelFileTab(screenType: ScreenType.HISTORY,),
+                PptFileTab(screenType: ScreenType.HISTORY,)
               ]))
             ],
           )),

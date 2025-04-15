@@ -18,23 +18,12 @@ class AllFilesScreens extends StatefulWidget{
 }
 
 class AllFilesStates extends State<AllFilesScreens>{
-  static GlobalKey<AllFilesTabStates> _allFileTabKey = GlobalKey();
-  static GlobalKey<PdfFileTabState> _pdfFileTabKey = GlobalKey();
-  static GlobalKey<DocFileTabState> _docFileTabKey = GlobalKey();
-  static GlobalKey<ExcelFileTabState> _xlsFileTabKey = GlobalKey();
-  static GlobalKey<PptFileTabState> _pptFileTabKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
   }
 
-  void refreshAllFiles(){
-    _allFileTabKey.currentState?.refresh();
-    _pdfFileTabKey.currentState?.refresh();
-    _docFileTabKey.currentState?.refresh();
-    _xlsFileTabKey.currentState?.refresh();
-    _pptFileTabKey.currentState?.refresh();
-  }
 
 
   @override
@@ -56,11 +45,11 @@ class AllFilesStates extends State<AllFilesScreens>{
                 Tab(text: 'PPT'),
               ],indicatorColor: ColorTheme.RED,),
               Expanded(child: TabBarView(children: [
-                AllFileTab(key:_allFileTabKey,screenType: ScreenType.ALL_FILES,),
-                PdfFileTab(key: _pdfFileTabKey,screenType: ScreenType.ALL_FILES,),
-                DocFileTab(key: _docFileTabKey,screenType: ScreenType.ALL_FILES,),
-                ExcelFileTab(key: _xlsFileTabKey,screenType: ScreenType.ALL_FILES,),
-                PptFileTab(key: _pptFileTabKey,screenType: ScreenType.ALL_FILES,)
+                AllFileTab(screenType: ScreenType.ALL_FILES,),
+                PdfFileTab(screenType: ScreenType.ALL_FILES,),
+                DocFileTab(screenType: ScreenType.ALL_FILES,),
+                ExcelFileTab(screenType: ScreenType.ALL_FILES,),
+                PptFileTab(screenType: ScreenType.ALL_FILES,)
               ]))
             ],
           )),

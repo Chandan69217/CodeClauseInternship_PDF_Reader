@@ -6,35 +6,34 @@ import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/get_icon_path.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
-import 'package:pdf_reader/widgets/confirm_bottomsheet.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/confirm_bottomsheet.dart';
 import 'package:share_plus/share_plus.dart';
 import '../model/data.dart';
 
-class SelectionScreen extends StatefulWidget {
+
+class MultipleSelectionScreen extends StatefulWidget {
   final List<Data> snapshot;
-  final VoidCallback refresh;
   final ScreenType screenType;
   final double scrollOffset;
   final int selectedIndex;
 
-  SelectionScreen(
+  MultipleSelectionScreen(
       {Key? key,
       required this.snapshot,
-      required this.refresh,
       required this.screenType,
       this.scrollOffset = 0,
       this.selectedIndex = 0
       }):super(key: key);
   @override
-  State<StatefulWidget> createState() => _SelectionScreenState();
+  State<StatefulWidget> createState() => _MultipleSelectionScreenState();
 }
 
-class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingObserver {
+class _MultipleSelectionScreenState extends State<MultipleSelectionScreen> with WidgetsBindingObserver {
   final ScrollController _controller = ScrollController();
   bool _isSelectAll = false;
-  FocusNode _searchedFocusNode = FocusNode();
+  final FocusNode _searchedFocusNode = FocusNode();
   bool _iconVisibility = false;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   Set<int> _selectedItems = {};
   List<Data> _filterItems = [];
 
@@ -51,14 +50,16 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
     _searchController.addListener(_search);
     _toggleSelection(widget.selectedIndex);
     _isSelectAll = _selectedItems.length == widget.snapshot.length;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_controller.hasClients) {
         final maxScroll = _controller.position.maxScrollExtent;
-        _controller.jumpTo(widget.scrollOffset.clamp(0, maxScroll));
+        final safeOffset = widget.scrollOffset.clamp(0, maxScroll).toDouble();
+        _controller.jumpTo(safeOffset);
       }
     });
-  }
 
+  }
 
 
   @override
@@ -66,7 +67,7 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
     return Scaffold(
 
       body: SafeArea(
-        child: Padding(padding: EdgeInsets.only(top: 10),
+        child: Padding(padding: const EdgeInsets.only(top: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,9 +90,6 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
                     activeColor: ColorTheme.RED,
                     materialTapTargetSize: MaterialTapTargetSize.padded,
                   ),
-                  // SizedBox(
-                  //   width: 5,
-                  // ),
                   ],),
               ),
             ),
@@ -102,6 +100,7 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
             Expanded(
               child: ListView.builder(
                 itemCount: _filterItems.length,
+                physics: const AlwaysScrollableScrollPhysics(),
                 controller: _controller,
                 itemBuilder: (BuildContext context, int index) {
                   final item = _filterItems[index];
@@ -187,7 +186,6 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
     super.dispose();
     _controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
-    widget.refresh();
   }
 
   @override
@@ -210,11 +208,10 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
     setState(() {
       if (value == true) {
         _selectedItems = Set<int>.from(Iterable.generate(widget.snapshot.length));
-        _isSelectAll = true;
       } else {
         _selectedItems.clear();
-        _isSelectAll = false;
       }
+      _isSelectAll = _selectedItems.length == widget.snapshot.length;
     });
   }
 
@@ -280,16 +277,16 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
         message: 'Delete all selection');
     if(confirmed){
       if (_selectedItems.isNotEmpty) {
-        for (var index in _selectedItems) {
+        List<int> sortedIndices = List.from(_selectedItems)..sort((a, b) => b.compareTo(a));
+        for (var index in sortedIndices) {
           var item = widget.snapshot[index];
             try {
-              Read.removeFiles(item);
+              Read.instance.removeFiles(item);
               _refreshData(item);
             } catch (exception) {
               print('Error deleting file: ${item.filePath}, Error: $exception');
             }
         }
-       widget.refresh();
         _unSelectAll();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -308,18 +305,18 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
     if(_selectedItems.isNotEmpty){
       var comfirmed = await showConfirmWidget(home_context: context, label: 'Remove',message: 'Remove selected bookmarks');
       if(comfirmed){
-        for(var index in _selectedItems){
+        List<int> sortedIndices = List.from(_selectedItems)..sort((a, b) => b.compareTo(a));
+        for(var index in sortedIndices){
           var item = widget.snapshot[index];
           if(widget.screenType == ScreenType.BOOKMARKS){
-            database.deleteFrom(table_name:DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: item.filePath);
-            Read.updateFiles(item,typeOfUpdate: TypeOfUpdate.BOOKMARK);
+            await database.deleteFrom(table_name:DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: item.filePath);
+            Read.instance.updateFiles(item,typeOfUpdate: TypeOfUpdate.BOOKMARK);
           }else{
-            database.deleteFrom(table_name: widget.screenType == ScreenType.BOOKMARKS ? DatabaseHelper.BOOKMARK_TABLE_NAME : DatabaseHelper.HISTORY_TABLE_NAME, filePath: item.filePath);
-            Read.updateFiles(item,typeOfUpdate: TypeOfUpdate.HISTORY);
+            await database.deleteFrom(table_name: widget.screenType == ScreenType.BOOKMARKS ? DatabaseHelper.BOOKMARK_TABLE_NAME : DatabaseHelper.HISTORY_TABLE_NAME, filePath: item.filePath);
+            Read.instance.updateFiles(item,typeOfUpdate: TypeOfUpdate.HISTORY);
           }
           _refreshData(item);
         }
-       widget.refresh();
         _unSelectAll();
       }
     }else{
@@ -347,12 +344,10 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
   }
 
   void _refreshData(Data item)async {
-    setState(() {
-      widget.snapshot.removeAt(widget.snapshot.indexOf(item));
-      if(widget.snapshot.isEmpty){
-        Navigator.of(context).pop();
-      }
-    });
+    widget.snapshot.removeAt(widget.snapshot.indexOf(item));
+    if(widget.snapshot.isEmpty){
+      Navigator.of(context).pop();
+    }
   }
 
   _search() {
@@ -386,7 +381,7 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
               controller: _searchController,
               cursorColor: ColorTheme.RED,
               maxLines: 1,
-              autofocus: true,
+              // autofocus: true,
               keyboardType: TextInputType.text,
               style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
@@ -442,69 +437,6 @@ class _SelectionScreenState extends State<SelectionScreen> with WidgetsBindingOb
       ],
     );
   }
-  // _topSearchDesign() {
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       TextSelectionTheme(
-  //         data: Theme.of(context).textSelectionTheme,
-  //         child: ConstrainedBox(
-  //           constraints: BoxConstraints(
-  //               maxWidth: MediaQuery.of(context).size.width * 0.62,
-  //               maxHeight: 40),
-  //           child: TextField(
-  //             focusNode: _searchedFocusNode,
-  //             controller: _searchController,
-  //             cursorColor: ColorTheme.RED,
-  //             maxLines: 1,
-  //             keyboardType: TextInputType.text,
-  //             style: Theme.of(context).textTheme.bodyMedium,
-  //             decoration: InputDecoration(
-  //                 border: InputBorder.none,
-  //                 suffixIcon: Visibility(
-  //                   visible: _iconVisibility,
-  //                   child: IconButton(
-  //                     onPressed: () {
-  //                       setState(() {
-  //                         _searchController.text = '';
-  //                         _iconVisibility = false;
-  //                       });
-  //                     },
-  //                     icon: Icon(Icons.cancel,),
-  //                   ),
-  //                 ),
-  //                 hintText: 'Search',
-  //                 hintStyle: Theme.of(context)
-  //                     .textTheme
-  //                     .bodyMedium!
-  //                     .copyWith(color:Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE.withValues(alpha: 0.5):ColorTheme.BLACK.withValues(alpha: 0.5))),
-  //           ),
-  //         ),
-  //       ),
-  //       SizedBox(
-  //         height: 17,
-  //         child: VerticalDivider(
-  //           color:Theme.of(context).brightness == Brightness.light? ColorTheme.BLACK.withValues(alpha: 0.1):ColorTheme.WHITE.withValues(alpha: 0.5), // Color of the divider
-  //           thickness: 1.5, // Thickness of the divider
-  //         ),
-  //       ),
-  //       TextButton(
-  //         onPressed: () {
-  //           Navigator.of(context).pop();
-  //         },
-  //         child: Text(
-  //           'Cancel',
-  //         ),
-  //         style: ButtonStyle(
-  //             overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-  //             foregroundColor: WidgetStatePropertyAll(ColorTheme.BLACK),
-  //             textStyle: WidgetStatePropertyAll(Theme.of(context)
-  //                 .textTheme
-  //                 .titleMedium!
-  //                 .copyWith(fontWeight: FontWeight.bold))),
-  //       ),
-  //     ],
-  //   );
-  // }
+
 
 }

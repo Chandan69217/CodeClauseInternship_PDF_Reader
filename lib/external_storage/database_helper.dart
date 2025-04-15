@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 
 
@@ -12,14 +14,11 @@ class DatabaseHelper {
 
   static final DatabaseHelper _instance = DatabaseHelper._();
 
-  // factory DatabaseHelper() {
-  //   return DatabaseHelper._();
-  // }
 
   static Future<DatabaseHelper> getInstance() async {
-    var applicationPath = await getDatabasesPath();
-    String filePath = applicationPath +'/'+ DATABASE_NAME;
     if(_database == null){
+      var applicationPath = await getDatabasesPath();
+      String filePath = applicationPath +'/'+ DATABASE_NAME;
       try{
         _database = await openDatabase(filePath,version: 1,onCreate: (database,version){
           database.execute('CREATE TABLE $BOOKMARK_TABLE_NAME ( $ID INTEGER PRIMARY KEY AUTOINCREMENT, $FILE_PATH TEXT NOT NULL)');
@@ -47,11 +46,18 @@ class DatabaseHelper {
     return false;
   }
 
-  Future<List<Map<String,dynamic>>> getFiles({required String table_name}) async{
-    var files = <Map<String,dynamic>>[];
-    try{
-      files = await _database!.query(table_name);
-    }catch(exception,trace){
+  Future<List<Map<String, dynamic>>> getFiles({required String table_name}) async {
+    var files = <Map<String, dynamic>>[];
+    try {
+      var dbFiles = await _database!.query(table_name);
+      for (var file in dbFiles) {
+        if (await doesFileExist(file[FILE_PATH].toString())) {
+          files.add(file);
+        }else{
+          deleteFrom(table_name: table_name, filePath: file[FILE_PATH].toString());
+        }
+      }
+    } catch (exception, trace) {
       _onError(exception.toString(), trace.toString());
     }
     return files;
@@ -93,6 +99,15 @@ class DatabaseHelper {
       _onError(exception.toString(), trace.toString());
     }
   }
+
+
+
+  Future<bool> doesFileExist(String filePath) async {
+    final file = File(filePath);
+    return await file.exists();
+  }
+
+
 
 
   static _onError(String exception,String trace){

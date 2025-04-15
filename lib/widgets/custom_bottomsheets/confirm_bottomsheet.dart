@@ -1,14 +1,15 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_reader/external_storage/read_storage.dart';
-import 'package:pdf_reader/utilities/callbacks.dart';
+import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 
 
-import '../model/data.dart';
-import '../utilities/color_theme.dart';
 
-void showDeleteWidget(
-    BuildContext home_context, Data data, OnChanged onDeleted) {
+
+Future<bool> showConfirmWidget (
+{ required BuildContext home_context, Data? data, required String label,String? message}) async {
+  Completer<bool> completer = Completer<bool>();
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -18,7 +19,7 @@ void showDeleteWidget(
           children: [
             Padding(
               padding: EdgeInsets.all(8),
-              child: RichText(
+              child: data != null ? RichText(
                 text: TextSpan(
                     text: 'Total size ',
                     style: Theme.of(home_context)
@@ -27,12 +28,21 @@ void showDeleteWidget(
                         .copyWith(fontSize: 11),
                     children: [TextSpan(text: data.fileSize)]),
                 textAlign: TextAlign.center,
+              ) : RichText(
+                text: TextSpan(
+                    text: message,
+                    style: Theme.of(home_context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 11),
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                _deleteFile(data, onDeleted);
+                completer.complete(true);
               },
               style: ButtonStyle(
                   overlayColor: WidgetStatePropertyAll(
@@ -41,7 +51,7 @@ void showDeleteWidget(
                   fixedSize: WidgetStatePropertyAll(
                       Size(MediaQuery.of(home_context).size.width, 65))),
               child: Text(
-                'Delete',
+                label,
                 style: Theme.of(home_context)
                     .textTheme
                     .bodyMedium!
@@ -57,6 +67,7 @@ void showDeleteWidget(
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  completer.complete(false);
                 },
                 style: ButtonStyle(
                     overlayColor: WidgetStatePropertyAll(
@@ -71,27 +82,6 @@ void showDeleteWidget(
           ],
         );
       });
+  return completer.future;
 }
 
-void _deleteFile(Data data, OnChanged onDeleted) async {
-    try {
-      onDeleted(await Read.removeFiles(data));
-    } catch (exception, trace) {
-      print('$exception : $trace');
-    }
-}
-
-// void _deleteFile(Data data, OnDeleted onDeleted) async {
-//   if (await data.file.exists()) {
-//     try {
-//       data.file.deleteSync();
-//       onDeleted(true,data);
-//     } catch (exception, trace) {
-//       onDeleted(false,data);
-//       print('$exception : $trace');
-//     }
-//   } else {
-//     onDeleted(false,data);
-//     print('file does not exist');
-//   }
-// }

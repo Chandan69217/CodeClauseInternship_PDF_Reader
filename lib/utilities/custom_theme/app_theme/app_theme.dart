@@ -27,7 +27,7 @@ class AppTheme{
     popupMenuTheme: TPopupMenuTheme.lightTheme,
     textSelectionTheme: TTextSelectionThemeData.light,
     iconButtonTheme: TIconBtnTheme.light,
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
           color: ColorTheme.BLACK
       ),
       textButtonTheme: TTextButtonTheme.ligth
@@ -47,7 +47,7 @@ class AppTheme{
     popupMenuTheme: TPopupMenuTheme.darkTheme,
     textSelectionTheme: TTextSelectionThemeData.dark,
     iconButtonTheme: TIconBtnTheme.dark,
-    iconTheme: IconThemeData(
+    iconTheme: const IconThemeData(
       color: ColorTheme.WHITE
     ),
     textButtonTheme: TTextButtonTheme.dark

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/utilities/screen_type.dart';
-import 'package:pdf_reader/widgets/custom_listview_widget.dart';
+import 'package:pdf_reader/widgets/custom_listview/custom_listview_widget.dart';
+import 'package:provider/provider.dart';
 import '../../../external_storage/read_storage.dart';
 import '../../../model/data.dart';
 
@@ -19,27 +20,23 @@ class AllFileTab extends StatefulWidget {
 }
 
 class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver {
-  List<Data> _snapshot = [];
+
   @override
   void initState() {
     super.initState();
-    _handleFileData(widget.screenType);
     WidgetsBinding.instance.addObserver(this);
   }
 
-  _handleFileData(ScreenType screenType) {
+  List<Data> _handleFileData(ScreenType screenType,List<Data> allFiles) {
     switch (screenType) {
       case ScreenType.ALL_FILES:
-        _snapshot = Read.AllFiles;
-        break;
+        return allFiles;
       case ScreenType.HISTORY:
-        _snapshot = _getHistory();
-        break;
+        return _getHistory(allFiles);
       case ScreenType.BOOKMARKS:
-        _snapshot = _getBookmark();
-        break;
+        return _getBookmark(allFiles);
       default:
-        _snapshot = [];
+        return [];
     }
   }
 
@@ -48,26 +45,22 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: CustomListView(
-              snapshot: _snapshot,
-              screenType: widget.screenType,
-            refresh: refresh,
+          child: Consumer<Read>(
+            builder: (context,value,child){
+              return CustomListView(
+                snapshot: _handleFileData(widget.screenType, value.AllFiles),
+                screenType: widget.screenType,
+              );
+            },
           )
-          ),
+      ),
     );
   }
 
-  List<Data> _getBookmark() {
-    return Read.AllFiles.where((data) => data.isBookmarked).toList();
+  List<Data> _getBookmark(List<Data> allFiles) {
+    return allFiles.where((data) => data.isBookmarked).toList();
   }
 
-  void refresh() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _handleFileData(widget.screenType);
-      });
-    });
-  }
 
   @override
   void dispose() {
@@ -75,7 +68,8 @@ class AllFilesTabStates extends State<AllFileTab> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  List<Data> _getHistory() {
-    return Read.AllFiles.where((data) => data.isHistory).toList();
+  List<Data> _getHistory(List<Data> allFiles) {
+    return allFiles.where((data) => data.isHistory).toList();
   }
+
 }

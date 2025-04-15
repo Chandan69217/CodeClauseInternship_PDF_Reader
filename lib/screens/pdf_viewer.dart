@@ -1,20 +1,19 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/external_storage/database_helper.dart';
+import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/utilities/callbacks.dart';
-import 'package:pdf_reader/widgets/show_delete_widget.dart';
-import 'package:pdf_reader/widgets/show_file_details_widget.dart';
-import 'package:pdf_reader/widgets/show_rename_widget.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_delete_widget.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_file_details_widget.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_rename_widget.dart';
 import 'package:pdfx/pdfx.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../utilities/color_theme.dart';
 
 class PdfViewer extends StatefulWidget {
   Data data;
-  OnChanged? onChanged;
   PdfViewer({super.key,
-    this.onChanged,
     required this.data,
   });
 
@@ -26,6 +25,7 @@ class _PdfViewerStates extends State<PdfViewer> {
   PdfControllerPinch? controllerPinch;
   int _totalPage = 0;
   int _currentPage = 0;
+
 
   @override
   void initState() {
@@ -41,39 +41,43 @@ class _PdfViewerStates extends State<PdfViewer> {
       appBar: _appBar(),
       body: SafeArea(
           child: Expanded(
-        child: PdfViewPinch(
-          controller: controllerPinch!,
-          onDocumentLoaded: (pdfDocument) {
-            setState(() {
-              _totalPage = pdfDocument.pagesCount;
-              _currentPage = controllerPinch!.page;
-            });
-          },
-          onPageChanged: (pageNo) {
-            setState(() {
-              _currentPage = pageNo;
-            });
-          },
-        ),
+        child: Consumer<Read>(
+            builder: (context,value,child){
+              return PdfViewPinch(
+                controller: controllerPinch!,
+                onDocumentLoaded: (pdfDocument) {
+                  setState(() {
+                    _totalPage = pdfDocument.pagesCount;
+                    _currentPage = controllerPinch!.page;
+                  });
+                },
+                onPageChanged: (pageNo) {
+                  setState(() {
+                    _currentPage = pageNo;
+                  });
+                },
+              );
+            }
+        )
       )),
     );
   }
 
   List<Widget> _actionsButton() {
     return <Widget>[
+      IconButton(onPressed: !widget.data.isBookmarked ? _addToBookmark : _removeFromBookmark,
+          icon: Icon(widget.data.isBookmarked?Icons.star:Icons.star_border)),
       PopupMenuButton(
         menuPadding: EdgeInsets.all(5),
         onSelected: (value) => _onSelected(value, widget.data),
-        style: const ButtonStyle(
-          overlayColor: WidgetStatePropertyAll(ColorTheme.PRIMARY),
-        ),
         itemBuilder: (context) {
           return <PopupMenuItem>[
             PopupMenuItem(
               value: 1,
               child: _popupMenuItemUI(
                   title: 'Rename',
-                  icon: Icons.drive_file_rename_outline_rounded),
+                  icon: Icons.drive_file_rename_outline_rounded,
+              ),
             ),
             PopupMenuItem(
               value: 2,
@@ -95,10 +99,8 @@ class _PdfViewerStates extends State<PdfViewer> {
           'assets/icons/three_dots_icon.webp',
           width: 20,
           height: 20,
+          color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
         ),
-        color: ColorTheme.WHITE,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
       SizedBox(
         width: 10,
@@ -143,33 +145,29 @@ class _PdfViewerStates extends State<PdfViewer> {
         showRenameWidget(
             home_context: context,
             data: data,
-            onChanged: (status,{Data? newData}) {
-              if(status && newData!=null){
-                _refresh(newData);
-                widget.onChanged!(status);
+          onChanged: (status, {newData}){
+              if(status){
+                setState(() {
+                  widget.data = newData!;
+                });
               }
-            });
+          },
+        );
         break;
       case 2:
         Share.shareXFiles([XFile(data.filePath)]);
         break;
       case 3:
-        showDeleteWidget(context, data, (status,{Data? newData}){
+        showDeleteWidget(context, data,onDeleted: (status, {newData}){
           if(status){
-            widget.onChanged!(status);
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           }
-        });
+        },);
         break;
       case 4:
         showFileDetails(home_context: context, data: data);
         break;
     }
-  }
-  _refresh(Data newData){
-    setState(() {
-      widget.data = newData;
-    });
   }
 
   AppBar _appBar() {
@@ -215,5 +213,26 @@ class _PdfViewerStates extends State<PdfViewer> {
              ),
            )),
        actions: _actionsButton());
+  }
+
+  _addToBookmark() async {
+    var database = await DatabaseHelper.getInstance();
+    var isBookmarked = await database.insertInto(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
+    if(isBookmarked) {
+      setState(() {
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(child: Text('Add to Bookmark'),)));
+        Read.instance.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
+      });
+    }
+  }
+  _removeFromBookmark() async {
+    var database = await DatabaseHelper.getInstance();
+    var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
+    if(isBookmarked) {
+      setState(() {
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(child: Text('Remove from Bookmark'),)));
+        Read.instance.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
+      });
+    }
   }
 }

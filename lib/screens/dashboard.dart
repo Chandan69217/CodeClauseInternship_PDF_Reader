@@ -9,6 +9,7 @@ import 'package:pdf_reader/screens/navigation_screens/bottom/tools_screen.dart';
 import 'package:pdf_reader/screens/search_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/sort.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -21,23 +22,16 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   int _currentIndex = 0;
-  bool _appliedSortingDate = false;
-  bool _appliedSortingName = false;
-  bool _appliedSortingSize = false;
-  static final GlobalKey<AllFilesStates> _allFilesKey = GlobalKey();
-  static final GlobalKey<BookmarkScreenState> _bookmarksKey = GlobalKey();
-  static final GlobalKey<HistoryScreenState> _historysKey = GlobalKey();
   static final List<Widget> _screens = <Widget>[
-    AllFilesScreens(key: _allFilesKey,),
-    HistoryScreen(key: _historysKey,),
-    BookmarkScreen(key: _bookmarksKey,),
+    AllFilesScreens(),
+    HistoryScreen(),
+    BookmarkScreen(),
     ToolsScreen()
   ];
 
   @override
   void initState() {
     super.initState();
-    _setSortingTicker(Read.sortingType);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -54,32 +48,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
     );
   }
 
-  _setSortingTicker(String sortType) {
-    if (sortType == SortType.DATE) {
-      _appliedSortingDate = true;
-      _appliedSortingName = false;
-      _appliedSortingSize = false;
-    } else if (sortType == SortType.NAME) {
-      _appliedSortingDate = false;
-      _appliedSortingName = true;
-      _appliedSortingSize = false;
-    } else {
-      _appliedSortingDate = false;
-      _appliedSortingName = false;
-      _appliedSortingSize = true;
-    }
-  }
 
 
-  Future<void> _saveSorting(String sortingType) async {
-    var instance = await SharedPreferences.getInstance();
-    instance.setString(SortType.KEY, sortingType);
-    Read.sortBy(sortingType);
-   _allFilesKey.currentState?.refreshAllFiles();
-    _bookmarksKey.currentState?.refreshAllBookmarks();
-    _historysKey.currentState?.refreshAllHistory();
-    _setSortingTicker(sortingType);
-  }
 
   AppBar _appBar() {
     return AppBar(
@@ -103,7 +73,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   }
 
   _onSelected(dynamic value){
-    _saveSorting(value);
+    Read.instance.saveSorting(value);
   }
 
   List<Widget> _actionsButton() {
@@ -122,31 +92,36 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
       ),
       Visibility(
         visible: _currentIndex !=3 ,
-        child: PopupMenuButton(
-          menuPadding: EdgeInsets.all(5),
-          onSelected: _onSelected,
-          itemBuilder: (context) {
-            return <PopupMenuItem>[
-              PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.webp', title: 'Last Modified', visibility: _appliedSortingDate),
-                value: 'DATE',
+        child: Consumer<Read>(
+          builder: (context,value,child){
+            var sortType = value.appliedSorting[SortType.KEY]??'';
+            return PopupMenuButton(
+              menuPadding: EdgeInsets.all(5),
+              onSelected: _onSelected,
+              itemBuilder: (context) {
+                return <PopupMenuItem>[
+                  PopupMenuItem(
+                    child: _popupMenuItemUI(leading: 'assets/icons/sort_icon.webp', title: 'Last Modified', visibility:sortType.contains(SortType.DATE) ),
+                    value: 'DATE',
+                  ),
+                  PopupMenuItem(
+                    child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.webp', title: 'Name', visibility: sortType.contains(SortType.NAME)),
+                    value: 'NAME',
+                  ),
+                  PopupMenuItem(
+                    child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.webp', title: 'File Size', visibility: sortType.contains(SortType.SIZE)),
+                    value: 'SIZE',
+                  )
+                ];
+              },
+              icon: Image.asset(
+                'assets/icons/sort_icon.webp',
+                width: 30,
+                height: 30,
+                color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
               ),
-              PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_name_icon.webp', title: 'Name', visibility: _appliedSortingName),
-                value: 'NAME',
-              ),
-              PopupMenuItem(
-                child: _popupMenuItemUI(leading: 'assets/icons/sort_by_size_icon.webp', title: 'File Size', visibility: _appliedSortingSize),
-                value: 'SIZE',
-              )
-            ];
+            );
           },
-          icon: Image.asset(
-            'assets/icons/sort_icon.webp',
-            width: 30,
-            height: 30,
-            color: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
-          ),
         ),
       ),
       SizedBox(
@@ -532,20 +507,9 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   }
 
   _onSearch(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen(onChanged: _onChanged)));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen()));
   }
 
-
-  _refreshAll(){
-    _allFilesKey.currentState?.refreshAllFiles();
-    _historysKey.currentState?.refreshAllHistory();
-    _bookmarksKey.currentState?.refreshAllBookmarks();
-  }
-  void _onChanged(status,{Data? newData}) {
-    if(status){
-      _refreshAll();
-    }
-  }
 
 
 }

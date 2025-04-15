@@ -2,16 +2,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/callbacks.dart';
+import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
-import '../utilities/callbacks.dart';
-import '../utilities/color_theme.dart';
+
 
 
 
 void showRenameWidget(
     {required BuildContext home_context,
-    required Data data,
-    required OnChanged onChanged}) {
+      required Data data,
+      OnChanged? onChanged}) {
   showModalBottomSheet(
       context: home_context,
       constraints: BoxConstraints(minWidth: MediaQuery.of(home_context).size.width),
@@ -122,7 +123,7 @@ class _State extends State<_BottomSheetUI> {
                   ),
                   hintText: 'File name',
                   hintStyle:
-                      TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))),
+                  TextStyle(color: ColorTheme.BLACK.withOpacity(0.4))),
             ),
           ),
         ],
@@ -147,11 +148,12 @@ class _State extends State<_BottomSheetUI> {
             fileSize: FileDetails.getSize(),
             date: FileDetails.getDate(),
             bytes: FileDetails.getBytes(),
-          isHistory: oldData.isHistory,
-          isBookmarked: oldData.isBookmarked
+            isHistory: oldData.isHistory,
+            isBookmarked: oldData.isBookmarked
         );
+        var status = await Read.instance.updateFiles(widget.data,newData: newData,typeOfUpdate: TypeOfUpdate.RENAME,);
+        widget.onChanged?.call(status, newData: newData);
         Navigator.pop(context);
-        widget.onChanged!(await Read.updateFiles(widget.data,newData: newData,typeOfUpdate: TypeOfUpdate.RENAME,),newData: newData);
       }
     } catch (exception, track) {
       print('${exception.toString()} : ${track.toString()}');

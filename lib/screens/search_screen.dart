@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/model/data.dart';
-import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
-import 'package:pdf_reader/widgets/custom_list_tile.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/custom_bottomsheet.dart';
+import 'package:pdf_reader/widgets/custom_listview/custom_list_tile.dart';
 import '../external_storage/read_storage.dart';
 import '../utilities/file_view_handler.dart';
-import '../widgets/custom_bottomsheet.dart';
+
+
 
 class SearchScreen extends StatefulWidget {
-  final OnChanged onChanged;
-  SearchScreen({required this.onChanged});
+  SearchScreen();
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
 }
@@ -68,20 +68,11 @@ class _SearchScreenState extends State<SearchScreen>
                                 customBottomSheet(
                                     home_context: context,
                                     data: _searchedItem[index],
-                                    onChanged: (status,{Data? newData}) {
-                                     if(status){
-                                       setState(() {
-                                         _searchedItem = Read.AllFiles;
-                                         _search();
-                                         widget.onChanged(status);
-                                       });
-                                     }
-                                    },
+                                  onChanged: _onChanged
                                 );
                               },
                               onTap: () {
-                                fileViewHandler(context, _searchedItem[index],
-                                    onChanged: _onChanged );
+                                fileViewHandler(context, _searchedItem[index],);
                               },
                             );
                           })
@@ -171,9 +162,9 @@ class _SearchScreenState extends State<SearchScreen>
     var searchedQuery = _searchController.text;
     if (searchedQuery.isNotEmpty) {
       setState(() {
-        _searchedItem = Read.AllFiles.where((data) => data.fileName
-            .toLowerCase()
-            .contains(searchedQuery.toLowerCase())).toList();
+        _searchedItem = Read.instance.AllFiles.where((data) => data.fileName
+            .toLowerCase().trim()
+            .contains(searchedQuery.toLowerCase().trim())).toList();
         _searchedItem.isNotEmpty ? _isAvailable = true : _isAvailable = false;
         _iconVisibility = true;
       });
@@ -192,11 +183,9 @@ class _SearchScreenState extends State<SearchScreen>
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  void _onChanged(bool status,{Data? newData}) {
+  void _onChanged(status,{newData}) {
    if(status){
      _search();
-     widget.onChanged(status);
-
    }
   }
 

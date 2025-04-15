@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
 import 'package:pdf_reader/model/data.dart';
+import 'package:pdf_reader/utilities/callbacks.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
-import 'package:pdf_reader/widgets/show_delete_widget.dart';
-import 'package:pdf_reader/widgets/show_file_details_widget.dart';
-import 'package:pdf_reader/widgets/show_rename_widget.dart';
+import 'package:pdf_reader/utilities/get_icon_path.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_delete_widget.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_file_details_widget.dart';
+import 'package:pdf_reader/widgets/custom_bottomsheets/show_rename_widget.dart';
 import 'package:share_plus/share_plus.dart';
 
 
-import '../utilities/callbacks.dart';
-import '../utilities/get_icon_path.dart';
+
 
 void customBottomSheet(
     {required BuildContext home_context,
-    required Data data,
-    required OnChanged onChanged,}
+      required Data data,
+      OnChanged? onChanged,}
     ) {
   showModalBottomSheet(
       context: home_context,
@@ -29,12 +30,12 @@ void customBottomSheet(
 
 
 class _SheetDesign extends StatefulWidget{
-   BuildContext home_context;
-   Data data;
-   OnChanged onChanged;
+  BuildContext home_context;
+  Data data;
+  OnChanged? onChanged;
   _SheetDesign({required this.home_context ,
     required this.data,
-    required this.onChanged,});
+    this.onChanged,});
   @override
   State<StatefulWidget> createState() => _SheetDesignState();
 }
@@ -91,7 +92,7 @@ class _SheetDesignState extends State<_SheetDesign>{
             ),
             onTap: () {
               Navigator.pop(context);
-              showDeleteWidget(widget.home_context, widget.data, widget.onChanged);
+              showDeleteWidget(widget.home_context, widget.data,onDeleted: widget.onChanged);
             },
           ),
           ListTile(
@@ -156,7 +157,7 @@ class _SheetDesignState extends State<_SheetDesign>{
                   width: 25,
                   height: 25,
                   color: widget.data.isBookmarked?
-                      null: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
+                  null: Theme.of(context).brightness == Brightness.dark? ColorTheme.WHITE:null,
                 )))
       ],
     );
@@ -171,7 +172,7 @@ class _SheetDesignState extends State<_SheetDesign>{
     var isBookmarked = await database.insertInto(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
     if(isBookmarked) {
       setState(() {
-        Read.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
+        Read.instance.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
       });
     }
   }
@@ -180,9 +181,8 @@ class _SheetDesignState extends State<_SheetDesign>{
     var isBookmarked = await database.deleteFrom(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME, filePath: widget.data.filePath);
     if(isBookmarked) {
       setState(() {
-        Read.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
+        Read.instance.updateFiles(widget.data,typeOfUpdate: TypeOfUpdate.BOOKMARK);
       });
     }
   }
 }
-

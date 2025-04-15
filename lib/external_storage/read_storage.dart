@@ -18,19 +18,34 @@ enum TypeOfUpdate{
   RENAME,
 }
 
-class Read {
+Set<String> validExtensions = {
+  'pdf', 'docx', 'ppt', 'xls', 'doc', 'xlsx', 'pptx'
+};
+
+class Read with ChangeNotifier {
   // ignore: non_constant_identifier_names
-  static List<String> _FilePaths = [];
-  static List<Data> AllFiles = [];
-  final BuildContext context;
-  static String sortingType = '';
-  static List<Map<String,dynamic>> _bookmarks = [];
-  static List<Map<String,dynamic>> _history = [];
+  List<String> _FilePaths = [];
+  List<Data> AllFiles = [];
+  final BuildContext _context;
+  Map<String,String> appliedSorting = {};
+  List<Map<String,dynamic>> _bookmarks = [];
+  List<Map<String,dynamic>> _history = [];
   VoidCallback? onClick;
 
-  Read._(this.context);
 
-  factory Read(BuildContext context) => Read._(context);
+  Read._(this._context);
+  factory Read(BuildContext context) {
+    _instance ??= Read._(context);
+    return _instance!;
+  }
+
+  static Read? _instance;
+  static Read get instance {
+    if (_instance == null) {
+      throw Exception('Read instance is not initialized. Call Read(context) first.');
+    }
+    return _instance!;
+  }
 
   Future<bool> scanForAllFiles() async {
     var database = await DatabaseHelper.getInstance();
@@ -56,8 +71,9 @@ class Read {
           )
           );
         }
-        sortingType = await _checkSortingSetup();
-        sortBy(sortingType);
+        appliedSorting = await _checkSortingSetup();
+        sortBy(appliedSorting[SortType.KEY]!);
+        notifyListeners();
         return true;
       }
     }
@@ -68,21 +84,15 @@ class Read {
     return _bookmarks.any((bookmark) => bookmark[DatabaseHelper.FILE_PATH] == path);
   }
 
-  Future<String> _checkSortingSetup() async {
+  Future<Map<String,String>> _checkSortingSetup() async {
     final SharedPreferences instance = await SharedPreferences.getInstance();
 
     if (!instance.containsKey(SortType.KEY)) {
       instance.setString(SortType.KEY, SortType.NAME);
-      return SortType.NAME;
+      return {SortType.KEY:SortType.NAME};
     }
     final getType = instance.get(SortType.KEY);
-    if (getType == SortType.DATE) {
-      return SortType.DATE;
-    } else if (getType == SortType.NAME) {
-      return SortType.NAME;
-    } else {
-      return SortType.SIZE;
-    }
+    return {SortType.KEY:getType.toString()};
   }
 
   Future<bool> requestPermission() async {
@@ -103,51 +113,56 @@ class Read {
           status = await Permission.manageExternalStorage.request();
         }
         if (status.isDenied) {
-          Navigator.pushReplacement(context,
+          Navigator.pushReplacement(_context,
               MaterialPageRoute(builder: (context) => PermissionScreen()));
         }
       }
-
       _showMessage(
           'Permission Required',
           'Storage permission is required for accessing files on your devices. please allow the permission',
           onClick);
     } else if (status.isPermanentlyDenied) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => PermissionScreen()));
+          _context, MaterialPageRoute(builder: (context) => PermissionScreen()));
     }
     return status.isGranted;
   }
 
-  // static void updateFiles(Data oldData, Data newData) {
-  //   AllFiles[AllFiles.indexOf(oldData)] = newData;
-  // }
 
-  static Future<bool> updateFiles(Data data,{TypeOfUpdate? typeOfUpdate,Data? newData})async {
+  Future<bool> updateFiles(Data data,{TypeOfUpdate? typeOfUpdate,Data? newData})async {
     final oldData = data;
     if(typeOfUpdate == TypeOfUpdate.BOOKMARK){
       data.isBookmarked = !data.isBookmarked;
-      AllFiles[AllFiles.indexOf(oldData)] = data ;
-      return true;
     }else if(typeOfUpdate == TypeOfUpdate.HISTORY){
       data.isHistory = !data.isHistory;
-      AllFiles[AllFiles.indexOf(oldData)] = data;
-      return true;
-    }else{
+    }else if(typeOfUpdate == TypeOfUpdate.RENAME){
       if(newData!=null){
         AllFiles[AllFiles.indexOf(oldData)] = newData;
+        if(appliedSorting.isNotEmpty){
+          sortBy(appliedSorting[SortType.KEY]!);
+        }
+        notifyListeners();
         return true;
+      }else{
+        return false;
       }
-      return false;
     }
+    AllFiles[AllFiles.indexOf(oldData)] = data ;
+    if(appliedSorting.isNotEmpty){
+      sortBy(appliedSorting[SortType.KEY]!);
+    }
+    notifyListeners();
+    return true;
   }
 
-  static Future<bool> removeFiles(Data data) async{
+  Future<bool> removeFiles(Data data) async{
     try{
       if(await data.file.exists()){
        try{
          await data.file.delete();
-         return AllFiles.remove(data);
+         final value = AllFiles.remove(data);
+         notifyListeners();
+         return value;
        }catch(exception){
          print('Unable to delete file from storage ${data.fileName} : $exception');
          return false;
@@ -165,8 +180,8 @@ class Read {
 
   void _showMessage(String title, String content, VoidCallback onClick) {
     AwesomeDialog(
-            context: context,
-            width: MediaQuery.of(context).size.width,
+            context: _context,
+            width: MediaQuery.of(_context).size.width,
             dismissOnBackKeyPress: false,
             dismissOnTouchOutside: false,
             animType: AnimType.scale,
@@ -182,7 +197,7 @@ class Read {
         .show();
   }
 
-  static void sortBy(String sort) async {
+  void sortBy(String sort) async {
     if (sort == SortType.NAME) {
       AllFiles = await Sort(filesData: AllFiles).sortByName();
     } else if (sort == SortType.DATE) {
@@ -190,6 +205,7 @@ class Read {
     } else if (sort == SortType.SIZE) {
       AllFiles = await Sort(filesData: AllFiles).sortBySize();
     }
+    notifyListeners();
   }
 
   Future<List<String>> _getAllPathsFromDirectory() async {
@@ -214,9 +230,6 @@ class Read {
           paths.addAll(await _listFilesRecursively(entity));
         } else if (entity is File) {
           String extension = entity.path.split('.').last.toLowerCase();
-          Set<String> validExtensions = {
-            'pdf', 'docx', 'ppt', 'xls', 'doc', 'xlsx', 'pptx'
-          };
           if (validExtensions.contains(extension)) {
             paths.add(entity.path);
           }
@@ -243,6 +256,13 @@ class Read {
 
   bool _isHistory(String path) {
     return _history.any((history) => history[DatabaseHelper.FILE_PATH] == path);
+  }
+
+  Future<void> saveSorting(String sortingType) async {
+    var instance = await SharedPreferences.getInstance();
+    instance.setString(SortType.KEY, sortingType);
+    appliedSorting = {SortType.KEY : sortingType};
+    sortBy(sortingType);
   }
 
 }
