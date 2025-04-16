@@ -20,11 +20,10 @@ class _AnimatedFABState extends State<AnimatedFAB> {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return IconButton(
       onPressed: _isLoading ? null : _onPressed,
-      backgroundColor: Colors.deepPurpleAccent,
-      shape: const CircleBorder(),
-      child: AnimatedSwitcher(
+      iconSize: 25,
+      icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         transitionBuilder: (child, animation) =>
             ScaleTransition(scale: animation, child: child),
@@ -34,12 +33,13 @@ class _AnimatedFABState extends State<AnimatedFAB> {
           width: 24,
           height: 24,
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(ColorTheme.RED),
             strokeWidth: 3,
           ),
         )
-            : Icon(Icons.sync, key: ValueKey('icon'),color: ColorTheme.WHITE,),
+            : Icon(Icons.sync, key: ValueKey('icon'),),
       ),
     );
   }
+
 }

@@ -81,7 +81,7 @@ class PrivacySecurityScreen extends StatelessWidget {
   Widget _policyTile(BuildContext context, {required String title, required String url}) {
     return Card(
       elevation: 0,
-      color: ColorTheme.WHITE,
+      color: Theme.of(context).brightness == Brightness.light? ColorTheme.WHITE:null,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(

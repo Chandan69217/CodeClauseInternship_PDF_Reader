@@ -35,7 +35,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       labelText: label,
       filled: true,
       labelStyle: Theme.of(context).textTheme.bodySmall,
-      fillColor: ColorTheme.WHITE,
+      fillColor: Theme.of(context).brightness == Brightness.light? ColorTheme.WHITE:null,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,

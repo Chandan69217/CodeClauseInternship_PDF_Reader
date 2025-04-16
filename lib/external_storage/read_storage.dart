@@ -48,7 +48,13 @@ class Read with ChangeNotifier {
   }
 
   Future<bool> scanForAllFiles() async {
+
     var database = await DatabaseHelper.getInstance();
+   _FilePaths = [];
+   AllFiles = [];
+   appliedSorting = {};
+   _bookmarks = [];
+   _history = [];
     if (await requestPermission()) {
       _FilePaths = await _getAllPathsFromDirectory();
       _bookmarks = await database.getFiles(table_name: DatabaseHelper.BOOKMARK_TABLE_NAME);

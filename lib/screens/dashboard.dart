@@ -52,7 +52,6 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
             child: _screens[_currentIndex]
         ),
         drawer: _drawerUI(),
-        floatingActionButton: _currentIndex!=3 ? const AnimatedFAB():null,
         bottomNavigationBar: _bottomNavigationBar()
     );
   }
@@ -87,6 +86,10 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
 
   List<Widget> _actionsButton() {
     return <Widget>[
+      Visibility(
+        visible: _currentIndex != 3,
+          child: AnimatedFAB()),
+
       Visibility(
         visible: _currentIndex != 3,
         child: IconButton(

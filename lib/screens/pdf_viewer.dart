@@ -13,8 +13,10 @@ import '../utilities/color_theme.dart';
 
 class PdfViewer extends StatefulWidget {
   Data data;
+  final bool? isSharedIntent;
   PdfViewer({super.key,
     required this.data,
+    this.isSharedIntent = false
   });
 
   @override
@@ -212,7 +214,7 @@ class _PdfViewerStates extends State<PdfViewer> {
                ],
              ),
            )),
-       actions: _actionsButton());
+       actions: widget.isSharedIntent! ?null:_actionsButton());
   }
 
   _addToBookmark() async {
