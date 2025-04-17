@@ -1,8 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:pdf_reader/api/stirling_pdf.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
+import 'package:pdf_reader/widgets/custom_linearprogress_indicator/CustomLinearProgressIndicator.dart';
+import 'package:pdf_reader/widgets/sticky_snackbar/show_snackbar.dart';
 
 
 class PdfToImageConverterScreen extends StatefulWidget {
@@ -18,6 +19,10 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
   String? _colorType = 'color';
   String _dpi = '150';
   bool _isLoading = false;
+  ValueNotifier<Map<String,dynamic>> _progress = ValueNotifier<Map<String,dynamic>>({
+    'progress': 0.0,
+    'message' : 'file uploading..'
+  });
 
   final List<String> imageFormats = ['png', 'jpeg', 'webp', 'jpg'];
   final List<String> colorTypes = ['color', 'grayscale', 'blackwhite'];
@@ -55,6 +60,10 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
       return;
     }
 
+    _progress.value = {
+      'progress': 0.0,
+      'message' : 'file uploading..'
+    };
     setState(() {
       _isLoading = true;
     });
@@ -66,18 +75,16 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
         pageNumber: _pageNumbers,
         colorType: _colorType!,
         dpi: _dpi,
-        onDownloadComplete: (outputPath){
+        progress: _progress,
+        onDownloadComplete: (outputPath)async{
           if(outputPath != null){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(
-              child: Text('$outputPath'),
-            )));
+            await ShowStickySnackbar.showStickySnackBarAndWait(context, outputPath);
+            setState(() {
+              _isLoading = false;
+            });
           }
         }
     );
-
-    setState(() {
-      _isLoading = false;
-    });
 
   }
 
@@ -119,14 +126,10 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
                             _selectedFile != null
                                 ? _selectedFile!.name
                                 : "Tap to select PDF file",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: _selectedFile != null
-                                  ? (isDark ? Colors.white : Colors.black87)
-                                  : Colors.grey,
-                            ),
+                            style:Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           if (_selectedFile != null)
                             Text(
@@ -161,24 +164,13 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
             _buildTextField("DPI (e.g. 150)", _dpi, (val) => _dpi = val),
             const SizedBox(height: 32),
 
+
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              switchInCurve: Curves.bounceIn,
-              switchOutCurve: Curves.bounceOut,
               transitionBuilder: (child, animation) =>
                   ScaleTransition(scale: animation, child: child),
               child: _isLoading
-                  ? const Center(
-                key: ValueKey('loading'),
-                child: SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(ColorTheme.RED),
-                    strokeWidth: 3,
-                  ),
-                ),
-              )
+                  ?  CustomLinearProgressBar(progress: _progress)
                   : SizedBox(
                 width: double.infinity,
                     child: ElevatedButton.icon(
@@ -186,14 +178,6 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
                                     icon: const Icon(Icons.transform),
                                     label: const Text("Convert PDF to Image"),
                                     onPressed: _submit,
-                                    style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 3,
-                                    ),
                                   ),
                   ),
             )

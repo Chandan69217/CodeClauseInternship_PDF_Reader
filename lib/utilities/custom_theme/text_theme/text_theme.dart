@@ -4,7 +4,7 @@ import 'package:pdf_reader/utilities/color_theme.dart';
 class TTextTheme {
   TTextTheme._();
 
-  static final TextTheme lightTextTheme = TextTheme(
+  static const TextTheme lightTextTheme = TextTheme(
     headlineLarge: TextStyle(
       color: ColorTheme.BLACK,
       fontSize: 24,
@@ -49,7 +49,7 @@ class TTextTheme {
     ),
   );
 
-  static final TextTheme darkTextTheme = TextTheme(
+  static const TextTheme darkTextTheme = TextTheme(
     headlineLarge: TextStyle(
       color: ColorTheme.WHITE,
       fontSize: 24,

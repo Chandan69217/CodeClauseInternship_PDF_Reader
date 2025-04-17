@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdf_reader/utilities/custom_theme/elevated_btn_theme/elevated_btn_theme.dart';
 import 'package:pdf_reader/utilities/custom_theme/icon_btn_theme/icon_btn_theme.dart';
 import 'package:pdf_reader/utilities/custom_theme/list_tile_theme/list_tile_theme.dart';
 import 'package:pdf_reader/utilities/custom_theme/text_sel_theme_data/text_sel_theme_data.dart';
@@ -25,6 +26,7 @@ class AppTheme{
       textTheme: TTextTheme.lightTextTheme,
     listTileTheme: TListTileTheme.light,
     popupMenuTheme: TPopupMenuTheme.lightTheme,
+    elevatedButtonTheme: ElevatedBtnTheme.light,
     textSelectionTheme: TTextSelectionThemeData.light,
     iconButtonTheme: TIconBtnTheme.light,
       iconTheme: const IconThemeData(
@@ -47,6 +49,7 @@ class AppTheme{
     popupMenuTheme: TPopupMenuTheme.darkTheme,
     textSelectionTheme: TTextSelectionThemeData.dark,
     iconButtonTheme: TIconBtnTheme.dark,
+    elevatedButtonTheme: ElevatedBtnTheme.dark,
     iconTheme: const IconThemeData(
       color: ColorTheme.WHITE
     ),
