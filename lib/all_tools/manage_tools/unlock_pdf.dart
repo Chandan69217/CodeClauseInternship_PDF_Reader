@@ -49,10 +49,13 @@ class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
       );
       return;
     }
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
     await StirlingApiService.unlockPDF(path: _selectedFile!.path!, password: _passwordController.text, progress: _progress, onDownloadComplete: (outputPath)async{
       if(outputPath != null){
         await ShowStickySnackbar.showStickySnackBarAndWait(context, outputPath);
