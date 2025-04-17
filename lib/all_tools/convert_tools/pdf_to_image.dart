@@ -30,8 +30,8 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
 
   void _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      type: FileType.any,
+      // allowedExtensions: ['pdf'],
       withData: true,
     );
 

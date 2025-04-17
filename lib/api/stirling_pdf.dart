@@ -257,6 +257,68 @@ class StirlingApiService {
 
 
 
+  static Future<void> unlockPDF({
+    required String path,
+    required String password,
+    required ValueNotifier<Map<String,dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  }) async {
+    final uri = Uri.https(APIUrl.baseUrl, APIUrl.unlockPDF);
+    final file = File(path);
+    final fileLength = await file.length();
+
+    final request = http.MultipartRequest('POST', uri)
+      ..headers.addAll({'accept': '*/*'})
+      ..fields['password'] = password;
+
+
+    final fileStream = http.ByteStream(
+      _trackUploadProgress(file.openRead(), fileLength, progress),
+    );
+
+    final multipartFile = http.MultipartFile(
+      'fileInput',
+      fileStream,
+      fileLength,
+      filename: file.path.split('/').last,
+      contentType: MediaType('application', 'pdf'),
+    );
+
+    request.files.add(multipartFile);
+
+    try {
+      progress.value = {
+        'progress': 0.5,
+        'message':'converting...'
+      };
+
+      final client = http.Client();
+      try {
+        final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+        if (streamedResponse.statusCode == 200) {
+          var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+            streamedResponse,
+            progress,
+          );
+          onDownloadComplete('File Saved: $outputPath');
+        }else if(streamedResponse.statusCode == 500){
+          onDownloadComplete('Incorrect Password');
+        } else {
+          print('server did not response: status code: ${streamedResponse.statusCode},reason: ${streamedResponse.reasonPhrase}');
+          onDownloadComplete('Something went wrong! Please try again');
+        }
+      } catch (e) {
+        print('Exception: ${e.toString()}');
+        onDownloadComplete('Server timeout or did not response!');
+      }
+    } catch (e) {
+      onDownloadComplete('Something went wrong! Please try again');
+      print('Exception during upload/download: $e');
+    }
+  }
+
+
+
 }
 
 

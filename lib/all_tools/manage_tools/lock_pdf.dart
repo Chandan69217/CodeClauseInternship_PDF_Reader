@@ -231,8 +231,8 @@ class _LockPdfScreenState extends State<LockPdfScreen> {
 
   void _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      type: FileType.any,
+      // allowedExtensions: ['pdf'],
       withData: true,
     );
 

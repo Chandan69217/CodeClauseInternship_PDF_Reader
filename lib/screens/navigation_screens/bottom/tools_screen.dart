@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:pdf_reader/all_tools/convert_tools/image_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
 import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
+import 'package:pdf_reader/all_tools/manage_tools/unlock_pdf.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 
@@ -158,7 +159,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
                   _items(iconData: Icons.lock, label: 'Lock PDF',onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LockPdfScreen() ));
                   }),
-                  _items(iconData: Icons.lock_open_outlined, label: 'Unlock PDF',onTap: _message),
+                  _items(iconData: Icons.lock_open_outlined, label: 'Unlock PDF',onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UnlockPDFScreen() ));
+                  }),
                 ]),
           )
         ],
