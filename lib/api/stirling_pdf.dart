@@ -78,6 +78,10 @@ class StirlingApiService {
   }
 
 
+
+
+
+
   static Future<void> convertImageToPDFWithProgress({
     required List<File> files,
     required String fitOption,
@@ -180,6 +184,79 @@ class StirlingApiService {
       yield chunk;
     }
   }
+
+
+
+  static Future<void> lockPDF({
+    required Map<String,dynamic> data,
+    required ValueNotifier<Map<String,dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  }) async {
+    final uri = Uri.https(APIUrl.baseUrl, APIUrl.lockPDF);
+    final file = File(data['fileInput']);
+    final fileLength = await file.length();
+
+    final request = http.MultipartRequest('POST', uri)
+      ..headers.addAll({'accept': '*/*'})
+      ..fields['ownerPassword'] = data['ownerPassword']
+      ..fields['password'] = data['password']
+      ..fields['keyLength'] = '40'
+      ..fields['canAssembleDocument'] = data['canAssembleDocument'].toString()
+      ..fields['canExtractForAccessibility'] = data['canExtractForAccessibility'].toString()
+      ..fields['canExtractContent'] = data['canExtractContent'].toString()
+      ..fields['canFillInForm'] = data['canFillInForm'].toString()
+      ..fields['canModify'] = data['canModify'].toString()
+      ..fields['canModifyAnnotations'] = data['canModifyAnnotations'].toString()
+      ..fields['canPrint'] = data['canPrint'].toString()
+      ..fields['canPrintFaithful'] = data['canPrintFaithful'].toString();
+
+
+    final fileStream = http.ByteStream(
+      _trackUploadProgress(file.openRead(), fileLength, progress),
+    );
+
+    final multipartFile = http.MultipartFile(
+      'fileInput',
+      fileStream,
+      fileLength,
+      filename: file.path.split('/').last,
+      contentType: MediaType('application', 'pdf'),
+    );
+
+    request.files.add(multipartFile);
+
+    try {
+      progress.value = {
+        'progress': 0.5,
+        'message':'converting...'
+      };
+
+      final client = http.Client();
+      try {
+        final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+        if (streamedResponse.statusCode == 200) {
+          var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+            streamedResponse,
+            progress,
+          );
+          onDownloadComplete('File Saved: $outputPath');
+        } else {
+          print('server did not response: status code: ${streamedResponse.statusCode},reason: ${streamedResponse.reasonPhrase}');
+          onDownloadComplete('Something went wrong! Please try again');
+        }
+      } catch (e) {
+        print('Exception: ${e.toString()}');
+        onDownloadComplete('Server timeout or did not response!');
+      }
+    } catch (e) {
+      onDownloadComplete('Something went wrong! Please try again');
+      print('Exception during upload/download: $e');
+    }
+  }
+
+
+
+
 }
 
 

@@ -261,23 +261,6 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
           style: TextStyle(color: isDark ? Colors.white : Colors.black87),
           decoration: InputDecoration(
             labelText: label,
-            labelStyle: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black54,
-            ),
-            filled: true,
-            fillColor: isDark ? Colors.grey[850] : Colors.grey[100],
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.purple,
-                  width: 1.2
-                )),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
           ),
           onChanged: onChanged,
         );
