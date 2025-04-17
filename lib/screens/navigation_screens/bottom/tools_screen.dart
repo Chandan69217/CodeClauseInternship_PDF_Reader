@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pdf_reader/all_tools/convert_tools/image_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
@@ -72,7 +73,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
               }),
               _items(iconData: Icons.document_scanner, label: 'Scan to PDF',onTap: _message),
               _items(iconData: Icons.wordpress_rounded, label: 'Word to PDF',onTap: _message),
-              _items(iconData: Icons.image_rounded, label: 'Image to PDF',onTap: _message),
+              _items(iconData: Icons.image_rounded, label: 'Image to PDF',onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ImageToPdfScreen() ));
+              }),
             ]),
           )
         ],
