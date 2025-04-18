@@ -379,6 +379,95 @@ class StirlingApiService {
 
 
 
+  static Future<void> MargePDF({
+    required List<File> files,
+    required String sortType,
+    required bool removeCertSign,
+    required ValueNotifier<Map<String, dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  }) async {
+
+    final uri = Uri.https(APIUrl.baseUrl, APIUrl.mergePDF);
+
+    final request = http.MultipartRequest('POST', uri)
+      ..headers.addAll({'accept': '*/*'})
+      ..fields['sortType'] = sortType
+      ..fields['removeCertSign'] = removeCertSign.toString();
+
+    int totalBytes = 0;
+    List<_FileProgressInfo> fileInfos = [];
+
+    // Prepare all files and calculate total size
+    for (File file in files) {
+      final length = await file.length();
+      final extension =  path.extension(file.path).replaceFirst('.', '');
+      totalBytes += length;
+      fileInfos.add(_FileProgressInfo(file: file, length: length,extension: extension));
+    }
+
+    int uploadedBytes = 0;
+
+
+    for (var info in fileInfos) {
+      final fileStream = http.ByteStream(info.file.openRead().transform(
+        StreamTransformer.fromHandlers(
+          handleData: (data, sink) {
+            uploadedBytes += data.length;
+            double uploadProgress = uploadedBytes / totalBytes;
+            progress.value = {
+              'progress': uploadProgress * 0.5,
+              'message': 'Uploading images...'
+            };
+            sink.add(data);
+          },
+        ),
+      ));
+
+      final multipartFile = http.MultipartFile(
+        'fileInput',
+        fileStream,
+        info.length,
+        filename: info.file.path.split('/').last,
+        contentType: MediaType('application', 'pdf'), // Change if PNG, etc.
+      );
+
+      request.files.add(multipartFile);
+    }
+
+    try {
+      progress.value = {
+        'progress': 0.5,
+        'message': 'Converting to PDF...'
+      };
+
+      final client = http.Client();
+      try {
+        final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+        if (streamedResponse.statusCode == 200) {
+          var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+            streamedResponse,
+            progress,
+          );
+          onDownloadComplete('File Saved: $outputPath');
+        } else {
+          print('status code: ${streamedResponse.statusCode}, Reason: ${streamedResponse.reasonPhrase}');
+          onDownloadComplete('Something went wrong! Please try again');
+        }
+      } catch (e) {
+        print('exception: ${e.toString()}');
+        onDownloadComplete('Server timeout or did not respond!');
+      }
+    } catch (e) {
+      onDownloadComplete('Something went wrong! Please try again');
+      print('❌ Exception during upload/download: $e');
+    }
+  }
+
+
+
+
+
+
 }
 
 

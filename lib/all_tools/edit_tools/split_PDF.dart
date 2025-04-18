@@ -68,7 +68,7 @@ class _SplitPdfScreenState extends State<SplitPdfScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Unlock PDF')),
+      appBar: AppBar(title: const Text('Split PDF')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
