@@ -55,18 +55,26 @@ class _CustomLinearProgressBarState extends State<CustomLinearProgressBar>
             AnimatedBuilder(
               animation: _colorAnimation,
               builder: (context, child) {
-                return LinearProgressIndicator(
-                  borderRadius: BorderRadius.circular(20),
-                  minHeight: 12,
-                  value: widget.progress.value['progress'],
-                  valueColor: AlwaysStoppedAnimation<Color?>(_colorAnimation.value),
-                  backgroundColor: Colors.grey.shade300,
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(20),
+                    minHeight: 12,
+                    value: widget.progress.value['progress'],
+                    valueColor: AlwaysStoppedAnimation<Color?>(_colorAnimation.value),
+                    backgroundColor: Colors.grey.shade300,
+                  ),
+                    Text('${(widget.progress.value['progress'] * 100).toStringAsFixed(2)}%',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    )
+                  ]
                 );
               },
             ),
             if(widget.progress.value.containsKey('message') )...[
               const SizedBox(height: 8.0,),
-              Text(widget.progress.value['message']),
+              const Text('Converting...'),
             ]
           ],
         );

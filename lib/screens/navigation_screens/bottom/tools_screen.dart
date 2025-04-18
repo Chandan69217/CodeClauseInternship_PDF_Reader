@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pdf_reader/all_tools/convert_tools/image_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
+import 'package:pdf_reader/all_tools/edit_tools/split_PDF.dart';
 import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/unlock_pdf.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
@@ -117,7 +118,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
                   _items(iconData: Icons.account_balance_wallet_rounded, label: 'Annotate',onTap: _message),
                   _items(iconData: Icons.follow_the_signs, label: 'Sign',onTap: _message),
                   _items(iconData: Icons.picture_as_pdf_rounded, label: 'Merge PDF',onTap: _message),
-                  _items(iconData: Icons.splitscreen_outlined, label: 'Split PDF',onTap: _message),
+                  _items(iconData: Icons.splitscreen_outlined, label: 'Split PDF',onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SplitPdfScreen() ));
+                  }),
                   _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
                 ]),
           )

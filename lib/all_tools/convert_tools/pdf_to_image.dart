@@ -96,75 +96,81 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
       appBar: AppBar(title: const Text("PDF to Image Converter")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
           children: [
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
 
-            GestureDetector(
-              onTap: _pickFile,
-              child: Builder(
-                builder: (context) {
-                  final isDark = Theme.of(context).brightness == Brightness.dark;
-                  return Container(
-                    height: 160,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.picture_as_pdf,
-                              size: 48, color: isDark ? Colors.red[200] : Colors.redAccent),
-                          const SizedBox(height: 12),
-                          Text(
-                            _selectedFile != null
-                                ? _selectedFile!.name
-                                : "Tap to select PDF file",
-                            style:Theme.of(context).textTheme.bodyMedium,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (_selectedFile != null)
-                            Text(
-                              'Size: ${(_selectedFile!.size / 1024).toStringAsFixed(2)} KB',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isDark ? Colors.grey[400] : Colors.grey[600],
-                              ),
+                  GestureDetector(
+                    onTap: _pickFile,
+                    child: Builder(
+                      builder: (context) {
+                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        return Container(
+                          height: 160,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                              width: 2,
                             ),
-                        ],
-                      ),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.picture_as_pdf,
+                                    size: 48, color: isDark ? Colors.red[200] : Colors.redAccent),
+                                const SizedBox(height: 12),
+                                Text(
+                                  _selectedFile != null
+                                      ? _selectedFile!.name
+                                      : "Tap to select PDF file",
+                                  style:Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (_selectedFile != null)
+                                  Text(
+                                    'Size: ${(_selectedFile!.size / 1024).toStringAsFixed(2)} KB',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  _buildDropdown("Image Format", imageFormats, _imageFormat, (val) => setState(() => _imageFormat = val)),
+                  const SizedBox(height: 16),
+
+                  _buildDropdown("Output Type", outputTypes, _singleOrMultiple, (val) => setState(() => _singleOrMultiple = val)),
+                  const SizedBox(height: 16),
+
+                  _buildTextField("Page Numbers (e.g. 1,3,5-9 or all)", _pageNumbers, (val) => _pageNumbers = val),
+                  const SizedBox(height: 16),
+
+                  _buildDropdown("Color Type", colorTypes, _colorType, (val) => setState(() => _colorType = val)),
+                  const SizedBox(height: 16),
+
+                  _buildTextField("DPI (e.g. 150)", _dpi, (val) => _dpi = val),
+                  const SizedBox(height: 32),
+
+                ],
               ),
             ),
-
-            const SizedBox(height: 16),
-
-            _buildDropdown("Image Format", imageFormats, _imageFormat, (val) => setState(() => _imageFormat = val)),
-            const SizedBox(height: 16),
-
-            _buildDropdown("Output Type", outputTypes, _singleOrMultiple, (val) => setState(() => _singleOrMultiple = val)),
-            const SizedBox(height: 16),
-
-            _buildTextField("Page Numbers (e.g. 1,3,5-9 or all)", _pageNumbers, (val) => _pageNumbers = val),
-            const SizedBox(height: 16),
-
-            _buildDropdown("Color Type", colorTypes, _colorType, (val) => setState(() => _colorType = val)),
-            const SizedBox(height: 16),
-
-            _buildTextField("DPI (e.g. 150)", _dpi, (val) => _dpi = val),
-            const SizedBox(height: 32),
-
-
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               transitionBuilder: (child, animation) =>
@@ -173,15 +179,14 @@ class _PdfToImageConverterScreenState extends State<PdfToImageConverterScreen> {
                   ?  CustomLinearProgressBar(progress: _progress)
                   : SizedBox(
                 width: double.infinity,
-                    child: ElevatedButton.icon(
-                                    key: const ValueKey('submit'),
-                                    icon: const Icon(Icons.transform),
-                                    label: const Text("Convert PDF to Image"),
-                                    onPressed: _submit,
-                                  ),
-                  ),
+                child: ElevatedButton.icon(
+                  key: const ValueKey('submit'),
+                  icon: const Icon(Icons.photo_library),
+                  label: const Text("Convert PDF to Image"),
+                  onPressed: _submit,
+                ),
+              ),
             )
-
           ],
         ),
       ),

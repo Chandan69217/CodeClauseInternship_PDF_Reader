@@ -106,6 +106,8 @@ class _SearchScreenState extends State<SearchScreen>
               style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                   suffixIcon: Visibility(
                     visible: _iconVisibility,
                     child: IconButton(

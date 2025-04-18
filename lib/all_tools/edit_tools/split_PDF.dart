@@ -4,16 +4,15 @@ import 'package:pdf_reader/api/stirling_pdf.dart';
 import 'package:pdf_reader/widgets/custom_linearprogress_indicator/CustomLinearProgressIndicator.dart';
 import 'package:pdf_reader/widgets/sticky_snackbar/show_snackbar.dart';
 
-class UnlockPDFScreen extends StatefulWidget {
+class SplitPdfScreen extends StatefulWidget {
   @override
-  _UnlockPDFScreenState createState() => _UnlockPDFScreenState();
+  _SplitPdfScreenState createState() => _SplitPdfScreenState();
 }
 
-class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
+class _SplitPdfScreenState extends State<SplitPdfScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController = TextEditingController();
+  String _pageNumbers = 'all';
   PlatformFile? _selectedFile;
-  bool _isPasswordVisible = false;
   ValueNotifier<Map<String, dynamic>> _progress =
   ValueNotifier<Map<String, dynamic>>(
       {'progress': 0.0, 'message': 'file uploading..'});
@@ -56,7 +55,7 @@ class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
     setState(() {
       _isLoading = true;
     });
-    await StirlingApiService.unlockPDF(path: _selectedFile!.path!, password: _passwordController.text, progress: _progress, onDownloadComplete: (outputPath)async{
+    await StirlingApiService.splitPDF(path: _selectedFile!.path!, pages: _pageNumbers, progress: _progress, onDownloadComplete: (outputPath)async{
       if(outputPath != null){
         await ShowStickySnackbar.showStickySnackBarAndWait(context, outputPath);
         setState(() {
@@ -135,28 +134,7 @@ class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: _isPasswordVisible,
-                decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible =
-                            !_isPasswordVisible;
-                          });
-                        },
-                        icon: Icon(_isPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'User password is required';
-                  }
-                  return null;
-                },
-              ),
+              _buildTextField("Page Numbers (e.g. 1,3,5-9 or all)", _pageNumbers, (val) => _pageNumbers = val),
               const Spacer(),
               AnimatedSwitcher(duration: const Duration(milliseconds: 300),
                 transitionBuilder: (child, animation) =>
@@ -164,8 +142,8 @@ class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
                 child:  _isLoading?CustomLinearProgressBar(progress: _progress):SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.lock_open_outlined),
-                    label: const Text('Decrypt PDF'),
+                    icon: const Icon(Icons.splitscreen),
+                    label: const Text('Split PDF'),
                     onPressed: _submit,
                   ),
                 ),
@@ -176,4 +154,27 @@ class _UnlockPDFScreenState extends State<UnlockPDFScreen> {
       ),
     );
   }
+
+
+
+  Widget _buildTextField(
+      String label,
+      String initialValue,
+      Function(String) onChanged,
+      ) {
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return TextFormField(
+          initialValue: initialValue,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+          decoration: InputDecoration(
+            labelText: label,
+          ),
+          onChanged: onChanged,
+        );
+      },
+    );
+  }
+
 }

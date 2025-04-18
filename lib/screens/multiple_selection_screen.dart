@@ -388,6 +388,8 @@ class _MultipleSelectionScreenState extends State<MultipleSelectionScreen> with 
               style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                   border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
                   suffixIcon: Visibility(
                     visible: _iconVisibility,
                     child: IconButton(

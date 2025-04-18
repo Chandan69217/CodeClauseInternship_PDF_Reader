@@ -223,27 +223,35 @@ class _ImageToPdfScreenState extends State<ImageToPdfScreen> {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const SizedBox(height: 12),
-                  _isLoading? CustomLinearProgressBar(progress: _progress):
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: selectedImages.isNotEmpty ? () {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                       StirlingApiService.convertImageToPDFWithProgress(files:selectedImages, fitOption: fitOption, colorType: colorType, autoRotate: autoRotate, progress: _progress, onDownloadComplete: (outputFile)async{
-                         if(outputFile != null)
-                         await ShowStickySnackbar.showStickySnackBarAndWait(context, outputFile);
-                         setState(() {
-                           _isLoading = false;
-                         });
-                       }) ;
-                      } : null,
-                      child: const Text("Convert to PDF"),
+
+                  AnimatedSwitcher(duration:const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+                    child:  _isLoading? CustomLinearProgressBar(progress: _progress):
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.picture_as_pdf),
+                        onPressed: selectedImages.isNotEmpty ? () {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          StirlingApiService.convertImageToPDFWithProgress(files:selectedImages, fitOption: fitOption, colorType: colorType, autoRotate: autoRotate, progress: _progress, onDownloadComplete: (outputFile)async{
+                            if(outputFile != null)
+                              await ShowStickySnackbar.showStickySnackBarAndWait(context, outputFile);
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }) ;
+                        } : null,
+                        label: const Text("Convert to PDF"),
+                      ),
                     ),
-                  ),
+                  )
+
                 ],
               ),
             ),
