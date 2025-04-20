@@ -42,26 +42,24 @@ class _PdfViewerStates extends State<PdfViewer> {
     return Scaffold(
       appBar: _appBar(),
       body: SafeArea(
-          child: Expanded(
-        child: Consumer<Read>(
-            builder: (context,value,child){
-              return PdfViewPinch(
-                controller: controllerPinch!,
-                onDocumentLoaded: (pdfDocument) {
-                  setState(() {
-                    _totalPage = pdfDocument.pagesCount;
-                    _currentPage = controllerPinch!.page;
-                  });
-                },
-                onPageChanged: (pageNo) {
-                  setState(() {
-                    _currentPage = pageNo;
-                  });
-                },
-              );
-            }
-        )
-      )),
+          child: Consumer<Read>(
+              builder: (context,value,child){
+                return PdfViewPinch(
+                  controller: controllerPinch!,
+                  onDocumentLoaded: (pdfDocument) {
+                    setState(() {
+                      _totalPage = pdfDocument.pagesCount;
+                      _currentPage = controllerPinch!.page;
+                    });
+                  },
+                  onPageChanged: (pageNo) {
+                    setState(() {
+                      _currentPage = pageNo;
+                    });
+                  },
+                );
+              }
+          )),
     );
   }
 

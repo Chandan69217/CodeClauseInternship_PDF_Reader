@@ -9,8 +9,8 @@ class TInputDecorationTheme{
     labelStyle: TTextTheme.lightTextTheme.bodySmall!.copyWith(
       color: Colors.black54,
     ),
-    filled: true,
-    fillColor:  Colors.grey[100],
+    // filled: true,
+    // fillColor:  Colors.grey[100],
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     focusedBorder: const OutlineInputBorder(
         borderSide: BorderSide(
@@ -29,8 +29,8 @@ class TInputDecorationTheme{
     labelStyle: TTextTheme.darkTextTheme.bodySmall!.copyWith(
       color:  Colors.white70,
     ),
-    filled: true,
-    fillColor: Colors.grey[850],
+    // filled: true,
+    // fillColor: Colors.grey[850],
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     focusedBorder: const OutlineInputBorder(
         borderSide: BorderSide(

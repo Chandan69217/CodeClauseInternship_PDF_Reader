@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pdf_reader/all_tools/convert_tools/file_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/image_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
+import 'package:pdf_reader/all_tools/convert_tools/pdf_to_word.dart';
 import 'package:pdf_reader/all_tools/edit_tools/merge_PDF.dart';
 import 'package:pdf_reader/all_tools/edit_tools/split_PDF.dart';
 import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/unlock_pdf.dart';
+import 'package:pdf_reader/all_tools/manage_tools/watermark_pdf.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 
@@ -78,8 +81,12 @@ class _ToolsScreenState extends State<ToolsScreen> {
               _items(iconData: Icons.picture_as_pdf_rounded, label:'PDF to Image',onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PdfToImageConverterScreen() ));
               }),
-              _items(iconData: Icons.document_scanner, label: 'Scan to PDF',onTap: _message),
-              _items(iconData: Icons.wordpress_rounded, label: 'Word to PDF',onTap: _message),
+              _items(iconData: Icons.wordpress, label: 'PDF to word',onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>PDFToWordScreen() ));
+              }),
+              _items(iconData: Icons.file_present_sharp, label: 'File to PDF',onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FileToPdfScreen()));
+              }),
               _items(iconData: Icons.image_rounded, label: 'Image to PDF',onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ImageToPdfScreen() ));
               }),
@@ -125,6 +132,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SplitPdfScreen() ));
                   }),
                   _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
+                  _items(iconData: Icons.compress, label: 'Compressed PDF',onTap: _message),
                 ]),
           )
         ],
@@ -160,7 +168,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
-                  _items(iconData: Icons.insert_drive_file_sharp, label: 'Import Files',onTap: _message),
+                  _items(iconData: Icons.branding_watermark, label: 'Add Watermark',onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=> AddWatermarkScreen()));
+                  }),
                   _items(iconData: Icons.print, label: 'Print PDF',onTap:()=> Navigator.push(context,MaterialPageRoute(builder: (context)=> SelectionScreen()))),
                   _items(iconData: Icons.lock, label: 'Lock PDF',onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LockPdfScreen() ));
