@@ -220,7 +220,18 @@ class _MergePDFScreenState extends State<MergePDFScreen> {
                           });
                           StirlingApiService.MargePDF(files:selectedPDFS, sortType: sortType,removeCertSign: removeCertSign, progress: _progress, onDownloadComplete: (outputFile)async{
                             if(outputFile != null)
-                              await ShowStickySnackbar.showStickySnackBarAndWait(context, outputFile);
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text('Done'),
+                                    content: Text(outputFile ?? 'Download complete'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ));
                             setState(() {
                               _isLoading = false;
                             });

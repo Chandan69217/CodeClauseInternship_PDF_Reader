@@ -71,7 +71,18 @@ class _PDFToWordScreenState extends State<PDFToWordScreen> {
         progress: _progress,
         onDownloadComplete: (outputPath)async{
           if(outputPath != null){
-            await ShowStickySnackbar.showStickySnackBarAndWait(context, outputPath);
+            showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('Done'),
+                  content: Text(outputPath ?? 'Download complete'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ));
             setState(() {
               _isLoading = false;
             });

@@ -35,7 +35,7 @@ class StirlingApiService {
       ..fields['dpi'] = dpi;
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength,fileLength, progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -171,15 +171,21 @@ class StirlingApiService {
 
   static Stream<List<int>> _trackUploadProgress(
       Stream<List<int>> stream,
-      int total,
-      ValueNotifier<Map<String,dynamic>> progress,
-      ) async* {
+      int fileLength,
+      int totalLength,
+      ValueNotifier<Map<String, dynamic>> progress, {
+        bool isPDF = true,
+      }) async* {
     int bytesSent = 0;
     await for (var chunk in stream) {
       bytesSent += chunk.length;
+      double ratio = fileLength / totalLength;
+      double progressPart = isPDF ? ratio * 0.5 : ratio * 0.5 + 0.5; // adjust progress split if needed
       progress.value = {
-        'progress':bytesSent / total * 0.5,
-        'message':'Converting...'
+        'progress': isPDF
+            ? (bytesSent / fileLength) * 0.5
+            : 0.5 + (bytesSent / fileLength) * 0.5,
+        'message': isPDF ? 'Uploading PDF...' : 'Uploading Watermark Image...',
       };
       yield chunk;
     }
@@ -212,7 +218,7 @@ class StirlingApiService {
 
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength,fileLength, progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -273,7 +279,7 @@ class StirlingApiService {
 
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength,fileLength, progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -335,7 +341,7 @@ class StirlingApiService {
 
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength,fileLength, progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -478,7 +484,7 @@ class StirlingApiService {
       ..headers.addAll({'accept': '*/*'});
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength,fileLength, progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -561,7 +567,7 @@ class StirlingApiService {
       ..fields['outputFormat'] = fileFormat;
 
     final fileStream = http.ByteStream(
-      _trackUploadProgress(file.openRead(), fileLength, progress),
+      _trackUploadProgress(file.openRead(), fileLength, fileLength,progress),
     );
 
     final multipartFile = http.MultipartFile(
@@ -602,6 +608,121 @@ class StirlingApiService {
       print('Exception during upload/download: $e');
     }
   }
+
+
+  static Future<void> addWatermarkToPDFWithProgress({
+    required String filePath,
+    required String watermarkType,
+    required String watermarkText,
+    required String watermarkImage,
+    required String fontSize,
+    required String rotation,
+    required String width_spacer,
+    required String height_spacer,
+    required String opacity,
+    required String converToImage,
+    required String watermarkColor,
+    required String alphabet,
+    required ValueNotifier<Map<String, dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  }) async {
+    final uri = Uri.https(APIUrl.baseUrl, APIUrl.addWatermark);
+
+    final pdfFile = File(filePath);
+    if (!pdfFile.existsSync()) {
+      onDownloadComplete('Invalid PDF file path!');
+      return;
+    }
+    final pdfFileLength = await pdfFile.length();
+
+    // Optional watermark image
+    File? watermarkImageFile;
+    int imageFileLength = 0;
+    if (watermarkType == 'image') {
+      watermarkImageFile = File(watermarkImage);
+      if (!watermarkImageFile.existsSync()) {
+        onDownloadComplete('Invalid watermark image file path!');
+        return;
+      }
+      imageFileLength = await watermarkImageFile.length();
+    }
+
+    final int totalLength = pdfFileLength + (imageFileLength);
+
+    final request = http.MultipartRequest('POST', uri)
+      ..headers.addAll({'accept': '*/*'})
+      ..fields['watermarkText'] = watermarkText
+      ..fields['watermarkType'] = watermarkType
+      ..fields['alphabet'] = alphabet
+      ..fields['fontSize'] = fontSize
+      ..fields['rotation'] = rotation
+      ..fields['opacity'] = opacity
+      ..fields['widthSpacer'] = width_spacer
+      ..fields['heightSpacer'] = height_spacer
+      ..fields['customColor'] = watermarkColor
+      ..fields['convertPDFToImage'] = converToImage;
+
+    // Track PDF upload
+    final pdfStream = http.ByteStream(
+      _trackUploadProgress(pdfFile.openRead(), pdfFileLength, totalLength, progress, isPDF: true),
+    );
+
+    final pdfMultipartFile = http.MultipartFile(
+      'fileInput',
+      pdfStream,
+      pdfFileLength,
+      filename: pdfFile.path.split('/').last,
+      contentType: MediaType('application', 'pdf'),
+    );
+
+    request.files.add(pdfMultipartFile);
+
+    // Add watermark image if applicable
+    if (watermarkType == 'image' && watermarkImageFile != null) {
+      final imageStream = http.ByteStream(
+        _trackUploadProgress(watermarkImageFile.openRead(), imageFileLength, totalLength, progress, isPDF: false),
+      );
+
+      final imageMultipartFile = http.MultipartFile(
+        'watermarkImage',
+        imageStream,
+        imageFileLength,
+        filename: watermarkImageFile.path.split('/').last,
+        contentType: MediaType('image', watermarkImage.split('.').last),
+      );
+
+      request.files.add(imageMultipartFile);
+    }
+
+    try {
+      progress.value = {
+        'progress': 0.5,
+        'message': 'Converting to Image...',
+      };
+
+      final client = http.Client();
+      try {
+        final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+        if (streamedResponse.statusCode == 200) {
+          var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+            streamedResponse,
+            progress,
+          );
+          onDownloadComplete('File Saved: $outputPath');
+        } else {
+          print('Server did not respond: status code: ${streamedResponse.statusCode}');
+          onDownloadComplete('Something went wrong! Please try again');
+        }
+      } catch (e) {
+        print('Exception: ${e.toString()}');
+        onDownloadComplete('Server timeout or did not respond!');
+      }
+    } catch (e) {
+      onDownloadComplete('Something went wrong! Please try again');
+      print('Exception during upload/download: $e');
+    }
+  }
+
 
 
 

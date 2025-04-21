@@ -4,6 +4,7 @@ class APIUrl{
   static const String pdfToWord = '/api/v1/convert/pdf/word';
   static const String imageToPDF = '/api/v1/convert/img/pdf';
   static const String lockPDF = '/api/v1/security/add-password';
+  static const String addWatermark = '/api/v1/security/add-watermark';
   static const String unlockPDF = '/api/v1/security/remove-password';
   static const String splitPDF = '/api/v1/general/split-pages';
   static const String mergePDF = '/api/v1/general/merge-pdfs';
