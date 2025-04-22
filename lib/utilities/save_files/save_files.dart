@@ -52,7 +52,7 @@ class SaveFiles {
       }
       downloadsDir = _externalDir;
     } else {
-      downloadsDir = Directory(await ExternalPath.DIRECTORY_DOWNLOADS);
+      downloadsDir = Directory(await ExternalPath.DIRECTORY_DOWNLOAD);
     }
 
     final outputPath = path.join(downloadsDir.path, '$filename');

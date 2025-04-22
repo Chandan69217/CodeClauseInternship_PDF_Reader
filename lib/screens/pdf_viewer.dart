@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pdf_reader/external_storage/database_helper.dart';
 import 'package:pdf_reader/external_storage/read_storage.dart';
@@ -6,10 +7,12 @@ import 'package:pdf_reader/model/data.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheets/show_delete_widget.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheets/show_file_details_widget.dart';
 import 'package:pdf_reader/widgets/custom_bottomsheets/show_rename_widget.dart';
-import 'package:pdfx/pdfx.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../utilities/color_theme.dart';
+
+
 
 class PdfViewer extends StatefulWidget {
   Data data;
@@ -24,18 +27,26 @@ class PdfViewer extends StatefulWidget {
 }
 
 class _PdfViewerStates extends State<PdfViewer> {
-  PdfControllerPinch? controllerPinch;
-  int _totalPage = 0;
-  int _currentPage = 0;
+
+  TextEditingController _searchController = TextEditingController();
+  final PdfViewerController _pdfViewerController = PdfViewerController();
+  PdfTextSearchResult _searchResult = PdfTextSearchResult();
 
 
   @override
   void initState() {
     super.initState();
-    controllerPinch = PdfControllerPinch(
-      document: PdfDocument.openFile(widget.data.filePath),
-    );
   }
+
+
+  void _search(String query) {
+    _searchResult = _pdfViewerController.searchText(query);
+    _searchResult.addListener(() {
+      setState(() {
+      });
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +55,10 @@ class _PdfViewerStates extends State<PdfViewer> {
       body: SafeArea(
           child: Consumer<Read>(
               builder: (context,value,child){
-                return PdfViewPinch(
-                  controller: controllerPinch!,
-                  onDocumentLoaded: (pdfDocument) {
-                    setState(() {
-                      _totalPage = pdfDocument.pagesCount;
-                      _currentPage = controllerPinch!.page;
-                    });
-                  },
-                  onPageChanged: (pageNo) {
-                    setState(() {
-                      _currentPage = pageNo;
-                    });
-                  },
+                return SfPdfViewer.file(widget.data.file,
+                  currentSearchTextHighlightColor: Colors.blue.withValues(alpha: 0.3),
+                  controller: _pdfViewerController,
+                  otherSearchTextHighlightColor: Colors.yellow.withValues(alpha: 0.4),
                 );
               }
           )),
@@ -136,7 +138,8 @@ class _PdfViewerStates extends State<PdfViewer> {
   @override
   void dispose() {
     super.dispose();
-    controllerPinch!.dispose();
+    _pdfViewerController.dispose();
+    _searchResult.removeListener((){});
   }
 
   void _onSelected(int value, Data data) {
@@ -176,44 +179,44 @@ class _PdfViewerStates extends State<PdfViewer> {
        bottom: PreferredSize(
            preferredSize: Size(35, 35),
            child: Padding(
-             padding: EdgeInsets.symmetric(horizontal: 10),
+             padding: EdgeInsets.symmetric(horizontal: 12.0),
              child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-               crossAxisAlignment: CrossAxisAlignment.center,
-               children: [
-                 Text(
-                   'Total Pages: $_totalPage',
-                   style: Theme.of(context).textTheme.bodySmall,
-                 ),
-                 IconButton(
-                     onPressed: () {
-                       controllerPinch!.previousPage(
-                           duration: const Duration(milliseconds: 500),
-                           curve: Curves.linear);
-                     },
-                     icon: Icon(
-                       Icons.arrow_back_ios,
-                       size: 18,
-                     )),
-                 Text(
-                   'Current Page: $_currentPage',
-                   style: Theme.of(context).textTheme.bodySmall,
-                 ),
-                 IconButton(
-                     onPressed: () {
-                       controllerPinch!.nextPage(
-                           duration: const Duration(milliseconds: 500),
-                           curve: Curves.linear);
-                     },
-                     icon: Icon(
-                       Icons.arrow_forward_ios_rounded,
-                       size: 18,
-                     )),
-               ],
-             ),
-           )),
+         children: [
+         Expanded(
+         child: TextField(
+         controller: _searchController,
+         decoration: InputDecoration(
+             hintText: 'Search text...',
+           suffixIcon: _searchController.text.isNotEmpty?IconButton(onPressed: (){
+             _searchResult.clear();
+             setState(() {
+               _searchController.text = '';
+             });
+           }, icon: Icon(Icons.close)):null,
+           focusedBorder: InputBorder.none
+         ),
+         onChanged: (value){
+           _search(value);
+         },
+       ),
+   ),
+           if(_searchResult.hasResult)
+           Text('Matches: ${_searchResult.totalInstanceCount}'),
+           IconButton(
+             icon: Icon(Icons.arrow_upward),
+             onPressed: _searchResult.hasResult ? _searchResult.previousInstance : null,
+           ),
+           IconButton(
+             icon: Icon(Icons.arrow_downward),
+             onPressed: _searchResult.hasResult ? _searchResult.nextInstance : null,
+           ),
+         ],
+    )
+
+    )),
        actions: widget.isSharedIntent! ?null:_actionsButton());
   }
+
 
   _addToBookmark() async {
     var database = await DatabaseHelper.getInstance();
