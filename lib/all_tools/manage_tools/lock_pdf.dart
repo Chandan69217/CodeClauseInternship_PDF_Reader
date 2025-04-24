@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pdf_reader/api/stirling_pdf.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/widgets/custom_linearprogress_indicator/CustomLinearProgressIndicator.dart';
-import 'package:pdf_reader/widgets/sticky_snackbar/show_snackbar.dart';
+
 
 class LockPdfScreen extends StatefulWidget {
   @override
@@ -43,141 +43,142 @@ class _LockPdfScreenState extends State<LockPdfScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  GestureDetector(
-                    onTap: _pickFile,
-                    child: Builder(
-                      builder: (context) {
-                        final isDark =
-                            Theme.of(context).brightness == Brightness.dark;
-                        return Container(
-                          height: 160,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.grey.shade900
-                                : Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: isDark
-                                  ? Colors.grey.shade700
-                                  : Colors.grey.shade300,
-                              width: 2,
-                            ),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.picture_as_pdf,
-                                    size: 48,
-                                    color: isDark
-                                        ? Colors.red[200]
-                                        : Colors.redAccent),
-                                const SizedBox(height: 12),
-                                Text(
-                                  _selectedFile != null
-                                      ? _selectedFile!.name
-                                      : "Tap to select PDF file",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (_selectedFile != null)
-                                  Text(
-                                    'Size: ${(_selectedFile!.size / 1024).toStringAsFixed(2)} KB',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: isDark
-                                          ? Colors.grey[400]
-                                          : Colors.grey[600],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 8,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Form(
-                    key: formState,
-                    child: StatefulBuilder(builder: (context, refresh) {
-                      return Column(
-                        children: [
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _userPasswordObscure,
-                            decoration: InputDecoration(
-                                labelText: 'User Password',
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      refresh(() {
-                                        _userPasswordObscure =
-                                            !_userPasswordObscure;
-                                      });
-                                    },
-                                    icon: Icon(_userPasswordObscure
-                                        ? Icons.visibility_off
-                                        : Icons.visibility))),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'User password is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _ownerPasswordController,
-                            obscureText: _ownerPasswordObscure,
-                            decoration: InputDecoration(
-                                labelText: 'Owner Password',
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      refresh(() {
-                                        _ownerPasswordObscure =
-                                            !_ownerPasswordObscure;
-                                      });
-                                    },
-                                    icon: Icon(_ownerPasswordObscure
-                                        ? Icons.visibility_off
-                                        : Icons.visibility))),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Owner password is required';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text('Permissions',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  ...permissions.keys.map((key) => SwitchListTile(
-                        title: Text(key),
-                        activeColor: ColorTheme.RED,
-                        value: permissions[key]!,
-                        onChanged: (val) {
-                          setState(() => permissions[key] = val);
+                    GestureDetector(
+                      onTap: _pickFile,
+                      child: Builder(
+                        builder: (context) {
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
+                          return Container(
+                            height: 160,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? Colors.grey.shade900
+                                  : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isDark
+                                    ? Colors.grey.shade700
+                                    : Colors.grey.shade300,
+                                width: 2,
+                              ),
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.picture_as_pdf,
+                                      size: 48,
+                                      color: isDark
+                                          ? Colors.red[200]
+                                          : Colors.redAccent),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    _selectedFile != null
+                                        ? _selectedFile!.name
+                                        : "Tap to select PDF file",
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (_selectedFile != null)
+                                    Text(
+                                      'Size: ${(_selectedFile!.size / 1024).toStringAsFixed(2)} KB',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDark
+                                            ? Colors.grey[400]
+                                            : Colors.grey[600],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
-                      )),
-                  const SizedBox(height: 34),
-                ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Form(
+                      key: formState,
+                      child: StatefulBuilder(builder: (context, refresh) {
+                        return Column(
+                          children: [
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _userPasswordObscure,
+                              decoration: InputDecoration(
+                                  labelText: 'User Password',
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        refresh(() {
+                                          _userPasswordObscure =
+                                              !_userPasswordObscure;
+                                        });
+                                      },
+                                      icon: Icon(_userPasswordObscure
+                                          ? Icons.visibility_off
+                                          : Icons.visibility))),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'User password is required';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _ownerPasswordController,
+                              obscureText: _ownerPasswordObscure,
+                              decoration: InputDecoration(
+                                  labelText: 'Owner Password',
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        refresh(() {
+                                          _ownerPasswordObscure =
+                                              !_ownerPasswordObscure;
+                                        });
+                                      },
+                                      icon: Icon(_ownerPasswordObscure
+                                          ? Icons.visibility_off
+                                          : Icons.visibility))),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Owner password is required';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Permissions',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    ...permissions.keys.map((key) => SwitchListTile(
+                          title: Text(key),
+                          activeColor: ColorTheme.RED,
+                          value: permissions[key]!,
+                          onChanged: (val) {
+                            setState(() => permissions[key] = val);
+                          },
+                        )),
+                    const SizedBox(height: 34),
+                  ],
+                ),
               ),
             ),
-            Spacer(),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               transitionBuilder: (child, animation) =>

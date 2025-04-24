@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart' as path;
 
+
+
 class SaveFiles {
   SaveFiles._();
   static final _externalDir = Directory('/storage/emulated/0/Download/PDF Reader');
@@ -52,7 +54,7 @@ class SaveFiles {
       }
       downloadsDir = _externalDir;
     } else {
-      downloadsDir = Directory(await ExternalPath.DIRECTORY_DOWNLOADS);
+      downloadsDir = Directory(await ExternalPath.DIRECTORY_DOWNLOAD);
     }
 
     final outputPath = path.join(downloadsDir.path, '$filename');

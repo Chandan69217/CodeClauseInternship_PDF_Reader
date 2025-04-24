@@ -214,7 +214,7 @@ class Read with ChangeNotifier {
 
   Future<List<String>> _getAllPathsFromDirectory() async {
     List<String> paths = [];
-    List<String> rootDir = await ExternalPath.getExternalStorageDirectories();
+    List<String> rootDir = await ExternalPath.getExternalStorageDirectories()??[];
     for (var dir in rootDir) {
       paths.addAll(await _listFilesRecursively(Directory(dir)));
     }
