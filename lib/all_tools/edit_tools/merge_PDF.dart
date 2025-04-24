@@ -5,7 +5,7 @@ import 'package:pdf_reader/api/stirling_pdf.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 import 'package:pdf_reader/utilities/get_file_details.dart';
 import 'package:pdf_reader/widgets/custom_linearprogress_indicator/CustomLinearProgressIndicator.dart';
-import 'package:pdf_reader/widgets/sticky_snackbar/show_snackbar.dart';
+
 
 
 

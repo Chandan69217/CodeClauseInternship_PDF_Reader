@@ -724,6 +724,79 @@ class StirlingApiService {
   }
 
 
+  static Future<void> compressedPDF({
+    required String filePath,
+    required String optimizeLevel,
+    required String expectedOutputSize,
+    required String linearize,
+    required String normalize,
+    required String grayscale,
+    required ValueNotifier<Map<String, dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  }) async {
+    final uri = Uri.https(APIUrl.baseUrl, APIUrl.compressPDF);
+
+    final pdfFile = File(filePath);
+    if (!pdfFile.existsSync()) {
+      onDownloadComplete('Invalid PDF file path!');
+      return;
+    }
+    final int totalLength = await pdfFile.length();
+
+
+    final request = http.MultipartRequest('POST', uri)
+      ..headers.addAll({'accept': '*/*'})
+      ..fields['optimizeLevel'] = optimizeLevel
+      ..fields['expectedOutputSize'] = expectedOutputSize
+      ..fields['linearize'] = linearize
+      ..fields['normalize'] = normalize
+      ..fields['grayscale'] = grayscale;
+
+    // Track PDF upload
+    final pdfStream = http.ByteStream(
+      _trackUploadProgress(pdfFile.openRead(), totalLength, totalLength, progress, isPDF: true),
+    );
+
+    final pdfMultipartFile = http.MultipartFile(
+      'fileInput',
+      pdfStream,
+      totalLength,
+      filename: pdfFile.path.split('/').last,
+      contentType: MediaType('application', 'pdf'),
+    );
+
+    request.files.add(pdfMultipartFile);
+
+    try {
+      progress.value = {
+        'progress': 0.5,
+        'message': 'Converting to Image...',
+      };
+
+      final client = http.Client();
+      try {
+        final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+        if (streamedResponse.statusCode == 200) {
+          var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+            streamedResponse,
+            progress,
+          );
+          onDownloadComplete('File Saved: $outputPath');
+        } else {
+          print('Server did not respond: status code: ${streamedResponse.statusCode}');
+          onDownloadComplete('Something went wrong! Please try again');
+        }
+      } catch (e) {
+        print('Exception: ${e.toString()}');
+        onDownloadComplete('Server timeout or did not respond!');
+      }
+    } catch (e) {
+      onDownloadComplete('Something went wrong! Please try again');
+      print('Exception during upload/download: $e');
+    }
+  }
+
+
 
 
 }

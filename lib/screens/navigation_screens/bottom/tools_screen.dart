@@ -5,6 +5,7 @@ import 'package:pdf_reader/all_tools/convert_tools/file_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/image_to_pdf.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_word.dart';
+import 'package:pdf_reader/all_tools/edit_tools/compress_PDF.dart';
 import 'package:pdf_reader/all_tools/edit_tools/merge_PDF.dart';
 import 'package:pdf_reader/all_tools/edit_tools/split_PDF.dart';
 import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
@@ -132,7 +133,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SplitPdfScreen() ));
                   }),
                   _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
-                  _items(iconData: Icons.compress, label: 'Compressed PDF',onTap: _message),
+                  _items(iconData: Icons.compress, label: 'Compressed PDF',onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=> CompressPDF()));
+                  }),
                 ]),
           )
         ],
