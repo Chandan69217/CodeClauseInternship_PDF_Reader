@@ -40,8 +40,6 @@ Lock & Unlock PDF – Add or remove password protection for document privacy.
 
 🔒 Secure & Offline:
 
-All features work offline – no internet required.
-
 Keep your files safe and private with local-only file handling.
 
 🌐 Why Choose This App?
