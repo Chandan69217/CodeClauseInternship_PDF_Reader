@@ -28,7 +28,7 @@ class PdfViewer extends StatefulWidget {
 
 class _PdfViewerStates extends State<PdfViewer> {
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   final PdfViewerController _pdfViewerController = PdfViewerController();
   PdfTextSearchResult _searchResult = PdfTextSearchResult();
 

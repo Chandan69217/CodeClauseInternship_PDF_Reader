@@ -57,7 +57,7 @@ dependencies:
   connectivity_plus: ^6.1.3
   flutter_colorpicker: ^1.1.0
   syncfusion_flutter_pdfviewer: ^29.1.39
-
+  syncfusion_flutter_signaturepad: ^29.1.39
 
 
 

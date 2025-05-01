@@ -7,12 +7,17 @@ import 'package:pdf_reader/all_tools/convert_tools/pdf_to_image.dart';
 import 'package:pdf_reader/all_tools/convert_tools/pdf_to_word.dart';
 import 'package:pdf_reader/all_tools/edit_tools/compress_PDF.dart';
 import 'package:pdf_reader/all_tools/edit_tools/merge_PDF.dart';
+import 'package:pdf_reader/all_tools/edit_tools/pdf_annotate_screen.dart';
+import 'package:pdf_reader/all_tools/edit_tools/sign_pdf_screen.dart';
 import 'package:pdf_reader/all_tools/edit_tools/split_PDF.dart';
 import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/unlock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/watermark_pdf.dart';
+import 'package:pdf_reader/api/stirling_pdf.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
+
+
 
 class ToolsScreen extends StatefulWidget {
   ToolsScreen._();
@@ -124,15 +129,19 @@ class _ToolsScreenState extends State<ToolsScreen> {
                 crossAxisSpacing: 0, // Horizontal spacing
                 mainAxisSpacing: 0,
                 children: <Widget>[
-                  _items(iconData: Icons.account_balance_wallet_rounded, label: 'Annotate',onTap: _message),
-                  _items(iconData: Icons.follow_the_signs, label: 'Sign',onTap: _message),
+                  _items(iconData: Icons.brush_outlined, label: 'Annotate',onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const PdfAnnotateScreen()));
+                  }),
+                  _items(iconData: Icons.draw, label: 'Sign',onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const StampFormScreen() ));
+                  }),
                   _items(iconData: Icons.picture_as_pdf_rounded, label: 'Merge PDF',onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MergePDFScreen() ));
                   }),
                   _items(iconData: Icons.splitscreen_outlined, label: 'Split PDF',onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SplitPdfScreen() ));
                   }),
-                  _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
+                  // _items(iconData: Icons.add_box_sharp, label: 'Add Text',onTap: _message),
                   _items(iconData: Icons.compress, label: 'Compressed PDF',onTap: (){
                     Navigator.push(context,MaterialPageRoute(builder: (context)=> CompressPDF()));
                   }),

@@ -1,11 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:pdf_reader/api/api_urls.dart';
 import 'package:path/path.dart' as path;
 import 'package:pdf_reader/utilities/save_files/save_files.dart';
+
+
+
+
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 
 
@@ -794,6 +802,124 @@ class StirlingApiService {
       onDownloadComplete('Something went wrong! Please try again');
       print('Exception during upload/download: $e');
     }
+  }
+
+
+  static Future<void> signPDF({
+    required String filePath,
+    required String pageNumbers,
+    required String signType,
+    required String signText,
+    required String signImage,
+    required String alphabet,
+    required String fontSize,
+    required String rotation,
+    required String opacity,
+    required String position,
+    required String overrideX,
+    required String overrideY,
+    required String customMargin,
+    required String customColor,
+    required ValueNotifier<Map<String, dynamic>> progress,
+    required void Function(String? outputPath) onDownloadComplete,
+  })async {
+   final uri = Uri.https(APIUrl.baseUrl, APIUrl.signPDF);
+
+   final pdfFile = File(filePath);
+   if (!pdfFile.existsSync()) {
+     onDownloadComplete('Invalid PDF file path!');
+     return;
+   }
+   final pdfFileLength = await pdfFile.length();
+
+   // Optional watermark image
+   File? signImageFile;
+   int imageFileLength = 0;
+   if ( signType== 'image') {
+     signImageFile = File(signImage);
+     if (!signImageFile.existsSync()) {
+       onDownloadComplete('Invalid image file path!');
+       return;
+     }
+     imageFileLength = await signImageFile.length();
+   }
+
+   final int totalLength = pdfFileLength + (imageFileLength);
+
+   final request = http.MultipartRequest('POST', uri)
+     ..headers.addAll({'accept': '*/*'})
+     ..fields['pageNumbers'] = pageNumbers
+     ..fields['stampType'] = signType
+     ..fields['alphabet'] = alphabet
+     ..fields['fontSize'] = fontSize
+     ..fields['rotation'] = rotation
+     ..fields['opacity'] = opacity
+     ..fields['stampText'] = signText
+     ..fields['position'] = position
+     ..fields['overrideX'] = overrideX
+     ..fields['overrideY'] = overrideY
+   ..fields['customMargin'] = customMargin
+   ..fields['customColor'] = customColor;
+
+   // Track PDF upload
+   final pdfStream = http.ByteStream(
+     _trackUploadProgress(pdfFile.openRead(), pdfFileLength, totalLength, progress, isPDF: true),
+   );
+
+   final pdfMultipartFile = http.MultipartFile(
+     'fileInput',
+     pdfStream,
+     pdfFileLength,
+     filename: pdfFile.path.split('/').last,
+     contentType: MediaType('application', 'pdf'),
+   );
+
+   request.files.add(pdfMultipartFile);
+
+   // Add watermark image if applicable
+   if (signType == 'image' && signImageFile != null) {
+     final imageStream = http.ByteStream(
+       _trackUploadProgress(signImageFile.openRead(), imageFileLength, totalLength, progress, isPDF: false),
+     );
+
+     final imageMultipartFile = http.MultipartFile(
+       'stampImage',
+       imageStream,
+       imageFileLength,
+       filename: signImageFile.path.split('/').last,
+       contentType: MediaType('image', signImage.split('.').last),
+     );
+
+     request.files.add(imageMultipartFile);
+   }
+
+   try {
+     progress.value = {
+       'progress': 0.5,
+       'message': 'Converting to Image...',
+     };
+
+     final client = http.Client();
+     try {
+       final streamedResponse = await client.send(request).timeout(Duration(minutes: 5));
+       if (streamedResponse.statusCode == 200) {
+         var outputPath = await SaveFiles.saveToDownloadsWithProgress(
+           streamedResponse,
+           progress,
+         );
+         onDownloadComplete('File Saved: $outputPath');
+       } else {
+         print('Server did not respond: status code: ${streamedResponse.statusCode}');
+         onDownloadComplete('Something went wrong! Please try again');
+       }
+     } catch (e) {
+       print('Exception: ${e.toString()}');
+       onDownloadComplete('Server timeout or did not respond!');
+     }
+   } catch (e) {
+     onDownloadComplete('Something went wrong! Please try again');
+     print('Exception during upload/download: $e');
+   }
   }
 
 
