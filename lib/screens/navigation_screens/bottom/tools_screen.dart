@@ -14,6 +14,7 @@ import 'package:pdf_reader/all_tools/manage_tools/lock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/unlock_pdf.dart';
 import 'package:pdf_reader/all_tools/manage_tools/watermark_pdf.dart';
 import 'package:pdf_reader/api/stirling_pdf.dart';
+import 'package:pdf_reader/pdf_sign_screen.dart';
 import 'package:pdf_reader/screens/selection_screen.dart';
 import 'package:pdf_reader/utilities/color_theme.dart';
 

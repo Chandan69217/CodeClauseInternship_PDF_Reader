@@ -2,11 +2,9 @@ import 'dart:typed_data';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:path/path.dart' as path;
 
 class PdfAnnotateScreen extends StatefulWidget {
@@ -32,10 +30,15 @@ class _PdfAnnotateScreenState extends State<PdfAnnotateScreen> {
     );
 
     if (result != null) {
-      setState(() {
-        _selectedFile = result.files.first;
-        _pdfBytes = _selectedFile!.bytes;
-      });
+      _selectedFile = result.files.first;
+      final ext = _selectedFile!.extension??'';
+      if(ext.contains('pdf')){
+        setState(() {
+          _pdfBytes = _selectedFile!.bytes;
+        });
+      }else{
+        _showSnackBar('Please select pdf file');
+      }
     }
   }
 
