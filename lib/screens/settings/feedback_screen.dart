@@ -56,7 +56,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           key: _formKey,
           child: ListView(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
             children: [
               Text("We’d love to hear your thoughts!",
                   style: Theme.of(context).textTheme.bodyMedium),
